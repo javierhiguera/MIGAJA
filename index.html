@@ -1,1 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Migaja · Milanesas de pollo caseras</title>
+<meta name="description" content="Milanesas de pollo caseras, listas para freír. Pedí por WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
+<header class="top">
+  <div class="logo" id="logo">Migaja</div>
+  <div class="top-actions">
+    <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">◐</button>
+    <a class="wa-btn" id="waTop" href="#" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Milanesas<br><span>de pollo caseras</span></h1>
+  <p class="slogan" id="slogan"></p>
+  <ul class="info">
+    <li id="infoHorario"></li>
+    <li id="infoRetiro"></li>
+  </ul>
+</section>
+
+<main class="wrap">
+  <div class="seg" role="group" aria-label="Modo de entrega">
+    <button type="button" class="seg-btn on" data-modo="Retiro">Retiro</button>
+    <button type="button" class="seg-btn" data-modo="Envío">Envío</button>
+  </div>
+
+  <input class="search" id="buscar" type="search" placeholder="Buscar sabor" aria-label="Buscar sabor">
+  <div class="chips" id="chips"></div>
+  <div id="lista"></div>
+</main>
+
+<div class="bar" id="bar" hidden>
+  <button type="button" id="verPedido" class="bar-btn"></button>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitulo">
+    <div class="panel-head">
+      <h2 id="panelTitulo">Tu pedido</h2>
+      <button type="button" class="icon-btn" id="cerrar" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div id="items"></div>
+
+    <label class="field">Tu nombre
+      <input id="nombre" type="text" autocomplete="name" placeholder="Nombre y apellido">
+    </label>
+
+    <label class="field" id="campoDir" hidden>Dirección de entrega
+      <input id="direccion" type="text" autocomplete="street-address" placeholder="Calle, número y barrio">
+    </label>
+
+    <label class="field">Notas (opcional)
+      <input id="notas" type="text" placeholder="Algo que quieras avisarnos">
+    </label>
+
+    <div class="field">Forma de pago
+      <div class="seg">
+        <button type="button" class="seg-btn on" data-pago="Efectivo">Efectivo</button>
+        <button type="button" class="seg-btn" data-pago="Transferencia">Transferencia</button>
+      </div>
+    </div>
+
+    <div class="alias-box" id="aliasBox" hidden>
+      <div>Alias: <strong id="aliasTxt"></strong></div>
+      <div>Titular: <strong id="titularTxt"></strong></div>
+      <button type="button" class="copy-btn" id="copiar">Copiar alias</button>
+      <div class="muted" id="copiado" aria-live="polite"></div>
+    </div>
+
+    <div class="total-row"><span>Total</span><strong id="total"></strong></div>
+    <div class="error" id="error" role="alert"></div>
+    <button type="button" class="send-btn" id="enviar">Pedir por WhatsApp</button>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/productos.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
