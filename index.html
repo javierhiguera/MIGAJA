@@ -3,87 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Migaja · Milanesas de pollo caseras</title>
-<meta name="description" content="Milanesas de pollo caseras, listas para freír. Pedí por WhatsApp.">
+<title>Migaja · Milanesas caseras</title>
+<meta name="description" content="Milanesas caseras, listas para disfrutar. Armá tu pedido y recibí el resumen por WhatsApp.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
 <header class="top">
-  <div class="logo" id="logo">Migaja</div>
-  <div class="top-actions">
-    <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro">◐</button>
-    <a class="wa-btn" id="waTop" href="#" target="_blank" rel="noopener">WhatsApp</a>
+  <a class="logo" href="#">Migaja</a>
+  <nav><a href="#catalogo">Catálogo</a><a href="#promos">Promociones</a><a href="#info">Info</a></nav>
+  <div class="acts">
+    <button id="tema" class="ib" type="button" aria-label="Cambiar entre modo claro y oscuro">◐</button>
+    <button id="cartBtn" class="ib" type="button" aria-label="Abrir carrito"><span id="ic"></span><b id="cnt">0</b></button>
   </div>
 </header>
 
 <section class="hero">
-  <h1>Milanesas<br><span>de pollo caseras</span></h1>
-  <p class="slogan" id="slogan"></p>
-  <ul class="info">
-    <li id="infoHorario"></li>
-    <li id="infoRetiro"></li>
-  </ul>
+  <img id="heroImg" src="img/hero.jpg" alt="Milanesas caseras de pollo">
+  <div class="hero-t">
+    <h1>Milanesas caseras, listas para disfrutar.</h1>
+    <p>Elegí tus favoritas, armá tu pedido y recibí milanesas preparadas para compartir.</p>
+    <a class="btn y" href="#catalogo">Ver milanesas</a> <a class="btn o" href="#info">Cómo comprar</a>
+  </div>
 </section>
 
-<main class="wrap">
-  <div class="seg" role="group" aria-label="Modo de entrega">
-    <button type="button" class="seg-btn on" data-modo="Retiro">Retiro</button>
-    <button type="button" class="seg-btn" data-modo="Envío">Envío</button>
-  </div>
-
-  <input class="search" id="buscar" type="search" placeholder="Buscar sabor" aria-label="Buscar sabor">
-  <div class="chips" id="chips"></div>
-  <div id="lista"></div>
+<main>
+  <section id="catalogo" class="sec"><h2>Catálogo</h2>
+    <input id="q" type="search" placeholder="Buscar milanesas" aria-label="Buscar milanesas">
+    <div id="chips" class="chips"></div>
+    <div id="lista" class="grid"></div>
+  </section>
+  <section id="promos" class="sec"><h2>Promociones</h2><div id="combos" class="grid"></div></section>
+  <section id="info" class="sec"><h2>Información</h2><div id="infoBody" class="info"></div></section>
 </main>
 
-<div class="bar" id="bar" hidden>
-  <button type="button" id="verPedido" class="bar-btn"></button>
-</div>
-
-<div class="overlay" id="overlay" hidden>
-  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitulo">
-    <div class="panel-head">
-      <h2 id="panelTitulo">Tu pedido</h2>
-      <button type="button" class="icon-btn" id="cerrar" aria-label="Cerrar">✕</button>
-    </div>
-
-    <div id="items"></div>
-
-    <label class="field">Tu nombre
-      <input id="nombre" type="text" autocomplete="name" placeholder="Nombre y apellido">
-    </label>
-
-    <label class="field" id="campoDir" hidden>Dirección de entrega
-      <input id="direccion" type="text" autocomplete="street-address" placeholder="Calle, número y barrio">
-    </label>
-
-    <label class="field">Notas (opcional)
-      <input id="notas" type="text" placeholder="Algo que quieras avisarnos">
-    </label>
-
-    <div class="field">Forma de pago
-      <div class="seg">
-        <button type="button" class="seg-btn on" data-pago="Efectivo">Efectivo</button>
-        <button type="button" class="seg-btn" data-pago="Transferencia">Transferencia</button>
-      </div>
-    </div>
-
-    <div class="alias-box" id="aliasBox" hidden>
-      <div>Alias: <strong id="aliasTxt"></strong></div>
-      <div>Titular: <strong id="titularTxt"></strong></div>
-      <button type="button" class="copy-btn" id="copiar">Copiar alias</button>
-      <div class="muted" id="copiado" aria-live="polite"></div>
-    </div>
-
-    <div class="total-row"><span>Total</span><strong id="total"></strong></div>
-    <div class="error" id="error" role="alert"></div>
-    <button type="button" class="send-btn" id="enviar">Pedir por WhatsApp</button>
+<div id="bar" class="bar" hidden><button id="barBtn" type="button"></button></div>
+<div id="ov" class="ov" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pt">
+    <div class="ph"><h2 id="pt"></h2><button class="ib" id="x" type="button" aria-label="Cerrar"></button></div>
+    <div id="pb"></div>
   </div>
 </div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="js/config.js"></script>
 <script src="js/productos.js"></script>
