@@ -1,1 +1,127 @@
+:root{
+  --red:#A50F1A; --yellow:#FFC531; --ink:#1A1A1A;
+  --bg:#FFF6E5; --card:#FFFFFF; --text:#1A1A1A; --muted:#5C5047;
+  --line:#E8DCC6; --price:#A50F1A;
+}
+:root[data-theme="dark"]{
+  --bg:#150F0F; --card:#231A1A; --text:#FFFFFF; --muted:#C9BDBD;
+  --line:#3A2C2C; --price:#FFC531;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Barlow Condensed',system-ui,sans-serif;
+  font-size:20px; font-weight:600; line-height:1.25; padding-bottom:110px;
+}
+button,input{font:inherit;color:inherit}
+.muted{color:var(--muted);font-size:17px}
 
+/* Encabezado */
+.top{
+  position:sticky; top:0; z-index:5; background:var(--red);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 16px; padding-top:calc(10px + env(safe-area-inset-top,0px));
+}
+.logo{font-family:'Anton',sans-serif; font-size:34px; color:var(--yellow); letter-spacing:1px; text-transform:uppercase}
+.top-actions{display:flex; gap:10px; align-items:center}
+.icon-btn{
+  width:44px; height:44px; border-radius:50%; border:2px solid var(--yellow);
+  background:transparent; color:var(--yellow); font-size:20px; cursor:pointer;
+}
+.panel .icon-btn{border-color:var(--line); color:var(--text)}
+.wa-btn{
+  background:var(--yellow); color:var(--ink); text-decoration:none; font-weight:700;
+  padding:10px 16px; border-radius:24px; text-transform:uppercase; letter-spacing:1px;
+}
+
+/* Portada */
+.hero{background:var(--red); color:#fff; padding:20px 16px 28px}
+.hero h1{
+  margin:0; font-family:'Anton',sans-serif; font-weight:400; text-transform:uppercase;
+  font-size:clamp(48px,15vw,84px); line-height:.95;
+}
+.hero h1 span{color:var(--yellow)}
+.slogan{margin:12px 0 0; font-size:24px; font-weight:700; text-transform:uppercase; letter-spacing:2px}
+.info{list-style:none; padding:0; margin:14px 0 0; display:flex; flex-wrap:wrap; gap:8px}
+.info li{background:var(--yellow); color:var(--ink); padding:6px 14px; border-radius:20px; font-weight:700}
+
+/* Contenido */
+.wrap{max-width:720px; margin:0 auto; padding:18px 16px}
+.seg{display:flex; background:var(--card); border:2px solid var(--line); border-radius:28px; padding:4px; gap:4px}
+.seg-btn{
+  flex:1; border:0; background:transparent; padding:10px; border-radius:22px;
+  font-weight:700; text-transform:uppercase; letter-spacing:1px; cursor:pointer;
+}
+.seg-btn.on{background:var(--red); color:#fff}
+.search{
+  width:100%; margin:14px 0 10px; padding:12px 16px; border-radius:28px;
+  border:2px solid var(--line); background:var(--card);
+}
+.chips{display:flex; gap:8px; overflow-x:auto; padding:4px 0 12px}
+.chip{
+  flex:none; border:2px solid var(--line); background:var(--card); border-radius:22px;
+  padding:8px 16px; font-weight:700; text-transform:uppercase; letter-spacing:1px; cursor:pointer;
+}
+.chip.on{background:var(--yellow); color:var(--ink); border-color:var(--yellow)}
+
+.card{background:var(--card); border:2px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px}
+.card h3{margin:0; font-size:28px; font-weight:700; text-transform:uppercase; letter-spacing:1px}
+.card p{margin:4px 0 8px; color:var(--muted)}
+.price{color:var(--price); font-family:'Anton',sans-serif; font-size:30px; font-weight:400}
+.price small{font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--muted)}
+.opt{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-top:1px solid var(--line)}
+.opt:first-of-type{margin-top:6px}
+.step{display:flex; align-items:center; gap:10px}
+.step button{
+  width:44px; height:44px; border-radius:50%; border:2px solid var(--red);
+  background:transparent; font-size:26px; font-weight:700; cursor:pointer; color:var(--text);
+}
+:root[data-theme="dark"] .step button{border-color:var(--yellow)}
+.step .qty{min-width:64px; text-align:center; font-weight:700}
+.vacio{padding:24px 0; text-align:center; color:var(--muted)}
+
+/* Barra de pedido */
+.bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:6; padding:12px 16px;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom,0px)); background:var(--bg);
+  border-top:2px solid var(--line);
+}
+.bar-btn{
+  width:100%; max-width:720px; display:block; margin:0 auto; border:0; border-radius:28px;
+  background:var(--red); color:#fff; padding:14px; font-size:22px; font-weight:700;
+  text-transform:uppercase; letter-spacing:1px; cursor:pointer;
+}
+
+/* Pedido */
+.overlay{position:fixed; inset:0; z-index:10; background:rgba(0,0,0,.6); display:flex; align-items:flex-end; justify-content:center}
+.overlay[hidden]{display:none}
+.panel{
+  width:100%; max-width:720px; max-height:92vh; overflow-y:auto; background:var(--bg);
+  border-radius:20px 20px 0 0; padding:16px; padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));
+}
+.panel-head{display:flex; justify-content:space-between; align-items:center}
+.panel-head h2{margin:0; font-family:'Anton',sans-serif; font-weight:400; font-size:32px; text-transform:uppercase}
+.item{display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px solid var(--line)}
+.field{display:block; margin-top:14px; font-weight:700}
+.field input[type="text"]{
+  width:100%; margin-top:6px; padding:12px 14px; border-radius:12px;
+  border:2px solid var(--line); background:var(--card);
+}
+.field .seg{margin-top:6px}
+.alias-box{margin-top:12px; padding:12px; border:2px dashed var(--red); border-radius:12px; background:var(--card)}
+:root[data-theme="dark"] .alias-box{border-color:var(--yellow)}
+.copy-btn{
+  margin-top:8px; padding:8px 16px; border-radius:20px; border:2px solid var(--red);
+  background:transparent; font-weight:700; cursor:pointer;
+}
+:root[data-theme="dark"] .copy-btn{border-color:var(--yellow)}
+.total-row{display:flex; justify-content:space-between; align-items:baseline; margin-top:18px; font-size:26px}
+.total-row strong{font-family:'Anton',sans-serif; font-weight:400; color:var(--price); font-size:32px}
+.error{color:#C62828; min-height:24px; margin-top:8px; font-weight:700}
+:root[data-theme="dark"] .error{color:#FF8A80}
+.send-btn{
+  width:100%; border:0; border-radius:28px; background:var(--red); color:#fff;
+  padding:16px; font-size:22px; font-weight:700; text-transform:uppercase; letter-spacing:1px; cursor:pointer;
+}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--yellow); outline-offset:2px}
