@@ -1,8 +1,8 @@
 // Datos del negocio y reglas de entrega. Editá solo este archivo.
 const CONFIG = {
   nombre: "Migaja",
-  whatsapp: "5491122790690",          // formato internacional, sin + ni espacios
-  telefono: "11 2279-0690",
+  whatsapp: "5491173537313",          // Tu número 1173537313 con formato internacional
+  telefono: "11 7353-7313",
   horarioTxt: "Lunes a viernes de 10 a 20 h",
   direccionRetiro: "[BARRIO / DIRECCIÓN]",
   condicionesRetiro: "",              // opcional
@@ -12,7 +12,6 @@ const CONFIG = {
   conservacion: "",                   // completá solo con datos confirmados; si queda vacío no se muestra
   envio: {
     habilitado: true,
-    // costo: null muestra "A confirmar". dias: 0=domingo ... 6=sábado (opcional, pisa los días generales)
     zonas: [{ nombre: "[ZONA / BARRIO]", costo: null, minimo: 0 }]
   },
   agenda: {
