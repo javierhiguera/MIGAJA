@@ -24,7 +24,6 @@
   var save = function () { ls.set("mg-cart", S.cart); };
   var toast = function (m) { var t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(function () { t.classList.remove("on"); }, 1600); };
 
-  // Limpia del carrito lo que ya no existe o no está disponible
   function depurar() {
     S.cart = S.cart.filter(function (l) {
       if (l.t === "p") { var p = prod(l.id); return p && p.disponible !== false && p.opciones.indexOf(l.op) > -1 && l.n > 0; }
@@ -68,12 +67,12 @@
   }
   var totTxt = function (c) { return c.unk ? "A confirmar" : money(c.total); };
 
-  // ---------- Catálogo ----------
   function renderChips() {
     var cats = ["Todas"]; PRODUCTOS.forEach(function (p) { if (cats.indexOf(p.categoria) < 0) cats.push(p.categoria); }); cats.push("Favoritos");
     $("#chips").innerHTML = cats.map(function (c) { return '<button type="button" class="chip' + (S.cat === c ? " on" : "") + '" data-a="cat" data-v="' + esc(c) + '">' + esc(c) + "</button>"; }).join("");
   }
   function foto(src, alt) { return '<div class="ph0">' + (src ? '<img loading="lazy" src="' + esc(src) + '" alt="' + esc(alt) + '">' : "Foto próximamente") + "</div>"; }
+  
   function renderLista() {
     var q = S.q.trim().toLowerCase();
     var v = PRODUCTOS.filter(function (p) {
@@ -82,13 +81,23 @@
     });
     $("#lista").innerHTML = v.length ? v.map(function (p) {
       var off = p.disponible === false, fav = S.favs.indexOf(p.id) > -1;
+      
+      var currentFoto = p.foto;
+      if (p.fotos_opciones) {
+        var opEnCarrito = S.cart.filter(function(l){ return l.t === "p" && l.id === p.id; })[0];
+        var opSeleccionada = opEnCarrito ? opEnCarrito.op : p.opciones[0];
+        if (p.fotos_opciones[opSeleccionada]) currentFoto = p.fotos_opciones[opSeleccionada];
+      }
+
       var opts = p.opciones.map(function (op) {
         var l = line("p", p.id, op);
         return '<div class="opt"><span>' + esc(p.opciones.length > 1 ? op : "Cantidad") + '</span><div class="st"><button type="button" data-a="add" data-t="p" data-id="' + esc(p.id) + '" data-op="' + esc(op) + '" data-d="-1" aria-label="Restar ' + esc(p.nombre + " " + op) + '"' + (off ? " disabled" : "") + '>−</button><span>' + (l ? qtxt(p, l.n) : "0") + '</span><button type="button" data-a="add" data-t="p" data-id="' + esc(p.id) + '" data-op="' + esc(op) + '" data-d="1" aria-label="Sumar ' + esc(p.nombre + " " + op) + '"' + (off ? " disabled" : "") + ">+</button></div></div>";
       }).join("");
-      return '<article class="card">' + foto(p.foto, p.nombre) + '<div class="cb"><h3>' + esc(p.nombre) + '<button type="button" class="fav' + (fav ? " on" : "") + '" data-a="fav" data-id="' + esc(p.id) + '" aria-label="Favorito: ' + esc(p.nombre) + '" aria-pressed="' + fav + '">' + IC.heart + "</button></h3><p>" + esc(p.descripcion) + '</p><div class="price">' + (p.precio > 0 ? money(p.precio) + " <small>" + esc(p.venta.etiqueta) + "</small>" : "A confirmar") + "</div>" + (off ? '<div class="tag">No disponible</div>' : opts) + "</div></article>";
+      
+      return '<article class="card">' + foto(currentFoto, p.nombre) + '<div class="cb"><h3>' + esc(p.nombre) + '<button type="button" class="fav' + (fav ? " on" : "") + '" data-a="fav" data-id="' + esc(p.id) + '" aria-label="Favorito: ' + esc(p.nombre) + '" aria-pressed="' + fav + '">' + IC.heart + "</button></h3><p>" + esc(p.descripcion) + '</p><div class="price">' + (p.precio > 0 ? money(p.precio) + " <small>" + esc(p.venta.etiqueta) + "</small>" : "A confirmar") + "</div>" + (off ? '<div class="tag">No disponible</div>' : opts) + "</div></article>";
     }).join("") : '<p class="tag">No encontramos ese producto.</p>';
   }
+  
   function renderCombos() {
     var v = COMBOS.filter(vigente);
     $("#combos").innerHTML = v.length ? v.map(function (c) {
@@ -98,6 +107,7 @@
         '<div class="opt"><span>Cantidad</span><div class="st"><button type="button" data-a="add" data-t="c" data-id="' + esc(c.id) + '" data-op="" data-d="-1" aria-label="Restar combo">−</button><span>' + (l ? l.n : 0) + '</span><button type="button" data-a="add" data-t="c" data-id="' + esc(c.id) + '" data-op="" data-d="1" aria-label="Sumar combo">+</button></div></div></div></article>';
     }).join("") : '<p class="tag">Por ahora no hay promociones vigentes.</p>';
   }
+  
   function renderInfo() {
     var b = [["Cómo comprar", "Elegí tus milanesas, armá el carrito, completá tus datos y confirmá. Te abrimos WhatsApp con el resumen para enviarlo."],
       ["Entrega", "Retiro" + (CONFIG.direccionRetiro ? " en " + CONFIG.direccionRetiro : "") + (CONFIG.envio.habilitado ? " o envío a domicilio según zona." : ".") + (CONFIG.condicionesRetiro ? " " + CONFIG.condicionesRetiro : "")],
@@ -113,7 +123,6 @@
   }
   function refrescar() { renderLista(); renderCombos(); renderBar(); if (S.open) renderPanel(); }
 
-  // ---------- Agenda ----------
   function slots(cfg, d) {
     var a = cfg.desde.split(":").map(Number), b = cfg.hasta.split(":").map(Number), r = [];
     var hh = function (x) { return String(Math.floor(x / 60)).padStart(2, "0") + ":" + String(x % 60).padStart(2, "0"); };
@@ -131,7 +140,6 @@
     return out;
   }
 
-  // ---------- Panel / checkout ----------
   var STEPS = ["Tu carrito", "Tus datos", "Entrega", "Fecha y horario", "Pago", "Resumen"];
   function totHtml(c) {
     return '<div class="tot"><div class="row"><span>Subtotal</span><span>' + (c.unk ? "A confirmar" : money(c.sub)) + "</span></div>" + (c.desc > 0 ? '<div class="row"><span>Descuento</span><span>-' + money(c.desc) + "</span></div>" : "") +
@@ -220,7 +228,6 @@
     S.done = { id: id, url: url }; S.cart = []; save(); refrescar(); toast("Pedido registrado");
   }
 
-  // ---------- Eventos ----------
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-a]"); if (!b) return; var a = b.getAttribute("data-a"), v = b.getAttribute("data-v"), i = +b.getAttribute("data-i");
     if (a === "cat") { S.cat = v; renderChips(); renderLista(); }
@@ -246,12 +253,10 @@
   $("#ov").addEventListener("click", function (e) { if (e.target === this) abrir(false); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && S.open) abrir(false); });
 
-  // Tema
   var tema = ls.get("mg-tema", null) || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   document.documentElement.setAttribute("data-theme", tema);
   $("#tema").addEventListener("click", function () { tema = tema === "dark" ? "light" : "dark"; document.documentElement.setAttribute("data-theme", tema); ls.set("mg-tema", tema); });
 
-  // Inicio
   $("#ic").innerHTML = IC.cart; $("#x").innerHTML = IC.x;
   $("#heroImg").addEventListener("error", function () { this.remove(); });
   depurar(); renderChips(); renderInfo(); refrescar();
