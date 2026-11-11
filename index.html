@@ -1,21 +1,17 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151312">
 <title>La Migaja · Milanesas caseras</title>
 <meta name="description" content="Milanesas de pollo caseras, listas para freír. Armá tu pedido y recibí el resumen por WhatsApp.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header class="top">
   <a class="logo" href="#">La Migaja</a>
-  <nav><a href="#catalogo">Catálogo</a><a href="#info">Cómo comprar</a><a href="#info">Entregas</a><a href="#info">Contacto</a></nav>
   <div class="acts">
-    <button id="tema" class="ib" type="button" aria-label="Cambiar tema">◐</button>
     <button id="cartBtn" class="ib" type="button" aria-label="Abrir carrito"><span id="ic"></span><b id="cnt">0</b></button>
   </div>
 </header>
@@ -23,6 +19,7 @@
 <section class="hero">
   <img id="heroImg" src="img/hero.jpg" alt="Milanesas de pollo caseras crudas, listas para freír">
   <div class="hero-t">
+    <span class="hero-badge">Caseras · Listas para freír</span>
     <h1>Milanesas caseras, listas para freír.</h1>
     <p>Elegí tus favoritas, armá tu pedido y coordinamos la entrega.</p>
     <a class="btn y" href="#catalogo">Ver catálogo</a>
@@ -30,7 +27,10 @@
 </section>
 
 <main>
-  <section id="catalogo" class="sec"><h2>Catálogo</h2>
+  <section id="catalogo" class="sec">
+    <div class="sec-head">
+      <h2>Catálogo</h2>
+    </div>
     <input id="q" type="search" placeholder="Buscar milanesas" aria-label="Buscar milanesas">
     <div id="chips" class="chips"></div>
     <div id="lista" class="grid"></div>
@@ -38,7 +38,19 @@
   <section id="info" class="sec"><h2>Información</h2><div id="infoBody" class="info"></div></section>
 </main>
 
-<div id="bar" class="bar" hidden><button id="barBtn" type="button"></button></div>
+<!-- Barra inferior persistente (App-like) -->
+<nav class="bottom-nav">
+  <a href="#catalogo" class="bn-item on">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Catálogo</span>
+  </a>
+  <button id="barBtn" class="bn-item bn-cart" type="button">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h11L21 7H6"/></svg>
+    <span id="barTxt">Carrito</span>
+    <b id="barCount" class="bn-badge">0</b>
+  </button>
+</nav>
+
 <div id="ov" class="ov" hidden>
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pt">
     <div class="ph"><h2 id="pt"></h2><button class="ib" id="x" type="button" aria-label="Cerrar"></button></div>
