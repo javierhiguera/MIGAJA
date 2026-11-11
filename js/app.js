@@ -25,16 +25,14 @@
   // --- MOTOR DE PRECIOS CON PROMO OPTIMIZADA ---
   function calcularTotales() {
     var lineas = [], subtotalRegular = 0, totalPromo = 0, kilosElegibles = 0;
-    var elegiblesCart = []; // { index, precio, kg, prodId, op }
+    var elegiblesCart = [];
 
-    // 1. Procesar carrito
     S.cart.forEach(function (l, idx) {
       var p = prod(l.id); if (!p) return;
       var m = p.precio * l.n;
       subtotalRegular += m;
       lineas.push({ txt: p.nombre + (p.opciones.length > 1 ? " (" + l.op + ")" : ""), q: qtxt(p, l.n), pu: p.precio, m: m, ok: true, idx: idx });
 
-      // Si es elegible para promo, acumular kilos
       if (PROMO.elegibles.indexOf(l.id) > -1) {
         kilosElegibles += l.n;
         for (var k = 0; k < l.n; k++) {
@@ -43,25 +41,17 @@
       }
     });
 
-    // 2. Calcular bloques de promo (2kg = $10.000)
     var bloques = Math.floor(kilosElegibles / PROMO.kilosRequeridos);
     var descuentoTotal = 0;
     var detallePromos = [];
 
     if (bloques > 0) {
-      // Ordenar elegibles de mayor a menor precio para maximizar descuento
       elegiblesCart.sort(function(a, b) { return b.precio - a.precio; });
-
       var promocionados = elegiblesCart.slice(0, bloques * PROMO.kilosRequeridos);
-      var noPromocionados = elegiblesCart.slice(bloques * PROMO.kilosRequeridos);
-
-      // Calcular valor regular de los promocionados
       var valorRegularPromo = promocionados.reduce(function(acc, x) { return acc + x.precio; }, 0);
       var valorPromo = bloques * PROMO.precio;
-      
       descuentoTotal = valorRegularPromo - valorPromo;
       
-      // Agrupar para mostrar en el resumen (simplificado)
       detallePromos.push({
         nombre: "Promo " + bloques + " x 2 kg",
         descripcion: bloques * 2 + " kg elegibles (Clásica/Crispy)",
@@ -71,7 +61,6 @@
       });
     }
 
-    // 3. Envío
     var envio = 0;
     if (S.f.modo === "Envío" && zona()) {
       envio = zona().costo;
@@ -106,9 +95,8 @@
     
     var nuevoValor = (l ? l.n : 0) + d;
     
-    // Validación estricta: solo enteros positivos
-    if (d < 0 && nuevoValor < 0) return; // No bajar de 0
-    if (!Number.isInteger(nuevoValor)) return; // Solo enteros
+    if (d < 0 && nuevoValor < 0) return;
+    if (!Number.isInteger(nuevoValor)) return;
 
     if (nuevoValor <= 0) {
       S.cart = S.cart.filter(function (x) { return x !== l; });
@@ -169,17 +157,23 @@
   
   function renderBar() {
     var c = calcularTotales(), n = S.cart.length;
-    $("#cnt").textContent = n; $("#bar").hidden = n === 0 || S.open;
-    $("#barBtn").textContent = "Ver carrito · " + n + (n === 1 ? " producto" : " productos") + " · " + money(c.total);
+    $("#cnt").textContent = n;
+    $("#barCount").textContent = n;
+    $("#barTxt").textContent = n > 0 ? money(c.total) : "Carrito";
+    
+    if (n === 0 || S.open) {
+      $("#barBtn").style.opacity = "0.5";
+    } else {
+      $("#barBtn").style.opacity = "1";
+    }
   }
   
   function refrescar() { renderLista(); renderBar(); if (S.open) renderPanel(); }
 
   // --- AGENDA (Franjas horarias) ---
   function getFranjasDisponibles(cfg, fechaISO) {
-    // Retorna array de strings "HH:MM a HH:MM"
     var fecha = new Date(fechaISO + "T00:00:00");
-    var diaSemana = fecha.getDay(); // 0=Dom, 1=Lun...
+    var diaSemana = fecha.getDay();
     if (cfg.dias.indexOf(diaSemana) < 0) return [];
     
     var ahora = new Date();
@@ -360,7 +354,6 @@
     for (var s = 1; s <= 4; s++) { var m = validar(s); if (m) { S.step = s; renderPanel(); $("#err").textContent = m; return; } }
     S.busy = true; setTimeout(function () { S.busy = false; }, 3000);
     
-    // ID determinista pero único (no garantiza unicidad global sin backend)
     var id = "MGA-" + iso(new Date()).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     var url = waUrl(id, c), hist = ls.get("mg-hist", []);
     hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
@@ -393,11 +386,6 @@
   $("#x").addEventListener("click", function () { abrir(false); });
   $("#ov").addEventListener("click", function (e) { if (e.target === this) abrir(false); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && S.open) abrir(false); });
-
-  // Tema
-  var tema = ls.get("mg-tema", null) || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  document.documentElement.setAttribute("data-theme", tema);
-  $("#tema").addEventListener("click", function () { tema = tema === "dark" ? "light" : "dark"; document.documentElement.setAttribute("data-theme", tema); ls.set("mg-tema", tema); });
 
   // Inicio
   $("#ic").innerHTML = IC.cart; $("#x").innerHTML = IC.x;
