@@ -15,9 +15,8 @@ const CONFIG = {
     zonas: [{ nombre: "Barrio La Esmeralda", costo: 1500, minimo: 0 }]
   },
   agenda: {
-    // Franjas horarias oficiales (se generan bloques según los rangos)
     retiro: { 
-      dias: [1, 2, 3, 4, 5, 6], // Lun a Sáb
+      dias: [1, 2, 3, 4, 5, 6],
       franjas: [
         { desde: "10:00", hasta: "14:00" },
         { desde: "17:00", hasta: "20:30" }
@@ -30,8 +29,8 @@ const CONFIG = {
         { desde: "17:00", hasta: "20:30" }
       ]
     },
-    anticipacionHoras: 2, // Mínimo 2 horas de anticipación
+    anticipacionHoras: 2,
     diasAdelante: 14,
-    bloqueadas: [] // Fechas sin atención, ej: ["2026-12-25"]
+    bloqueadas: []
   }
 };
