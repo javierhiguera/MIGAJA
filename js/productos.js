@@ -1,5 +1,4 @@
 // Catálogo. precio 0 = "A confirmar". foto: ruta a tu imagen real.
-// venta: { unidad: "kg", paso: 1, etiqueta: "el kilo" }
 const PRODUCTOS = [
   { id: "clasica", categoria: "Clásicas", nombre: "Clásica", descripcion: "Milanesa de pollo casera, lista para freír.",
     foto: "img/clasica.jpg", precio: 6000, venta: { unidad: "kg", paso: 1, etiqueta: "el kilo" }, opciones: ["Con sal", "Sin sal"], disponible: true },
@@ -17,13 +16,11 @@ const PRODUCTOS = [
 ];
 
 // Promoción oficial: 2 kg de Clásica (cualquier variante) o Crispy por $10.000
-// Los productos excluidos (semillas, rellenas) NO completan bloques promocionales.
 const PROMO = {
   id: "promo2kg",
   nombre: "Promo 2 Kilos",
   descripcion: "Llevá 2 kg de milanesas Clásicas o Crispy y pagá solo $10.000.",
   precio: 10000,
   kilosRequeridos: 2,
-  // IDs de productos elegibles para completar el bloque
   elegibles: ["clasica", "crispy"]
 };
