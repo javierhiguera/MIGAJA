@@ -349,7 +349,7 @@
   
   function abrir(v) { S.open = v; $("#ov").hidden = !v; if (v) { renderPanel(); $("#x").focus(); } renderBar(); }
   
-    async function confirmar() {
+  async function confirmar() {
     if (S.busy) return; var c = calcularTotales(); if (!c.L.length) return;
     for (var s = 1; s <= 4; s++) { var m = validar(s); if (m) { S.step = s; renderPanel(); $("#err").textContent = m; return; } }
     S.busy = true; 
