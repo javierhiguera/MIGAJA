@@ -349,16 +349,67 @@
   
   function abrir(v) { S.open = v; $("#ov").hidden = !v; if (v) { renderPanel(); $("#x").focus(); } renderBar(); }
   
-  function confirmar() {
+    async function confirmar() {
     if (S.busy) return; var c = calcularTotales(); if (!c.L.length) return;
     for (var s = 1; s <= 4; s++) { var m = validar(s); if (m) { S.step = s; renderPanel(); $("#err").textContent = m; return; } }
-    S.busy = true; setTimeout(function () { S.busy = false; }, 3000);
+    S.busy = true; 
     
     var id = "MGA-" + iso(new Date()).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
-    var url = waUrl(id, c), hist = ls.get("mg-hist", []);
-    hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
-    window.open(url, "_blank", "noopener");
-    S.done = { id: id, url: url }; S.cart = []; save(); refrescar(); toast("Pedido registrado");
+    var url = waUrl(id, c);
+    
+    // --- NUEVO: GUARDAR EN SUPABASE ---
+    try {
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      
+      // 1. Guardar el pedido principal
+      const { data: pedidoData, error: pedidoError } = await supabase
+        .from('pedidos')
+        .insert([{
+          cliente_nombre: S.f.nombre,
+          cliente_telefono: S.f.tel,
+          metodo_pago: S.f.pago,
+          modalidad: S.f.modo,
+          total: c.total,
+          observaciones: S.f.obs
+        }])
+        .select();
+
+      if (pedidoError) throw pedidoError;
+
+      // 2. Guardar los detalles (los productos)
+      const detalles = S.cart.map(function(l) {
+        var p = prod(l.id);
+        var subtotal = p.precio * l.n;
+        return {
+          pedido_id: pedidoData[0].id,
+          producto_id: l.id,
+          producto_nombre: p.nombre,
+          cantidad: l.n,
+          precio_unitario: p.precio,
+          subtotal: subtotal
+        };
+      });
+
+      const { error: detallesError } = await supabase.from('pedido_detalles').insert(detalles);
+      if (detallesError) throw detallesError;
+
+      // Si todo salió bien, abrimos WhatsApp
+      window.open(url, "_blank", "noopener");
+      
+      var hist = ls.get("mg-hist", []);
+      hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
+      S.done = { id: id, url: url }; S.cart = []; save(); refrescar(); toast("Pedido guardado y registrado");
+      
+    } catch (err) {
+      console.error("Error guardando pedido:", err);
+      // Si falla Supabase, igual abrimos WhatsApp para no perder la venta
+      window.open(url, "_blank", "noopener");
+      var hist = ls.get("mg-hist", []);
+      hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
+      S.done = { id: id, url: url }; S.cart = []; save(); refrescar(); toast("Pedido registrado (modo offline)");
+    }
+    
+    S.busy = false; 
   }
 
   // --- EVENTOS ---
