@@ -357,8 +357,15 @@
     var id = "MGA-" + iso(new Date()).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     var url = waUrl(id, c);
     
-    // --- NUEVO: GUARDAR EN SUPABASE ---
+    // --- CONEXIÓN A SUPABASE ---
     try {
+      if (typeof window.supabase === 'undefined') {
+        alert("ERROR: La librería de Supabase no se cargó. Revisá el index.html");
+        window.open(url, "_blank", "noopener");
+        S.busy = false;
+        return;
+      }
+
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       
       // 1. Guardar el pedido principal
@@ -374,7 +381,10 @@
         }])
         .select();
 
-      if (pedidoError) throw pedidoError;
+      if (pedidoError) {
+        alert("Error de Supabase al guardar pedido: " + pedidoError.message);
+        throw pedidoError;
+      }
 
       // 2. Guardar los detalles (los productos)
       const detalles = S.cart.map(function(l) {
@@ -391,7 +401,10 @@
       });
 
       const { error: detallesError } = await supabase.from('pedido_detalles').insert(detalles);
-      if (detallesError) throw detallesError;
+      if (detallesError) {
+        alert("Error de Supabase al guardar detalles: " + detallesError.message);
+        throw detallesError;
+      }
 
       // Si todo salió bien, abrimos WhatsApp
       window.open(url, "_blank", "noopener");
