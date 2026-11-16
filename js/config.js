@@ -1,3 +1,5 @@
+const SUPABASE_URL = "https://ynncndundoooinkdrtiw.supabase.co";
+const SUPABASE_KEY = "sb_publishable_kSu1cHcql8zIEd-oxqOngA_CI908kyy";
 // Datos del negocio y reglas de entrega. Editá solo este archivo.
 const CONFIG = {
   nombre: "La Migaja",
