@@ -2,6 +2,22 @@
    FUENTES LOCALES
    ========================================================================== */
 @font-face {
+  font-family: 'Wangi';
+  src: url('../fonts/Wangi.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inclusive Sans';
+  src: url('../fonts/InclusiveSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Fluma';
   src: url('../fonts/Fluma-Regular.otf') format('opentype');
   font-weight: 400;
@@ -28,8 +44,8 @@
   --text-muted: #A89F98;
   --border: #332E2B;
   
-  --font-brand: 'Fluma', serif;
-  --font-body: 'Armonia', system-ui, sans-serif;
+  --font-brand: 'Wangi', 'Fluma', serif;
+  --font-body: 'Inclusive Sans', 'Armonia', system-ui, sans-serif;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -42,18 +58,26 @@
 /* ==========================================================================
    RESET & BASE
    ========================================================================== */
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; scroll-padding-top: 70px; }
 body {
   margin: 0;
   background: var(--surface);
   color: var(--text);
   font-family: var(--font-body);
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.5;
   padding-bottom: calc(80px + var(--safe-bottom)); /* Espacio para bottom nav */
   overflow-x: hidden;
 }
+
+/* Reglas de negrilla explícitas para Inclusive Sans */
+b, strong, fw-bold, .fw-bold {
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
 button, input, select, textarea { font: inherit; color: inherit; }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
@@ -209,6 +233,7 @@ input[type=search], .fld input, .fld select, .fld textarea {
   background: var(--muted);
   color: var(--text);
   font-family: var(--font-body);
+  font-weight: 400;
   font-size: 16px;
   transition: border-color 0.2s;
 }
