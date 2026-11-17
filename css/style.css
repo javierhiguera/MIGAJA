@@ -17,21 +17,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Fluma';
-  src: url('../fonts/Fluma-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Armonia';
-  src: url('../fonts/armonia-mezzo.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ==========================================================================
    VARIABLES (MODO OSCURO ÚNICO)
    ========================================================================== */
@@ -44,8 +29,8 @@
   --text-muted: #A89F98;
   --border: #332E2B;
   
-  --font-brand: 'Wangi', 'Fluma', serif;
-  --font-body: 'Inclusive Sans', 'Armonia', system-ui, sans-serif;
+  --font-brand: 'Wangi', serif;
+  --font-body: 'Inclusive Sans', system-ui, sans-serif;
 
   --radius: 12px;
   --radius-sm: 8px;
@@ -68,12 +53,12 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: 1.5;
-  padding-bottom: calc(80px + var(--safe-bottom)); /* Espacio para bottom nav */
+  padding-bottom: calc(80px + var(--safe-bottom));
   overflow-x: hidden;
 }
 
 /* Reglas de negrilla explícitas para Inclusive Sans */
-b, strong, fw-bold, .fw-bold {
+b, strong, .fw-bold {
   font-family: var(--font-body);
   font-weight: 700;
 }
@@ -172,15 +157,17 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 }
 .hero h1 {
   margin: 0 0 10px;
-  font-family: var(--font-brand);
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: clamp(32px, 8vw, 48px);
   line-height: 1.1;
-  text-transform: uppercase;
   color: var(--text);
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 .hero p {
   margin: 0 0 20px;
+  font-family: var(--font-body);
+  font-weight: 400;
   font-size: 17px;
   color: var(--text-muted);
   max-width: 400px;
@@ -195,6 +182,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   justify-content: center;
   padding: 14px 24px;
   border-radius: var(--radius-sm);
+  font-family: var(--font-body);
   font-weight: 700;
   font-size: 15px;
   text-transform: uppercase;
@@ -216,7 +204,8 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .sec h2 {
   margin: 0;
-  font-family: var(--font-brand);
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 26px;
   text-transform: uppercase;
   color: var(--text);
@@ -252,6 +241,7 @@ input::placeholder { color: var(--text-muted); }
   color: var(--text-muted);
   border-radius: 20px;
   padding: 8px 18px;
+  font-family: var(--font-body);
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
@@ -277,17 +267,17 @@ input::placeholder { color: var(--text-muted); }
 .cb { padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 .cb h3 {
   margin: 0;
-  font-family: var(--font-brand);
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: 22px;
-  text-transform: uppercase;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
   color: var(--text);
 }
-.cb p { margin: 0; color: var(--text-muted); font-size: 15px; }
-.price { font-family: var(--font-brand); font-size: 24px; color: var(--accent); display: flex; align-items: baseline; gap: 4px; }
+.cb p { margin: 0; color: var(--text-muted); font-size: 15px; font-weight: 400; }
+.price { font-family: var(--font-body); font-weight: 700; font-size: 24px; color: var(--accent); display: flex; align-items: baseline; gap: 4px; }
 .price small { font-family: var(--font-body); font-size: 14px; color: var(--text-muted); font-weight: 400; }
 .fav { border: 0; background: none; color: var(--text-muted); cursor: pointer; padding: 4px; transition: color 0.2s; }
 .fav.on { color: var(--primary); }
@@ -328,8 +318,8 @@ input::placeholder { color: var(--text-muted); }
    ========================================================================== */
 .info { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .info div { background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
-.info h3 { margin: 0 0 6px; font-family: var(--font-brand); font-size: 18px; text-transform: uppercase; color: var(--accent); }
-.info p { margin: 0; font-size: 15px; color: var(--text-muted); }
+.info h3 { margin: 0 0 6px; font-family: var(--font-body); font-weight: 700; font-size: 18px; color: var(--accent); }
+.info p { margin: 0; font-size: 15px; color: var(--text-muted); font-weight: 400; }
 
 /* ==========================================================================
    BOTTOM NAV (APP-LIKE)
@@ -414,7 +404,7 @@ input::placeholder { color: var(--text-muted); }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
 .ph { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.ph h2 { margin: 0; font-family: var(--font-brand); font-size: 24px; text-transform: uppercase; color: var(--text); }
+.ph h2 { margin: 0; font-family: var(--font-body); font-weight: 700; font-size: 24px; color: var(--text); }
 
 .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text); }
 .row:last-child { border-bottom: none; }
@@ -447,18 +437,19 @@ input::placeholder { color: var(--text-muted); }
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-muted);
+  font-weight: 400;
 }
 .box b { color: var(--text); }
 
 .tot { margin-top: 16px; background: var(--muted); border-radius: var(--radius-sm); padding: 16px; }
 .tot .row { border: none; padding: 6px 0; }
 .tot .row.t { font-size: 20px; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 6px; }
-.tot .row.t b { font-family: var(--font-brand); font-size: 26px; color: var(--primary); }
+.tot .row.t b { font-family: var(--font-body); font-weight: 700; font-size: 26px; color: var(--primary); }
 
 .err { color: #FF6B6B; min-height: 24px; font-weight: 600; font-size: 14px; margin-top: 12px; }
 .nav { display: flex; gap: 10px; margin-top: 20px; }
 .nav .btn { flex: 1; }
-.steps { color: var(--text-muted); margin: 0 0 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+.steps { color: var(--text-muted); margin: 0 0 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
 /* Toast */
 .toast {
