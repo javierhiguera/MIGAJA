@@ -1,7 +1,7 @@
 const SUPABASE_URL = "https://ynncndundoooinkdrtiw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kSu1cHcql8zIEd-oxqOngA_CI908kyy";
 
-// Datos del negocio y reglas de entrega. Editá solo este archivo.
+// BUSINESS INFO
 const CONFIG = {
   nombre: "La Migaja",
   whatsapp: "5491173537313",
@@ -22,7 +22,7 @@ const CONFIG = {
       dias: [1, 2, 3, 4, 5, 6],
       franjas: [
         { desde: "10:00", hasta: "14:00" },
-        { desde: "17:00", hasta: "20:30" }
+        { desde: "17:00", hasta: "20:00" }
       ]
     },
     envio: { 
@@ -38,7 +38,7 @@ const CONFIG = {
   }
 };
 
-// Catálogo. precio 0 = "A confirmar". foto: ruta a tu imagen real.
+// CATALOG
 const PRODUCTOS = [
   { id: "clasica", categoria: "Clásicas", nombre: "Clásica", descripcion: "Milanesa de pollo casera, lista para freír.",
     foto: "assets/img/clasica.jpg", precio: 6000, venta: { unidad: "kg", paso: 1, etiqueta: "el kilo" }, opciones: ["Con sal", "Sin sal"], disponible: true },
@@ -55,7 +55,7 @@ const PRODUCTOS = [
     precio: 10000, venta: { unidad: "kg", paso: 1, etiqueta: "el kilo" }, opciones: ["De jamón y queso", "De espinaca y ricota"], disponible: true }
 ];
 
-// Promoción oficial: 2 kg de Clásica (cualquier variante) o Crispy por $10.000
+// PROMO
 const PROMO = {
   id: "promo2kg",
   nombre: "Promo 2 Kilos",
