@@ -9,7 +9,7 @@ const CONFIG = {
   horarioTxt: "Lun a Vie: 10:00–14:00 y 17:00–20:30 | Sáb: 10:00–14:00 | Dom: Cerrado",
   direccionRetiro: "Av. Obispo Jorge Novak 2076",
   condicionesRetiro: "Retiro sin cargo. Coordiná el horario al confirmar el pedido.",
-  alias: "lamigaja",
+  alias: "migaja.com.ar",
   titular: "Pedro Javier Higuera Marin",
   pagos: ["Transferencia", "Efectivo"],
   conservacion: "Mantené las milanesas refrigeradas y freílas bien antes de consumir.",
