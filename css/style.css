@@ -1,5 +1,5 @@
 /* ==========================================================================
-   FUENTES LOCALES
+   FONTS
    ========================================================================== */
 @font-face {
   font-family: 'Wangi';
@@ -11,7 +11,6 @@
 
 @font-face {
   font-family: 'Inclusive Sans';
-  /* Ojo: verifiqué el nombre del archivo de la captura. Si se llama distinto, ajustalo acá */
   src: url('../assets/fonts/InclusiveSans-VariableFont_wght.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
@@ -19,7 +18,7 @@
 }
 
 /* ==========================================================================
-   VARIABLES (PALETA EXACTA DE LA REFERENCIA)
+   VARIABLES
    ========================================================================== */
 :root {
   --primary: #D1E535;
@@ -112,7 +111,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .ib b { font-size: 15px; font-weight: 700; color: #2C3522; }
 
 /* ==========================================================================
-   HERO (SPLIT-SCREEN IDÉNTICO A LA REFERENCIA)
+   HERO
    ========================================================================== */
 .hero {
   position: relative;
@@ -180,7 +179,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 }
 
 /* ==========================================================================
-   BOTONES
+   BUTTONS
    ========================================================================== */
 .btn {
   display: inline-flex;
@@ -205,7 +204,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
 
 /* ==========================================================================
-   SECCIONES Y CATÁLOGO
+   SECTIONS & CATALOG
    ========================================================================== */
 .sec { padding: 32px 20px; max-width: 1100px; margin: 0 auto; }
 .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -254,6 +253,9 @@ input::placeholder { color: var(--text-muted); }
 }
 .chip.on { background: #2C3522; color: #fff; border-color: #2C3522; }
 
+/* ==========================================================================
+   CARDS
+   ========================================================================== */
 .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .card {
   background: var(--muted);
@@ -285,6 +287,9 @@ input::placeholder { color: var(--text-muted); }
 .fav.on { color: #D1E535; }
 .fav.on svg { fill: currentColor; }
 
+/* ==========================================================================
+   QUANTITY SELECTOR
+   ========================================================================== */
 .opt {
   display: flex;
   justify-content: space-between;
@@ -315,13 +320,16 @@ input::placeholder { color: var(--text-muted); }
 .st span { min-width: 50px; text-align: center; font-weight: 700; color: var(--text); font-size: 15px; }
 .tag { color: var(--text-muted); font-size: 14px; margin: 0; }
 
+/* ==========================================================================
+   INFO
+   ========================================================================== */
 .info { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .info div { background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
 .info h3 { margin: 0 0 8px; font-family: var(--font-body); font-weight: 700; font-size: 18px; color: #2C3522; }
 .info p { margin: 0; font-size: 15px; color: var(--text-muted); }
 
 /* ==========================================================================
-   BOTTOM NAV & MODALES
+   BOTTOM NAV
    ========================================================================== */
 .bottom-nav {
   position: fixed;
@@ -374,6 +382,9 @@ input::placeholder { color: var(--text-muted); }
   padding: 0 4px;
 }
 
+/* ==========================================================================
+   MODALS
+   ========================================================================== */
 .ov {
   position: fixed;
   inset: 0;
@@ -402,6 +413,9 @@ input::placeholder { color: var(--text-muted); }
 .ph { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .ph h2 { margin: 0; font-family: var(--font-body); font-weight: 700; font-size: 24px; color: var(--text); }
 
+/* ==========================================================================
+   CHECKOUT ROWS
+   ========================================================================== */
 .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text); }
 .row:last-child { border-bottom: none; }
 .row b { color: #2C3522; }
@@ -446,6 +460,9 @@ input::placeholder { color: var(--text-muted); }
 .nav .btn { flex: 1; }
 .steps { color: var(--text-muted); margin: 0 0 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
+/* ==========================================================================
+   TOAST
+   ========================================================================== */
 .toast {
   position: fixed;
   left: 50%;
@@ -466,7 +483,7 @@ input::placeholder { color: var(--text-muted); }
 .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ==========================================================================
-   RESPONSIVE (SPLIT-SCREEN)
+   RESPONSIVE
    ========================================================================== */
 @media (min-width: 768px) {
   .hero {
