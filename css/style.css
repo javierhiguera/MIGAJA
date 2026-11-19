@@ -3,7 +3,7 @@
    ========================================================================== */
 @font-face {
   font-family: 'Wangi';
-  src: url('../fonts/Wangi.ttf') format('truetype');
+  src: url('../assets/fonts/Wangi.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,8 @@
 
 @font-face {
   font-family: 'Inclusive Sans';
-  src: url('../fonts/InclusiveSans-VariableFont_wght.ttf') format('truetype');
+  /* Ojo: verifiqué el nombre del archivo de la captura. Si se llama distinto, ajustalo acá */
+  src: url('../assets/fonts/InclusiveSans-VariableFont_wght.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -21,13 +22,13 @@
    VARIABLES (PALETA EXACTA DE LA REFERENCIA)
    ========================================================================== */
 :root {
-  --primary: #D1E535;     /* Amarillo-limón / verde brillante de acento (como el botón de la ref) */
-  --accent: #2C3522;      /* Verde oscuro profundo/oliva de la tarjeta izquierda */
-  --surface: #D8C5E4;     /* Tono lavanda/lila suave del fondo exterior de la pantalla */
-  --muted: #EDE6DC;       /* Crema natural / lino para el fondo de la derecha y tarjetas */
-  --text: #1B2317;        /* Texto oscuro con matiz verde para contraste impecable */
-  --text-muted: #5C6556;  /* Gris verdoso para descripciones */
-  --border: #D2CAB8;      /* Bordes sutiles naturales */
+  --primary: #D1E535;
+  --accent: #2C3522;
+  --surface: #D8C5E4;
+  --muted: #EDE6DC;
+  --text: #1B2317;
+  --text-muted: #5C6556;
+  --border: #D2CAB8;
   
   --font-brand: 'Wangi', serif;
   --font-body: 'Inclusive Sans', system-ui, sans-serif;
@@ -118,7 +119,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   margin: 20px;
   border-radius: 28px;
   overflow: hidden;
-  background: #2C3522; /* Bloque izquierdo verde oscuro profundo */
+  background: #2C3522;
   color: #FFFFFF;
   display: grid;
   grid-template-columns: 1fr;
@@ -164,7 +165,6 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   max-width: 420px;
 }
 
-/* Columna derecha con fondo crema natural */
 .hero-img-container {
   position: relative;
   min-height: 340px;
@@ -199,7 +199,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   width: fit-content;
 }
 .btn:active { transform: scale(0.97); }
-.btn.y { background: #D1E535; color: #1B2317; } /* El botón amarillo brillante de la referencia */
+.btn.y { background: #D1E535; color: #1B2317; }
 .btn.o { background: transparent; color: var(--text); border: 1px solid var(--border); }
 .btn.r { background: #2C3522; color: #FFFFFF; }
 .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
@@ -254,7 +254,6 @@ input::placeholder { color: var(--text-muted); }
 }
 .chip.on { background: #2C3522; color: #fff; border-color: #2C3522; }
 
-/* Tarjetas */
 .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .card {
   background: var(--muted);
@@ -286,7 +285,6 @@ input::placeholder { color: var(--text-muted); }
 .fav.on { color: #D1E535; }
 .fav.on svg { fill: currentColor; }
 
-/* Selector de cantidad */
 .opt {
   display: flex;
   justify-content: space-between;
@@ -317,7 +315,6 @@ input::placeholder { color: var(--text-muted); }
 .st span { min-width: 50px; text-align: center; font-weight: 700; color: var(--text); font-size: 15px; }
 .tag { color: var(--text-muted); font-size: 14px; margin: 0; }
 
-/* Info */
 .info { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .info div { background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
 .info h3 { margin: 0 0 8px; font-family: var(--font-body); font-weight: 700; font-size: 18px; color: #2C3522; }
