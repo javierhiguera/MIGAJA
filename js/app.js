@@ -231,41 +231,79 @@
     }).join("");
   }
   
-  function waUrl(id, c) {
+    function waUrl(id, c) {
     var f = S.f, d = diasDisponibles().filter(function (x) { return x.iso === f.fecha; })[0];
-    var t = ["*LA MIGAJA | NUEVO PEDIDO*", "", "PEDIDO: " + id, "", "*CLIENTE*", "Nombre: " + f.nombre, "Teléfono: " + f.tel, "", "*ENTREGA*", "Modalidad: " + f.modo];
+    var nombreFecha = d ? d.label : f.fecha;
+    
+    // Armamos el mensaje con un diseño más moderno y legible
+    var t = [
+      "🛒 *NUEVO PEDIDO - LA MIGAJA*",
+      "----------------------------------",
+      "👤 *Cliente:* " + f.nombre,
+      "📱 *Teléfono:* " + f.tel,
+      "",
+      "*📦 ENTREGA*",
+      "Modalidad: " + f.modo
+    ];
     
     if (f.modo === "Envío") {
-      t.push("Dirección: " + f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")" + (f.ref ? " - " + f.ref : ""));
+      t.push("Dirección: " + f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")" + (f.ref ? " - Ref: " + f.ref : ""));
     } else {
       t.push("Retiro en: " + CONFIG.direccionRetiro);
     }
     
-    t.push("Fecha: " + (d ? d.label : f.fecha), "Franja: " + f.hora, "", "*DETALLE DEL PEDIDO*");
+    t.push("Fecha: " + nombreFecha);
+    t.push("Horario: " + f.hora);
+    t.push("");
     
+    t.push("*🍔 TU PEDIDO*");
     c.L.forEach(function (x) { 
-      t.push("• " + x.txt + " — " + x.q + " — " + money(x.m)); 
+      t.push("• " + x.q + " de " + x.txt + " - " + money(x.m)); 
     });
     
     if (c.promos.length > 0) {
-      t.push("", "*PROMOCIONES*");
+      t.push("");
+      t.push("*🔥 PROMOS APLICADAS*");
       c.promos.forEach(function(p) {
-        t.push(p.nombre + ": " + p.descripcion);
+        t.push(p.nombre + ": " + p.descripcion + " (Ahorrás " + money(p.ahorro) + ")");
       });
-      t.push("Ahorro: " + money(c.desc));
     }
     
-    t.push("", "*RESUMEN*", "Subtotal: " + money(c.sub), "Descuentos: -" + money(c.desc), "Envío: " + (f.modo === "Envío" ? money(c.env) : "—"), "*TOTAL: " + money(c.total) + "*", "", "*PAGO*", "Medio: " + f.pago);
+    t.push("");
+    t.push("*💵 RESUMEN*");
+    t.push("Subtotal: " + money(c.sub));
+    if (c.desc > 0) t.push("Descuento: -" + money(c.desc));
+    if (f.modo === "Envío") t.push("Envío: " + money(c.env));
+    t.push("*TOTAL A PAGAR: " + money(c.total) + "*");
+    t.push("");
     
+    t.push("*💳 PAGO*");
+    t.push("Método: " + f.pago);
     if (f.pago === "Transferencia") {
-      t.push("Alias: " + CONFIG.alias, "Titular: " + CONFIG.titular, "Comprobante: pendiente de validación.");
+      t.push("Alias: " + CONFIG.alias);
+      t.push("Titular: " + CONFIG.titular);
+      t.push("⚠️ _Enviá el comprobante por acá para confirmar tu pedido._");
     } else {
-      t.push("Pago al retirar o recibir.");
+      t.push("⚠️ _Abonás en efectivo al retirar o recibir._");
     }
     
-    t.push("", "Estado: PENDIENTE DE CONFIRMACIÓN.");
+    if (f.obs) {
+      t.push("");
+      t.push("*📝 NOTA:* " + f.obs);
+    }
     
-    if (f.obs) t.push("", "*OBSERVACIONES*", f.obs);
+    t.push("");
+    t.push("----------------------------------");
+    
+    // ACÁ AGREGAMOS LO DEL SEGUIMIENTO Y EL RANGO HORARIO
+    t.push("🤖 *AVISO AUTOMÁTICO:*");
+    if (f.modo === "Envío") {
+      t.push("Tu pedido está siendo preparado. El repartidor se comunicará con vos cuando esté en camino. Podés seguir el estado de tu envío respondiendo a este mensaje.");
+    } else {
+      t.push("Tu pedido está siendo preparado. Te esperamos en el local dentro del horario elegido. Podés avisarnos cuando estés en camino respondiendo a este mensaje.");
+    }
+    t.push("");
+    t.push("¡Gracias por elegir La Migaja! 🐔✨");
     
     return "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(t.join("\n"));
   }
