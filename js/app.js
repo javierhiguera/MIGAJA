@@ -22,7 +22,7 @@
   var save = function () { ls.set("mg-cart", S.cart); };
   var toast = function (m) { var t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(function () { t.classList.remove("on"); }, 1600); };
 
-  // --- MOTOR DE PRECIOS CON PROMO OPTIMIZADA ---
+  // --- PRICING ---
   function calcularTotales() {
     var lineas = [], subtotalRegular = 0, totalPromo = 0, kilosElegibles = 0;
     var elegiblesCart = [];
@@ -111,7 +111,7 @@
     save(); refrescar();
   }
 
-  // --- RENDERIZADO ---
+  // --- RENDER ---
   function renderChips() {
     var cats = ["Todas"]; PRODUCTOS.forEach(function (p) { if (cats.indexOf(p.categoria) < 0) cats.push(p.categoria); }); cats.push("Favoritos");
     $("#chips").innerHTML = cats.map(function (c) { return '<button type="button" class="chip' + (S.cat === c ? " on" : "") + '" data-a="cat" data-v="' + esc(c) + '">' + esc(c) + "</button>"; }).join("");
@@ -170,7 +170,7 @@
   
   function refrescar() { renderLista(); renderBar(); if (S.open) renderPanel(); }
 
-  // --- AGENDA (Franjas horarias) ---
+  // --- SCHEDULE ---
   function getFranjasDisponibles(cfg, fechaISO) {
     var fecha = new Date(fechaISO + "T00:00:00");
     var diaSemana = fecha.getDay();
@@ -213,7 +213,7 @@
     return out;
   }
 
-  // --- PANEL / CHECKOUT ---
+  // --- CHECKOUT ---
   var STEPS = ["Tu carrito", "Tus datos", "Entrega", "Fecha y horario", "Pago", "Resumen"];
   
   function totHtml(c) {
@@ -357,7 +357,7 @@
     var id = "MGA-" + iso(new Date()).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     var url = waUrl(id, c);
     
-    // --- CONEXIÓN A SUPABASE ---
+    // --- SUPABASE ---
     try {
       if (typeof window.supabase === 'undefined') {
         alert("ERROR: La librería de Supabase no se cargó. Revisá el index.html");
@@ -368,7 +368,6 @@
 
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       
-      // 1. Guardar el pedido principal
       const { data: pedidoData, error: pedidoError } = await supabase
         .from('pedidos')
         .insert([{
@@ -386,7 +385,6 @@
         throw pedidoError;
       }
 
-      // 2. Guardar los detalles (los productos)
       const detalles = S.cart.map(function(l) {
         var p = prod(l.id);
         var subtotal = p.precio * l.n;
@@ -406,7 +404,6 @@
         throw detallesError;
       }
 
-      // Si todo salió bien, abrimos WhatsApp
       window.open(url, "_blank", "noopener");
       
       var hist = ls.get("mg-hist", []);
@@ -415,7 +412,6 @@
       
     } catch (err) {
       console.error("Error guardando pedido:", err);
-      // Si falla Supabase, igual abrimos WhatsApp para no perder la venta
       window.open(url, "_blank", "noopener");
       var hist = ls.get("mg-hist", []);
       hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
@@ -425,7 +421,7 @@
     S.busy = false; 
   }
 
-  // --- EVENTOS ---
+  // --- EVENTS ---
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-a]"); if (!b) return; var a = b.getAttribute("data-a"), v = b.getAttribute("data-v"), i = +b.getAttribute("data-i");
     if (a === "cat") { S.cat = v; renderChips(); renderLista(); }
@@ -451,7 +447,7 @@
   $("#ov").addEventListener("click", function (e) { if (e.target === this) abrir(false); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && S.open) abrir(false); });
 
-  // Inicio
+  // --- INIT ---
   $("#ic").innerHTML = IC.cart; $("#x").innerHTML = IC.x;
   $("#heroImg").addEventListener("error", function () { this.remove(); });
   depurar(); renderChips(); renderInfo(); refrescar();
