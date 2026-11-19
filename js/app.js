@@ -213,13 +213,13 @@
     return out;
   }
 
-  // --- CHECKOUT ---
-  var STEPS = ["Tu carrito", "Tus datos", "Entrega", "Fecha y horario", "Pago", "Resumen"];
+  // --- CHECKOUT (AHORA SON SOLO 2 PASOS) ---
+  var STEPS = ["Tu carrito", "Datos y entrega", "Resumen"];
   
   function totHtml(c) {
     var h = '<div class="tot"><div class="row"><span>Subtotal</span><span>' + money(c.sub) + "</span></div>";
     if (c.desc > 0) h += '<div class="row"><span>Descuento Promo</span><span>-' + money(c.desc) + "</span></div>";
-    if (S.f.modo === "Envío" && S.step >= 2 && zona()) h += '<div class="row"><span>Envío</span><span>' + money(c.env) + "</span></div>";
+    if (S.f.modo === "Envío" && S.step >= 1 && zona()) h += '<div class="row"><span>Envío</span><span>' + money(c.env) + "</span></div>";
     h += '<div class="row t"><span>Total</span><b>' + money(c.total) + "</b></div></div>";
     return h;
   }
@@ -276,19 +276,16 @@
     if (step === 1) { 
       if (!f.nombre.trim()) return "Escribí tu nombre y apellido."; 
       if (f.tel.replace(/\D/g, "").length < 8) return "Escribí un teléfono válido."; 
-    }
-    if (step === 2 && f.modo === "Envío") {
-      if (!CONFIG.envio.habilitado || !CONFIG.envio.zonas.length) return "Por ahora no hacemos envíos. Elegí retiro.";
-      var z = zona(); if (!z) return "Elegí tu zona de entrega.";
-      if (!f.calle.trim() || !f.altura.trim()) return "Completá calle y altura.";
-    }
-    if (step === 3) { 
+      if (f.modo === "Envío") {
+        if (!CONFIG.envio.habilitado || !CONFIG.envio.zonas.length) return "Por ahora no hacemos envíos. Elegí retiro.";
+        var z = zona(); if (!z) return "Elegí tu zona de entrega.";
+        if (!f.calle.trim() || !f.altura.trim()) return "Completá calle y altura.";
+      }
       var ds = diasDisponibles();
       var d = ds.filter(function (x) { return x.iso === f.fecha; })[0]; 
       if (!d) return "Elegí una fecha válida."; 
       if (!d.franjas.includes(f.hora)) return "Elegí una franja horaria disponible."; 
     }
-    if (step === 4 && CONFIG.pagos.indexOf(f.pago) < 0) return "Elegí un método de pago.";
     return "";
   }
   
@@ -304,46 +301,41 @@
       } else {
         h = itemsHtml(c, true) + totHtml(c) + '<div class="nav"><button type="button" class="btn o" data-a="fin">Seguir comprando</button><button type="button" class="btn r" data-a="next">Ir al checkout</button></div><button type="button" class="btn o" data-a="vaciar">Vaciar carrito</button>';
       }
-    } else {
-      h = '<p class="steps">Paso ' + S.step + " de 5</p>";
+    } else if (S.step === 1) {
+      // PASO UNIFICADO: Datos + Entrega + Fecha + Pago en una sola pantalla
+      h = '<p class="steps">Paso ' + S.step + " de 2</p>";
       
-      if (S.step === 1) {
-        h += '<label class="fld">Nombre y apellido<input data-f="nombre" autocomplete="name" value="' + esc(f.nombre) + '"></label><label class="fld">Teléfono<input data-f="tel" type="tel" autocomplete="tel" value="' + esc(f.tel) + '"></label>';
+      h += '<label class="fld">Nombre y apellido<input data-f="nombre" autocomplete="name" value="' + esc(f.nombre) + '"></label><label class="fld">Teléfono<input data-f="tel" type="tel" autocomplete="tel" value="' + esc(f.tel) + '"></label>';
+      
+      h += '<div class="seg"><button type="button" data-a="modo" data-v="Retiro" class="' + (f.modo === "Retiro" ? "on" : "") + '">Retiro</button><button type="button" data-a="modo" data-v="Envío" class="' + (f.modo === "Envío" ? "on" : "") + '">Envío</button></div>';
+      
+      if (f.modo === "Retiro") {
+        h += '<div class="box">Retiro en: <b>' + esc(CONFIG.direccionRetiro) + "</b><br>" + esc(CONFIG.condicionesRetiro) + "</div>";
+      } else {
+        h += '<label class="fld">Zona de entrega<select data-f="zona"><option value="">Elegí tu zona</option>' + CONFIG.envio.zonas.map(function (z) { return '<option value="' + esc(z.nombre) + '"' + (f.zona === z.nombre ? " selected" : "") + ">" + esc(z.nombre) + " · Envío " + money(z.costo) + "</option>"; }).join("") + '</select></label><label class="fld">Calle<input data-f="calle" value="' + esc(f.calle) + '"></label><label class="fld">Altura<input data-f="altura" inputmode="numeric" value="' + esc(f.altura) + '"></label><label class="fld">Piso / depto (opcional)<input data-f="piso" value="' + esc(f.piso) + '"></label><label class="fld">Referencias (opcional)<input data-f="ref" value="' + esc(f.ref) + '"></label>';
       }
-      
-      if (S.step === 2) {
-        h += '<div class="seg"><button type="button" data-a="modo" data-v="Retiro" class="' + (f.modo === "Retiro" ? "on" : "") + '">Retiro</button><button type="button" data-a="modo" data-v="Envío" class="' + (f.modo === "Envío" ? "on" : "") + '">Envío</button></div>';
-        if (f.modo === "Retiro") {
-          h += '<div class="box">Retiro en: <b>' + esc(CONFIG.direccionRetiro) + "</b><br>" + esc(CONFIG.condicionesRetiro) + "</div>";
-        } else {
-          h += '<label class="fld">Zona de entrega<select data-f="zona"><option value="">Elegí tu zona</option>' + CONFIG.envio.zonas.map(function (z) { return '<option value="' + esc(z.nombre) + '"' + (f.zona === z.nombre ? " selected" : "") + ">" + esc(z.nombre) + " · Envío " + money(z.costo) + "</option>"; }).join("") + '</select></label><label class="fld">Calle<input data-f="calle" value="' + esc(f.calle) + '"></label><label class="fld">Altura<input data-f="altura" inputmode="numeric" value="' + esc(f.altura) + '"></label><label class="fld">Piso / depto (opcional)<input data-f="piso" value="' + esc(f.piso) + '"></label><label class="fld">Referencias (opcional)<input data-f="ref" value="' + esc(f.ref) + '"></label>';
-        }
+
+      var ds = diasDisponibles(), cur = ds.filter(function (x) { return x.iso === f.fecha; })[0];
+      h += ds.length ? '<label class="fld">Fecha<select data-f="fecha"><option value="">Elegí una fecha</option>' + ds.map(function (d) { return '<option value="' + d.iso + '"' + (f.fecha === d.iso ? " selected" : "") + ">" + esc(d.label) + "</option>"; }).join("") + "</select></label>" + (cur ? '<label class="fld">Franja horaria<select data-f="hora"><option value="">Elegí una franja</option>' + cur.franjas.map(function (s) { return '<option value="' + esc(s) + '"' + (f.hora === s ? " selected" : "") + ">" + esc(s) + "</option>"; }).join("") + "</select></label>" : "") : '<p class="err">No hay fechas disponibles por ahora.</p>';
+
+      h += '<div class="seg">' + CONFIG.pagos.map(function (p) { return '<button type="button" data-a="pago" data-v="' + esc(p) + '" class="' + (f.pago === p ? "on" : "") + '">' + esc(p) + "</button>"; }).join("") + "</div>";
+      if (f.pago === "Transferencia") {
+        h += '<div class="box">Alias: <b>' + esc(CONFIG.alias) + "</b><br>Titular: <b>" + esc(CONFIG.titular) + "</b><br>Importe: <b>" + money(c.total) + '</b><br>Enviá el comprobante por WhatsApp.</div>';
+      } else {
+        h += '<div class="box">Pago en efectivo al retirar o recibir el pedido.</div>';
       }
-      
-      if (S.step === 3) {
-        var ds = diasDisponibles(), cur = ds.filter(function (x) { return x.iso === f.fecha; })[0];
-        h += ds.length ? '<label class="fld">Fecha<select data-f="fecha"><option value="">Elegí una fecha</option>' + ds.map(function (d) { return '<option value="' + d.iso + '"' + (f.fecha === d.iso ? " selected" : "") + ">" + esc(d.label) + "</option>"; }).join("") + "</select></label>" + (cur ? '<label class="fld">Franja horaria<select data-f="hora"><option value="">Elegí una franja</option>' + cur.franjas.map(function (s) { return '<option value="' + esc(s) + '"' + (f.hora === s ? " selected" : "") + ">" + esc(s) + "</option>"; }).join("") + "</select></label>" : "") : '<p class="err">No hay fechas disponibles por ahora.</p>';
-      }
-      
-      if (S.step === 4) {
-        h += '<div class="seg">' + CONFIG.pagos.map(function (p) { return '<button type="button" data-a="pago" data-v="' + esc(p) + '" class="' + (f.pago === p ? "on" : "") + '">' + esc(p) + "</button>"; }).join("") + "</div>";
-        if (f.pago === "Transferencia") {
-          h += '<div class="box">Alias: <b>' + esc(CONFIG.alias) + "</b><br>Titular: <b>" + esc(CONFIG.titular) + "</b><br>Importe: <b>" + money(c.total) + '</b><br>Enviá el comprobante por WhatsApp. El pago se confirma cuando el negocio lo verifica.</div>';
-        } else {
-          h += '<div class="box">Pago en efectivo al retirar o recibir el pedido.</div>';
-        }
-        h += '<label class="fld">Observaciones (opcional)<textarea data-f="obs" rows="3">' + esc(f.obs) + "</textarea></label>";
-      }
-      
-      if (S.step === 5) {
-        var d2 = diasDisponibles().filter(function (x) { return x.iso === f.fecha; })[0];
-        h += "<p><b>" + esc(f.nombre) + "</b> · " + esc(f.tel) + "<br>" + esc(f.modo) + (f.modo === "Envío" ? ": " + esc(f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")") : ": " + esc(CONFIG.direccionRetiro)) + "<br>" + esc((d2 ? d2.label : f.fecha) + " · " + f.hora) + "<br>Pago: " + esc(f.pago) + (f.obs ? "<br>Obs.: " + esc(f.obs) : "") + "</p>" + itemsHtml(c, false);
-      }
-      
-      if (S.step >= 2) h += totHtml(c);
-      
-      h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="' + (S.step === 5 ? "confirm" : "next") + '"' + (S.busy ? " disabled" : "") + ">" + (S.step === 5 ? "Confirmar pedido" : "Siguiente") + "</button></div>";
+      h += '<label class="fld">Observaciones (opcional)<textarea data-f="obs" rows="3">' + esc(f.obs) + "</textarea></label>";
+
+      h += totHtml(c);
+      h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="next">Ver resumen</button></div>';
+    } else if (S.step === 2) {
+      var d2 = diasDisponibles().filter(function (x) { return x.iso === f.fecha; })[0];
+      h = '<p class="steps">Paso ' + S.step + " de 2</p>";
+      h += "<p><b>" + esc(f.nombre) + "</b> · " + esc(f.tel) + "<br>" + esc(f.modo) + (f.modo === "Envío" ? ": " + esc(f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")") : ": " + esc(CONFIG.direccionRetiro)) + "<br>" + esc((d2 ? d2.label : f.fecha) + " · " + f.hora) + "<br>Pago: " + esc(f.pago) + (f.obs ? "<br>Obs.: " + esc(f.obs) : "") + "</p>" + itemsHtml(c, false);
+      h += totHtml(c);
+      h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="confirm"' + (S.busy ? " disabled" : "") + ">Confirmar pedido</button></div>";
     }
+    
     pb.innerHTML = h;
   }
   
@@ -351,13 +343,13 @@
   
   async function confirmar() {
     if (S.busy) return; var c = calcularTotales(); if (!c.L.length) return;
-    for (var s = 1; s <= 4; s++) { var m = validar(s); if (m) { S.step = s; renderPanel(); $("#err").textContent = m; return; } }
+    var m = validar(1); if (m) { S.step = 1; renderPanel(); $("#err").textContent = m; return; }
     S.busy = true; 
     
     var id = "MGA-" + iso(new Date()).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     var url = waUrl(id, c);
     
-    // --- SUPABASE ---
+    // --- SUPABASE (RPC) ---
     try {
       if (typeof window.supabase === 'undefined') {
         alert("ERROR: La librería de Supabase no se cargó. Revisá el index.html");
@@ -368,40 +360,30 @@
 
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       
-      const { data: pedidoData, error: pedidoError } = await supabase
-        .from('pedidos')
-        .insert([{
-          cliente_nombre: S.f.nombre,
-          cliente_telefono: S.f.tel,
-          metodo_pago: S.f.pago,
-          modalidad: S.f.modo,
-          total: c.total,
-          observaciones: S.f.obs
-        }])
-        .select();
-
-      if (pedidoError) {
-        alert("Error de Supabase al guardar pedido: " + pedidoError.message);
-        throw pedidoError;
-      }
-
-      const detalles = S.cart.map(function(l) {
+      const detallesArray = S.cart.map(function(l) {
         var p = prod(l.id);
-        var subtotal = p.precio * l.n;
         return {
-          pedido_id: pedidoData[0].id,
           producto_id: l.id,
           producto_nombre: p.nombre,
           cantidad: l.n,
           precio_unitario: p.precio,
-          subtotal: subtotal
+          subtotal: p.precio * l.n
         };
       });
 
-      const { error: detallesError } = await supabase.from('pedido_detalles').insert(detalles);
-      if (detallesError) {
-        alert("Error de Supabase al guardar detalles: " + detallesError.message);
-        throw detallesError;
+      const { data, error } = await supabase.rpc('crear_pedido_completo', {
+        p_cliente_nombre: S.f.nombre,
+        p_cliente_telefono: S.f.tel,
+        p_metodo_pago: S.f.pago,
+        p_modalidad: S.f.modo,
+        p_total: c.total,
+        p_observaciones: S.f.obs,
+        p_detalles: detallesArray
+      });
+
+      if (error) {
+        alert("Error de Supabase al guardar pedido: " + error.message);
+        throw error;
       }
 
       window.open(url, "_blank", "noopener");
@@ -433,7 +415,12 @@
     else if (a === "modo") { S.f.modo = v; S.f.fecha = ""; S.f.hora = ""; renderPanel(); }
     else if (a === "pago") { S.f.pago = v; renderPanel(); }
     else if (a === "prev") { S.step = Math.max(0, S.step - 1); renderPanel(); }
-    else if (a === "next") { var m = validar(S.step); if (m) { if (S.step === 0) toast(m); else $("#err").textContent = m; return; } S.step++; renderPanel(); }
+    else if (a === "next") { 
+      var m = validar(S.step); 
+      if (m) { $("#err").textContent = m; return; } 
+      S.step++; 
+      renderPanel(); 
+    }
     else if (a === "confirm") confirmar();
     else if (a === "fin") { S.done = null; S.step = 0; abrir(false); }
   });
