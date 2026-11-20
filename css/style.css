@@ -83,14 +83,17 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .logo {
   display: flex;
   align-items: center;
+  overflow: hidden;
+  height: 70px;
 }
 
 .logo img {
-  height: 120px;
+  height: 200px;
   width: auto;
   object-fit: contain;
-  transform: scale(1.2);
+  transform: scale(1.5);
   transform-origin: left center;
+  margin-top: -10px;
 }
 
 .acts { display: flex; gap: 8px; }
@@ -470,9 +473,12 @@ input::placeholder { color: var(--text-muted); }
 .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 600px) {
+  .logo {
+    height: 50px;
+  }
   .logo img {
-    height: 80px;
-    transform: scale(1);
+    height: 140px;
+    transform: scale(1.2);
   }
 }
 
