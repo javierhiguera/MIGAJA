@@ -384,42 +384,4 @@
       window.open(url, "_blank", "noopener");
       var hist = ls.get("mg-hist", []);
       hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
-      S.done = { id: id, url: url }; S.cart = []; save(); refrescar(); toast("Pedido registrado (modo offline)");
-    }
-    
-    S.busy = false; 
-  }
-
-  document.addEventListener("click", function (e) {
-    var b = e.target.closest("[data-a]"); if (!b) return; var a = b.getAttribute("data-a"), v = b.getAttribute("data-v"), i = +b.getAttribute("data-i");
-    if (a === "cat") { S.cat = v; renderChips(); renderLista(); }
-    else if (a === "add") add(b.getAttribute("data-t"), b.getAttribute("data-id"), b.getAttribute("data-op"), +b.getAttribute("data-d"));
-    else if (a === "fav") { var k = S.favs.indexOf(b.getAttribute("data-id")); if (k > -1) S.favs.splice(k, 1); else S.favs.push(b.getAttribute("data-id")); ls.set("mg-favs", S.favs); renderLista(); }
-    else if (a === "line") { var l = S.cart[i]; if (l) add(l.t, l.id, l.op, +b.getAttribute("data-d")); }
-    else if (a === "del") { S.cart.splice(i, 1); save(); refrescar(); toast("Producto eliminado"); }
-    else if (a === "vaciar") { S.cart = []; save(); refrescar(); }
-    else if (a === "modo") { S.f.modo = v; renderPanel(); }
-    else if (a === "pago") { S.f.pago = v; renderPanel(); }
-    else if (a === "prev") { S.step = Math.max(0, S.step - 1); renderPanel(); }
-    else if (a === "next") { 
-      var m = validar(S.step); 
-      if (m) { $("#err").textContent = m; return; } 
-      S.step++; 
-      renderPanel(); 
-    }
-    else if (a === "confirm") confirmar();
-    else if (a === "fin") { S.done = null; S.step = 0; abrir(false); }
-  });
-  
-  $("#pb").addEventListener("input", function (e) { var k = e.target.getAttribute("data-f"); if (k && e.target.tagName !== "SELECT") S.f[k] = e.target.value; });
-  $("#pb").addEventListener("change", function (e) { var k = e.target.getAttribute("data-f"); if (k && e.target.tagName === "SELECT") { S.f[k] = e.target.value; renderPanel(); } });
-  $("#cartBtn").addEventListener("click", function () { S.step = 0; S.done = null; abrir(true); });
-  $("#barBtn").addEventListener("click", function () { S.step = 0; S.done = null; abrir(true); });
-  $("#x").addEventListener("click", function () { abrir(false); });
-  $("#ov").addEventListener("click", function (e) { if (e.target === this) abrir(false); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && S.open) abrir(false); });
-
-  $("#ic").innerHTML = IC.cart; $("#x").innerHTML = IC.x;
-  $("#heroImg").addEventListener("error", function () { this.remove(); });
-  depurar(); renderChips(); renderInfo(); refrescar();
-})();
+      S.done = { id
