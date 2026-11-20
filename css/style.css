@@ -35,7 +35,7 @@
   --radius: 20px;
   --radius-sm: 10px;
   --shadow: 0 10px 30px rgba(28,35,22,0.1);
-  --shadow-hover: 0 20px 40px rgba(28,35,22,0.15); /* Sombra más amplia para el hover */
+  --shadow-hover: 0 20px 40px rgba(28,35,22,0.15);
   
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
@@ -108,12 +108,13 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .ib b { font-size: 15px; font-weight: 700; color: #2C3522; }
 
 /* ==========================================================================
-   HERO
+   HERO (AHORA DE LADO A LADO)
    ========================================================================== */
 .hero {
   position: relative;
-  margin: 20px;
-  border-radius: 28px;
+  /* margin: 20px; <-- ELIMINADO PARA QUE OCUPE TODO EL ANCHO */
+  margin: 0;
+  border-radius: 0; /* Sin bordes redondeados laterales */
   overflow: hidden;
   background: linear-gradient(135deg, #2C3522 0%, #1b2317 100%);
   color: #FFFFFF;
@@ -125,17 +126,19 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .hero-t {
   position: relative;
   z-index: 2;
-  padding: 48px 32px;
+  padding: 64px 24px; /* Más padding para que respire */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: center; /* Centrado para que se vea más moderno */
+  align-items: center;
 }
 
 .hero h1 {
   margin: 0 0 16px;
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: clamp(32px, 7vw, 50px);
+  font-size: clamp(36px, 8vw, 60px); /* Letra más grande */
   line-height: 1.1;
   color: #FFFFFF;
   text-transform: uppercase;
@@ -144,9 +147,10 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 
 .hero p {
   margin: 0 0 30px;
-  font-size: 16px;
-  color: #B5BCAE;
-  max-width: 420px;
+  font-size: clamp(18px, 3vw, 22px); /* Texto secundario más grande */
+  color: #D1E535; /* Color más brillante para que resalte */
+  max-width: 600px;
+  font-weight: 600;
 }
 
 .hero-img-container {
@@ -170,11 +174,11 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 28px;
+  padding: 16px 32px; /* Botón un poco más grande */
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: none;
@@ -220,7 +224,7 @@ input[type=search]:focus, .fld input:focus, .fld select:focus, .fld textarea:foc
 }
 input::placeholder { color: var(--text-muted); }
 
-.chips { display: flex; gap: 8px; overflow-x: auto; padding: 16px 0; scrollbar-width: none; -ms-overflow-style: none; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 16px 0; scrollbar-width: none; -ms-overflow-style: none; justify-content: center; }
 .chips::-webkit-scrollbar { display: none; }
 .chip {
   flex: none;
@@ -250,10 +254,10 @@ input::placeholder { color: var(--text-muted); }
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .card:hover {
-  transform: translateY(-6px); /* Efecto levitar */
+  transform: translateY(-6px);
   box-shadow: var(--shadow-hover);
 }
 .ph0 { aspect-ratio: 4/3; background: #D8D0C5; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; position: relative; }
@@ -481,8 +485,11 @@ input::placeholder { color: var(--text-muted); }
     min-height: 480px;
   }
   .hero-t {
-    padding: 60px;
+    padding: 80px 60px; /* Más padding en escritorio */
+    text-align: left; /* En escritorio alineamos a la izquierda */
+    align-items: flex-start;
   }
+  .hero h1 { font-size: clamp(40px, 5vw, 70px); }
   .grid { grid-template-columns: repeat(2, 1fr); }
   .info { grid-template-columns: repeat(2, 1fr); }
 }
