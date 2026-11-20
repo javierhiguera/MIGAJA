@@ -13,7 +13,7 @@
     x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'
   };
   var S = { cart: ls.get("mg-cart", []), favs: ls.get("mg-favs", []), cat: "Todas", q: "", open: false, step: 0, done: null, busy: false,
-    f: { nombre: "", tel: "", email: "", modo: "Retiro", zona: "", calle: "", altura: "", piso: "", ref: "", fecha: "", hora: "", pago: CONFIG.pagos[0], obs: "" } };
+    f: { nombre: "", tel: "", email: "", modo: "Retiro", zona: "", calle: "", altura: "", piso: "", ref: "", pago: CONFIG.pagos[0], obs: "" } };
 
   var prod = function (id) { return PRODUCTOS.filter(function (p) { return p.id === id; })[0]; };
   var iso = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
@@ -24,7 +24,7 @@
 
   // --- PRICING ---
   function calcularTotales() {
-    var lineas = [], subtotalRegular = 0, totalPromo = 0, kilosElegibles = 0;
+    var lineas = [], subtotalRegular = 0, kilosElegibles = 0;
     var elegiblesCart = [];
 
     S.cart.forEach(function (l, idx) {
@@ -74,9 +74,7 @@
       desc: descuentoTotal,
       env: envio,
       total: totalFinal,
-      promos: detallePromos,
-      kilosElegibles: kilosElegibles,
-      bloques: bloques
+      promos: detallePromos
     };
   }
 
@@ -90,7 +88,7 @@
   function line(t, id, op) { return S.cart.filter(function (l) { return l.t === t && l.id === id && l.op === (op || ""); })[0]; }
   
   function add(t, id, op, d) {
-    var p = t === "p" ? prod(id) : null, paso = p ? p.venta.paso : 1, l = line(t, id, op);
+    var p = t === "p" ? prod(id) : null, l = line(t, id, op);
     if (p && p.disponible === false) return;
     
     var nuevoValor = (l ? l.n : 0) + d;
@@ -170,7 +168,7 @@
   
   function refrescar() { renderLista(); renderBar(); if (S.open) renderPanel(); }
 
-  // --- CHECKOUT (AHORA SON SOLO 2 PASOS) ---
+  // --- CHECKOUT (2 PASOS) ---
   var STEPS = ["Tu carrito", "Datos y entrega", "Resumen"];
   
   function totHtml(c) {
@@ -191,7 +189,6 @@
   function waUrl(id, c) {
     var f = S.f;
     
-    // Mensaje simplificado, sin emojis y con aviso de coordinación
     var t = [
       "*** NUEVO PEDIDO - LA MIGAJA ***",
       "----------------------------------",
@@ -303,7 +300,6 @@
         h += '<label class="fld">Zona de entrega<select data-f="zona"><option value="">Elegí tu zona</option>' + CONFIG.envio.zonas.map(function (z) { return '<option value="' + esc(z.nombre) + '"' + (f.zona === z.nombre ? " selected" : "") + ">" + esc(z.nombre) + " · Envío " + money(z.costo) + "</option>"; }).join("") + '</select></label><label class="fld">Calle<input data-f="calle" value="' + esc(f.calle) + '"></label><label class="fld">Altura<input data-f="altura" inputmode="numeric" value="' + esc(f.altura) + '"></label><label class="fld">Piso / depto (opcional)<input data-f="piso" value="' + esc(f.piso) + '"></label><label class="fld">Referencias (opcional)<input data-f="ref" value="' + esc(f.ref) + '"></label>';
       }
 
-      // Cartel informativo en vez de los selectores de fecha y hora
       h += '<div class="box" style="background:#E3DCD3; border:none; margin-top:20px;">';
       h += '<b>Horario de entrega</b><br>';
       h += 'Una vez confirmado el pedido, te escribimos por WhatsApp para coordinar el día y el horario exacto.';
@@ -339,7 +335,6 @@
     var id = "MGA-" + iso(new Date()).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
     var url = waUrl(id, c);
     
-    // --- SUPABASE (RPC) ---
     try {
       if (typeof window.supabase === 'undefined') {
         alert("ERROR: La librería de Supabase no se cargó. Revisá el index.html");
