@@ -12,7 +12,7 @@
     heart: '<svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z"/></svg>',
     x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'
   };
-  var S = { cart: ls.get("mg-cart", []), favs: ls.get("mg-favs", []), cat: "Todas", q: "", open: false, step: 0, done: null, busy: false,
+  var S = { cart: ls.get("mg-cart", []), favs: ls.get("mg-favs", []), cat: "Todas", open: false, step: 0, done: null, busy: false,
     f: { nombre: "", tel: "", email: "", modo: "Retiro", zona: "", calle: "", altura: "", piso: "", ref: "", pago: CONFIG.pagos[0], obs: "" } };
 
   var prod = function (id) { return PRODUCTOS.filter(function (p) { return p.id === id; })[0]; };
@@ -22,7 +22,6 @@
   var save = function () { ls.set("mg-cart", S.cart); };
   var toast = function (m) { var t = $("#toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(function () { t.classList.remove("on"); }, 1600); };
 
-  // --- PRICING ---
   function calcularTotales() {
     var lineas = [], subtotalRegular = 0, kilosElegibles = 0;
     var elegiblesCart = [];
@@ -109,7 +108,6 @@
     save(); refrescar();
   }
 
-  // --- RENDER ---
   function renderChips() {
     var cats = ["Todas"]; PRODUCTOS.forEach(function (p) { if (cats.indexOf(p.categoria) < 0) cats.push(p.categoria); }); cats.push("Favoritos");
     $("#chips").innerHTML = cats.map(function (c) { return '<button type="button" class="chip' + (S.cat === c ? " on" : "") + '" data-a="cat" data-v="' + esc(c) + '">' + esc(c) + "</button>"; }).join("");
@@ -118,10 +116,9 @@
   function foto(src, alt) { return '<div class="ph0">' + (src ? '<img loading="lazy" src="' + esc(src) + '" alt="' + esc(alt) + '">' : "Foto próximamente") + "</div>"; }
   
   function renderLista() {
-    var q = S.q.trim().toLowerCase();
     var v = PRODUCTOS.filter(function (p) {
       var okc = S.cat === "Todas" || (S.cat === "Favoritos" ? S.favs.indexOf(p.id) > -1 : p.categoria === S.cat);
-      return okc && (!q || (p.nombre + " " + p.categoria + " " + p.descripcion).toLowerCase().indexOf(q) > -1);
+      return okc;
     });
     $("#lista").innerHTML = v.length ? v.map(function (p) {
       var off = p.disponible === false, fav = S.favs.indexOf(p.id) > -1;
@@ -144,13 +141,19 @@
   }
   
   function renderInfo() {
-    var b = [["Cómo comprar", "Elegí tus milanesas, armá el carrito, completá tus datos y confirmá. Te abrimos WhatsApp con el resumen para enviarlo."],
-      ["Entrega", "Retiro en " + CONFIG.direccionRetiro + " sin cargo. Envío únicamente en Barrio La Esmeralda con costo de " + money(CONFIG.envio.zonas[0].costo) + "."],
-      ["Pagos", CONFIG.pagos.join(" · ") + ". Transferencia: Alias " + CONFIG.alias + " (" + CONFIG.titular + ")."],
-      ["Horarios", CONFIG.horarioTxt]];
-    if (CONFIG.conservacion) b.push(["Conservación", CONFIG.conservacion]);
-    b.push(["Contacto", "WhatsApp " + CONFIG.telefono]);
-    $("#infoBody").innerHTML = b.map(function (x) { return "<div><h3>" + esc(x[0]) + "</h3><p>" + esc(x[1]) + "</p></div>"; }).join("");
+    var b = [
+      ["Cómo comprar", "Elegí tus milanesas, armá el carrito, completá tus datos y confirmá. Se abrirá WhatsApp con el resumen de tu pedido para que puedas enviarlo."],
+      ["Entregas y retiros", "Retiro sin cargo en <b>Av. Obispo Jorge Novak 2076</b>.<br><br>Envíos únicamente en <b>Barrio La Esmeralda</b>, con un costo de <b>$1.500</b>."],
+      ["Medios de pago", "Aceptamos transferencia y efectivo.<br><br><b>Alias:</b> migaja.com.ar<br><b>Titular:</b> Pedro Javier Higuera Marin."],
+      ["Horarios de atención", "<b>Lunes a viernes:</b> 14:00 a 20:00 hs.<br><b>Sábados:</b> 10:00 a 14:00 hs.<br><b>Domingos:</b> Cerrado."],
+      ["Horarios de delivery", "<b>Lunes a Viernes:</b> 14:00 a 20:00 hs."],
+      ["Conservación", "Mantené las milanesas refrigeradas hasta el momento de prepararlas. Cocinalas completamente antes de consumirlas."],
+      ["Contacto", "Para consultas o pedidos, comunicate con nosotros por WhatsApp.<br><br><a href='https://wa.me/" + CONFIG.whatsapp + "' target='_blank'><b>WhatsApp:</b> " + CONFIG.telefono + "</a>"]
+    ];
+    
+    $("#infoBody").innerHTML = b.map(function (x) { 
+      return "<div><h3>" + esc(x[0]) + "</h3><p>" + x[1] + "</p></div>"; 
+    }).join("");
   }
   
   function renderBar() {
@@ -168,7 +171,6 @@
   
   function refrescar() { renderLista(); renderBar(); if (S.open) renderPanel(); }
 
-  // --- CHECKOUT (2 PASOS) ---
   var STEPS = ["Tu carrito", "Datos y entrega", "Resumen"];
   
   function totHtml(c) {
@@ -388,7 +390,6 @@
     S.busy = false; 
   }
 
-  // --- EVENTS ---
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-a]"); if (!b) return; var a = b.getAttribute("data-a"), v = b.getAttribute("data-v"), i = +b.getAttribute("data-i");
     if (a === "cat") { S.cat = v; renderChips(); renderLista(); }
@@ -412,14 +413,12 @@
   
   $("#pb").addEventListener("input", function (e) { var k = e.target.getAttribute("data-f"); if (k && e.target.tagName !== "SELECT") S.f[k] = e.target.value; });
   $("#pb").addEventListener("change", function (e) { var k = e.target.getAttribute("data-f"); if (k && e.target.tagName === "SELECT") { S.f[k] = e.target.value; renderPanel(); } });
-  $("#q").addEventListener("input", function (e) { S.q = e.target.value; renderLista(); });
   $("#cartBtn").addEventListener("click", function () { S.step = 0; S.done = null; abrir(true); });
   $("#barBtn").addEventListener("click", function () { S.step = 0; S.done = null; abrir(true); });
   $("#x").addEventListener("click", function () { abrir(false); });
   $("#ov").addEventListener("click", function (e) { if (e.target === this) abrir(false); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && S.open) abrir(false); });
 
-  // --- INIT ---
   $("#ic").innerHTML = IC.cart; $("#x").innerHTML = IC.x;
   $("#heroImg").addEventListener("error", function () { this.remove(); });
   depurar(); renderChips(); renderInfo(); refrescar();
