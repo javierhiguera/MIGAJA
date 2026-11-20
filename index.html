@@ -17,30 +17,25 @@
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <img id="heroImg" src="assets/img/hero.jpg" alt="Milanesas de pollo caseras crudas, listas para freír">
   <div class="hero-t">
     <h1>MILANESAS DE POLLO</h1>
     <p>Las clásicas de siempre, con ese inconfundible sabor a casa.</p>
-    <a class="btn y" href="#catalogo">Ver catálogo</a>
   </div>
 </section>
 
-<!-- MAIN -->
 <main>
   <section id="catalogo" class="sec">
     <div class="sec-head">
       <h2>Catálogo</h2>
     </div>
-    <input id="q" type="search" placeholder="Buscar milanesas" aria-label="Buscar milanesas">
     <div id="chips" class="chips"></div>
     <div id="lista" class="grid"></div>
   </section>
   <section id="info" class="sec"><h2>Información</h2><div id="infoBody" class="info"></div></section>
 </main>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <a href="#catalogo" class="bn-item on">
     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -53,7 +48,6 @@
   </button>
 </nav>
 
-<!-- MODAL -->
 <div id="ov" class="ov" hidden>
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pt">
     <div class="ph"><h2 id="pt"></h2><button class="ib" id="x" type="button" aria-label="Cerrar"></button></div>
@@ -61,10 +55,8 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js"></script>
 <script src="js/productos.js"></script>
