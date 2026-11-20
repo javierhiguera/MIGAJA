@@ -122,7 +122,6 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
-/* Capa oscura para que el texto se lea sobre la imagen en celular */
 .hero::before {
   content: '';
   position: absolute;
@@ -251,7 +250,7 @@ input::placeholder { color: var(--text-muted); }
 .chip.on { background: #2C3522; color: #fff; border-color: #2C3522; }
 
 /* ==========================================================================
-   CARDS (EFECTO FLOTANTE)
+   CARDS
    ========================================================================== */
 .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .card {
@@ -494,7 +493,7 @@ input::placeholder { color: var(--text-muted); }
     grid-template-columns: 1.1fr 0.9fr;
     min-height: 480px;
   }
-  .hero::before { background: none; } /* En escritorio no hace falta la capa oscura */
+  .hero::before { background: none; }
   .hero-t {
     padding: 80px 60px;
     text-align: left;
