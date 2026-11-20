@@ -35,6 +35,7 @@
   --radius: 20px;
   --radius-sm: 10px;
   --shadow: 0 10px 30px rgba(28,35,22,0.1);
+  --shadow-hover: 0 20px 40px rgba(28,35,22,0.15); /* Sombra más amplia para el hover */
   
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
@@ -57,11 +58,7 @@ body {
   overflow-x: hidden;
 }
 
-b, strong, .fw-bold {
-  font-family: var(--font-body);
-  font-weight: 700;
-}
-
+b, strong, .fw-bold { font-family: var(--font-body); font-weight: 700; }
 button, input, select, textarea { font: inherit; color: inherit; }
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
@@ -118,7 +115,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   margin: 20px;
   border-radius: 28px;
   overflow: hidden;
-  background: #2C3522;
+  background: linear-gradient(135deg, #2C3522 0%, #1b2317 100%);
   color: #FFFFFF;
   display: grid;
   grid-template-columns: 1fr;
@@ -242,7 +239,7 @@ input::placeholder { color: var(--text-muted); }
 .chip.on { background: #2C3522; color: #fff; border-color: #2C3522; }
 
 /* ==========================================================================
-   CARDS
+   CARDS (CON EFECTO FLOTANTE)
    ========================================================================== */
 .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .card {
@@ -253,6 +250,11 @@ input::placeholder { color: var(--text-muted); }
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+}
+.card:hover {
+  transform: translateY(-6px); /* Efecto levitar */
+  box-shadow: var(--shadow-hover);
 }
 .ph0 { aspect-ratio: 4/3; background: #D8D0C5; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px; position: relative; }
 .ph0 img { width: 100%; height: 100%; object-fit: cover; }
