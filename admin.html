@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Admin · La Migaja</title>
+<title>Admin - La Migaja</title>
 <style>
   :root {
     --primary: #D1E535;
@@ -47,7 +47,7 @@
 <div id="app" class="container">
   <div class="card">
     <h1>Pedidos Recientes</h1>
-    <button class="btn-refresh" onclick="cargarPedidos()">🔄 Actualizar Pedidos</button>
+    <button class="btn-refresh" onclick="cargarPedidos()">Actualizar Pedidos</button>
     <div id="lista"></div>
   </div>
 </div>
@@ -57,31 +57,32 @@
 <script src="js/config.js"></script>
 <script>
   // --- AUTH ---
+  var claveActual = "";
+  
   function login() {
-    const input = document.getElementById("pass").value;
+    var input = document.getElementById("pass").value;
     if (!input) return;
     
-    // Ocultamos el login y mostramos la app (la validación real la hace Supabase)
     document.getElementById("login").style.display = "none";
     document.getElementById("app").style.display = "block";
     
-    // Pasamos la clave ingresada a la función que carga los pedidos
-    cargarPedidos(input);
+    claveActual = input;
+    cargarPedidos(claveActual);
   }
 
   // --- RENDER ---
   async function cargarPedidos(clave) {
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    const lista = document.getElementById("lista");
+    if (!clave) clave = claveActual;
+
+    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    var lista = document.getElementById("lista");
     lista.innerHTML = "Cargando pedidos...";
 
-    // Enviamos la clave a Supabase. Si es incorrecta, Supabase devuelve error.
-    const { data: pedidos, error } = await supabase.rpc('obtener_pedidos_admin', {
+    var { data: pedidos, error } = await supabase.rpc('obtener_pedidos_admin', {
       p_clave: clave
     });
 
     if (error) {
-      // Si la clave es incorrecta, volvemos al login y mostramos el error
       document.getElementById("app").style.display = "none";
       document.getElementById("login").style.display = "block";
       document.getElementById("error").textContent = "Contraseña incorrecta o acceso denegado.";
@@ -89,20 +90,20 @@
     }
 
     if (!pedidos || pedidos.length === 0) {
-      lista.innerHTML = "<p>No hay pedidos todavía. ¡A vender!</p>";
+      lista.innerHTML = "<p>No hay pedidos todavía.</p>";
       return;
     }
 
     lista.innerHTML = pedidos.map(function(p) {
-      const fecha = new Date(p.created_at).toLocaleString("es-AR");
-      const detalles = p.pedido_detalles ? p.pedido_detalles.map(function(d) {
-        return "• " + d.cantidad + " kg de " + d.producto_nombre + " - $" + d.subtotal;
+      var fecha = new Date(p.created_at).toLocaleString("es-AR");
+      var detalles = p.pedido_detalles ? p.pedido_detalles.map(function(d) {
+        return "- " + d.cantidad + " kg de " + d.producto_nombre + " - $" + d.subtotal;
       }).join("<br>") : "Sin detalles";
 
       return `
         <div class="pedido">
           <div class="pedido-header">
-            <span>👤 ${p.cliente_nombre} (${p.cliente_telefono})</span>
+            <span>${p.cliente_nombre} (${p.cliente_telefono})</span>
             <span>${fecha}</span>
           </div>
           <div class="pedido-detalle">
