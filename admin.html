@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin · La Migaja</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; color: #333; }
+  .container { max-width: 900px; margin: 0 auto; }
+  .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+  h1 { margin-top: 0; color: #2C3522; }
+  input, button { padding: 10px; font-size: 16px; border-radius: 4px; border: 1px solid #ccc; }
+  button { background: #D1E535; color: #1B2317; border: none; font-weight: bold; cursor: pointer; }
+  button:hover { background: #b8cc2b; }
+  .pedido { border-bottom: 1px solid #eee; padding: 15px 0; }
+  .pedido:last-child { border-bottom: none; }
+  .pedido-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; }
+  .pedido-detalle { font-size: 14px; color: #666; }
+  .total { font-size: 18px; color: #2C3522; font-weight: bold; margin-top: 10px; }
+  #login { text-align: center; margin-top: 100px; }
+  #app { display: none; }
+</style>
+</head>
+<body>
+
+<div id="login" class="card">
+  <h1>Panel de Admin</h1>
+  <p>Ingresá la contraseña para ver los pedidos.</p>
+  <input type="password" id="pass" placeholder="Contraseña">
+  <button onclick="login()">Entrar</button>
+  <p id="error" style="color:red;"></p>
+</div>
+
+<div id="app" class="container">
+  <div class="card">
+    <h1>Pedidos Recientes</h1>
+    <button onclick="cargarPedidos()">Actualizar</button>
+    <div id="lista"></div>
+  </div>
+</div>
+
+<!-- Cargamos Supabase y tu config -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script>
+  // ⚠️ CAMBIÁ ESTA CLAVE POR LA QUE VOS QUIERAS
+  const CLAVE_ADMIN = "migaja2024"; 
+
+  function login() {
+    const input = document.getElementById("pass").value;
+    if (input === CLAVE_ADMIN) {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      cargarPedidos();
+    } else {
+      document.getElementById("error").textContent = "Contraseña incorrecta";
+    }
+  }
+
+  async function cargarPedidos() {
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "Cargando...";
+
+    // Traemos los pedidos y sus detalles
+    const { data: pedidos, error } = await supabase
+      .from('pedidos')
+      .select(`
+        id, cliente_nombre, cliente_telefono, metodo_pago, modalidad, total, created_at,
+        pedido_detalles ( producto_nombre, cantidad, precio_unitario, subtotal )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      lista.innerHTML = "<p style='color:red'>Error: " + error.message + "</p>";
+      return;
+    }
+
+    if (pedidos.length === 0) {
+      lista.innerHTML = "<p>No hay pedidos todavía.</p>";
+      return;
+    }
+
+    lista.innerHTML = pedidos.map(function(p) {
+      const fecha = new Date(p.created_at).toLocaleString("es-AR");
+      const detalles = p.pedido_detalles.map(function(d) {
+        return d.cantidad + " kg de " + d.producto_nombre + " - $" + d.subtotal;
+      }).join("<br>");
+
+      return `
+        <div class="pedido">
+          <div class="pedido-header">
+            <span>${p.cliente_nombre} (${p.cliente_telefono})</span>
+            <span>${fecha}</span>
+          </div>
+          <div class="pedido-detalle">
+            <b>Entrega:</b> ${p.modalidad} | <b>Pago:</b> ${p.metodo_pago}<br>
+            <b>Productos:</b><br>${detalles}
+          </div>
+          <div class="total">Total: $${p.total}</div>
+        </div>
+      `;
+    }).join("");
+  }
+</script>
+
+</body>
+</html>
