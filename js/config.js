@@ -1,12 +1,11 @@
 const SUPABASE_URL = "https://ynncndundoooinkdrtiw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kSu1cHcql8zIEd-oxqOngA_CI908kyy";
 
-// BUSINESS INFO
 const CONFIG = {
   nombre: "La Migaja",
   whatsapp: "5491173537313",
   telefono: "11 7353-7313",
-  horarioTxt: "Lun a Vie: 14:00–20:00 | Sáb: 14:00–20:00 | Dom: Cerrado",
+  horarioTxt: "Lun a Vie: 10:00–14:00 y 17:00–20:00 | Sáb: 10:00–14:00 | Dom: Cerrado",
   direccionRetiro: "Av. Obispo Jorge Novak 2076",
   condicionesRetiro: "Retiro sin cargo. Coordiná el horario al confirmar el pedido.",
   alias: "migaja.com.ar",
@@ -21,7 +20,8 @@ const CONFIG = {
     retiro: { 
       dias: [1, 2, 3, 4, 5, 6],
       franjas: [
-        { desde: "14:00", hasta: "20:00" }
+        { desde: "10:00", hasta: "14:00" },
+        { desde: "17:00", hasta: "20:00" }
       ]
     },
     envio: { 
@@ -36,7 +36,6 @@ const CONFIG = {
   }
 };
 
-// CATALOG
 const PRODUCTOS = [
   { id: "clasica", categoria: "Clásicas", nombre: "Clásica", descripcion: "Milanesa de pollo casera, lista para freír.",
     foto: "assets/img/clasica.jpg", precio: 6000, venta: { unidad: "kg", paso: 1, etiqueta: "el kilo" }, opciones: ["Con sal", "Sin sal"], disponible: true },
@@ -53,7 +52,6 @@ const PRODUCTOS = [
     precio: 10000, venta: { unidad: "kg", paso: 1, etiqueta: "el kilo" }, opciones: ["De jamón y queso", "De espinaca y ricota"], disponible: true }
 ];
 
-// PROMO
 const PROMO = {
   id: "promo2kg",
   nombre: "Promo 2 Kilos",
