@@ -69,13 +69,17 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   padding: 16px 24px;
   padding-top: calc(16px + var(--safe-top));
 }
+
 .logo {
-  font-family: var(--font-brand);
-  font-size: 40px;
-  color: #2C3522;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  display: flex;
+  align-items: center;
 }
+
+.logo img {
+  height: 70px;
+  width: auto;
+}
+
 .acts { display: flex; gap: 8px; }
 .ib {
   position: relative;
