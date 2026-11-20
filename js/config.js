@@ -6,7 +6,7 @@ const CONFIG = {
   nombre: "La Migaja",
   whatsapp: "5491173537313",
   telefono: "11 7353-7313",
-  horarioTxt: "Lun a Vie: 10:00–14:00 y 17:00–20:30 | Sáb: 10:00–14:00 | Dom: Cerrado",
+  horarioTxt: "Lun a Vie: 14:00–20:00 | Sáb: 14:00–20:00 | Dom: Cerrado",
   direccionRetiro: "Av. Obispo Jorge Novak 2076",
   condicionesRetiro: "Retiro sin cargo. Coordiná el horario al confirmar el pedido.",
   alias: "migaja.com.ar",
@@ -21,15 +21,13 @@ const CONFIG = {
     retiro: { 
       dias: [1, 2, 3, 4, 5, 6],
       franjas: [
-        { desde: "10:00", hasta: "14:00" },
-        { desde: "17:00", hasta: "20:00" }
+        { desde: "14:00", hasta: "20:00" }
       ]
     },
     envio: { 
       dias: [1, 2, 3, 4, 5, 6],
       franjas: [
-        { desde: "10:00", hasta: "14:00" },
-        { desde: "17:00", hasta: "20:30" }
+        { desde: "14:00", hasta: "20:00" }
       ]
     },
     anticipacionHoras: 2,
