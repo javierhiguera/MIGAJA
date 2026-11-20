@@ -16,7 +16,6 @@
     f: { nombre: "", tel: "", email: "", modo: "Retiro", zona: "", calle: "", altura: "", piso: "", ref: "", pago: CONFIG.pagos[0], obs: "" } };
 
   var prod = function (id) { return PRODUCTOS.filter(function (p) { return p.id === id; })[0]; };
-  var iso = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
   var qtxt = function (p, n) { return p.venta.unidad === "kg" ? String(n) + " kg" : n + " u."; };
   var zona = function () { return CONFIG.envio.zonas.filter(function (z) { return z.nombre === S.f.zona; })[0]; };
   var save = function () { ls.set("mg-cart", S.cart); };
@@ -67,14 +66,7 @@
 
     var totalFinal = subtotalRegular - descuentoTotal + envio;
 
-    return {
-      L: lineas,
-      sub: subtotalRegular,
-      desc: descuentoTotal,
-      env: envio,
-      total: totalFinal,
-      promos: detallePromos
-    };
+    return { L: lineas, sub: subtotalRegular, desc: descuentoTotal, env: envio, total: totalFinal, promos: detallePromos };
   }
 
   function depurar() {
@@ -190,75 +182,20 @@
   
   function waUrl(id, c) {
     var f = S.f;
-    
-    var t = [
-      "*** NUEVO PEDIDO - LA MIGAJA ***",
-      "----------------------------------",
-      "Cliente: " + f.nombre,
-      "Telefono: " + f.tel,
-      "",
-      "--- ENTREGA ---",
-      "Modalidad: " + f.modo
-    ];
-    
-    if (f.modo === "Envío") {
-      t.push("Dirección: " + f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")" + (f.ref ? " - Ref: " + f.ref : ""));
-    } else {
-      t.push("Retiro en: " + CONFIG.direccionRetiro);
-    }
-    
-    t.push("Horario: A coordinar por WhatsApp");
-    t.push("");
-    
-    t.push("--- TU PEDIDO ---");
-    c.L.forEach(function (x) { 
-      t.push("- " + x.q + " de " + x.txt + " - " + money(x.m)); 
-    });
-    
-    if (c.promos.length > 0) {
-      t.push("");
-      t.push("--- PROMOS APLICADAS ---");
-      c.promos.forEach(function(p) {
-        t.push(p.nombre + ": " + p.descripcion + " (Ahorrás " + money(p.ahorro) + ")");
-      });
-    }
-    
-    t.push("");
-    t.push("--- RESUMEN ---");
-    t.push("Subtotal: " + money(c.sub));
+    var t = ["*** NUEVO PEDIDO - LA MIGAJA ***", "----------------------------------", "Cliente: " + f.nombre, "Telefono: " + f.tel, "", "--- ENTREGA ---", "Modalidad: " + f.modo];
+    if (f.modo === "Envío") { t.push("Dirección: " + f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")" + (f.ref ? " - Ref: " + f.ref : "")); } else { t.push("Retiro en: " + CONFIG.direccionRetiro); }
+    t.push("Horario: A coordinar por WhatsApp", "", "--- TU PEDIDO ---");
+    c.L.forEach(function (x) { t.push("- " + x.q + " de " + x.txt + " - " + money(x.m)); });
+    if (c.promos.length > 0) { t.push("", "--- PROMOS APLICADAS ---"); c.promos.forEach(function(p) { t.push(p.nombre + ": " + p.descripcion + " (Ahorrás " + money(p.ahorro) + ")"); }); }
+    t.push("", "--- RESUMEN ---", "Subtotal: " + money(c.sub));
     if (c.desc > 0) t.push("Descuento: -" + money(c.desc));
     if (f.modo === "Envío") t.push("Envío: " + money(c.env));
-    t.push("TOTAL A PAGAR: " + money(c.total));
-    t.push("");
-    
-    t.push("--- PAGO ---");
-    t.push("Método: " + f.pago);
-    if (f.pago === "Transferencia") {
-      t.push("Alias: " + CONFIG.alias);
-      t.push("Titular: " + CONFIG.titular);
-      t.push(">> Enviá el comprobante por acá para confirmar tu pedido.");
-    } else {
-      t.push(">> Abonás en efectivo al retirar o recibir.");
-    }
-    
-    if (f.obs) {
-      t.push("");
-      t.push("NOTA: " + f.obs);
-    }
-    
-    t.push("");
-    t.push("----------------------------------");
-    t.push("AVISO AUTOMÁTICO:");
-    
-    if (f.modo === "Envío") {
-      t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar la entrega y el horario.");
-    } else {
-      t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar el horario de retiro.");
-    }
-    
-    t.push("");
-    t.push("Gracias por elegir La Migaja!");
-    
+    t.push("TOTAL A PAGAR: " + money(c.total), "", "--- PAGO ---", "Método: " + f.pago);
+    if (f.pago === "Transferencia") { t.push("Alias: " + CONFIG.alias, "Titular: " + CONFIG.titular, ">> Enviá el comprobante por acá para confirmar tu pedido."); } else { t.push(">> Abonás en efectivo al retirar o recibir."); }
+    if (f.obs) { t.push("", "NOTA: " + f.obs); }
+    t.push("", "----------------------------------", "AVISO AUTOMÁTICO:");
+    if (f.modo === "Envío") { t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar la entrega y el horario."); } else { t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar el horario de retiro."); }
+    t.push("", "Gracias por elegir La Migaja!");
     return "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(t.join("\n"));
   }
   
@@ -282,7 +219,7 @@
     $("#pt").textContent = S.done ? "Pedido listo" : STEPS[S.step];
     
     if (S.done) {
-      h = "<p><b>" + esc(S.done.id) + "</b></p><p>Se abrió WhatsApp con tu pedido. Tocá <b>Enviar</b> para que le llegue al negocio. Hasta que el negocio lo confirme, el pedido no está confirmado.</p><p class=\"tag\">El pedido quedó guardado en este dispositivo para que puedas repetirlo.</p><a class=\"btn y\" target=\"_blank\" rel=\"noopener\" href=\"" + esc(S.done.url) + "\">Abrir WhatsApp de nuevo</a> <button type=\"button\" class=\"btn r\" data-a=\"fin\">Volver al catálogo</button>";
+      h = "<p><b>" + esc(S.done.id) + "</b></p><p>Se abrió WhatsApp con tu pedido. Tocá <b>Enviar</b> para que le llegue al negocio. Hasta que el negocio lo confirme, el pedido no está confirmado.</p><a class=\"btn y\" target=\"_blank\" rel=\"noopener\" href=\"" + esc(S.done.url) + "\">Abrir WhatsApp de nuevo</a> <button type=\"button\" class=\"btn r\" data-a=\"fin\">Volver al catálogo</button>";
     } else if (S.step === 0) {
       if (!c.L.length) {
         h = "<p>Tu carrito está vacío.</p><button type=\"button\" class=\"btn y\" data-a=\"fin\">Explorar productos</button>";
@@ -291,22 +228,14 @@
       }
     } else if (S.step === 1) {
       h = '<p class="steps">Paso ' + S.step + " de 2</p>";
-      
       h += '<label class="fld">Nombre y apellido<input data-f="nombre" autocomplete="name" value="' + esc(f.nombre) + '"></label><label class="fld">Teléfono<input data-f="tel" type="tel" autocomplete="tel" value="' + esc(f.tel) + '"></label>';
-      
       h += '<div class="seg"><button type="button" data-a="modo" data-v="Retiro" class="' + (f.modo === "Retiro" ? "on" : "") + '">Retiro</button><button type="button" data-a="modo" data-v="Envío" class="' + (f.modo === "Envío" ? "on" : "") + '">Envío</button></div>';
-      
       if (f.modo === "Retiro") {
         h += '<div class="box">Retiro en: <b>' + esc(CONFIG.direccionRetiro) + "</b><br>" + esc(CONFIG.condicionesRetiro) + "</div>";
       } else {
         h += '<label class="fld">Zona de entrega<select data-f="zona"><option value="">Elegí tu zona</option>' + CONFIG.envio.zonas.map(function (z) { return '<option value="' + esc(z.nombre) + '"' + (f.zona === z.nombre ? " selected" : "") + ">" + esc(z.nombre) + " · Envío " + money(z.costo) + "</option>"; }).join("") + '</select></label><label class="fld">Calle<input data-f="calle" value="' + esc(f.calle) + '"></label><label class="fld">Altura<input data-f="altura" inputmode="numeric" value="' + esc(f.altura) + '"></label><label class="fld">Piso / depto (opcional)<input data-f="piso" value="' + esc(f.piso) + '"></label><label class="fld">Referencias (opcional)<input data-f="ref" value="' + esc(f.ref) + '"></label>';
       }
-
-      h += '<div class="box" style="background:#E3DCD3; border:none; margin-top:20px;">';
-      h += '<b>Horario de entrega</b><br>';
-      h += 'Una vez confirmado el pedido, te escribimos por WhatsApp para coordinar el día y el horario exacto.';
-      h += '</div>';
-
+      h += '<div class="box" style="background:#E3DCD3; border:none; margin-top:20px;"><b>Horario de entrega</b><br>Una vez confirmado el pedido, te escribimos por WhatsApp para coordinar el día y el horario exacto.</div>';
       h += '<div class="seg">' + CONFIG.pagos.map(function (p) { return '<button type="button" data-a="pago" data-v="' + esc(p) + '" class="' + (f.pago === p ? "on" : "") + '">' + esc(p) + "</button>"; }).join("") + "</div>";
       if (f.pago === "Transferencia") {
         h += '<div class="box">Alias: <b>' + esc(CONFIG.alias) + "</b><br>Titular: <b>" + esc(CONFIG.titular) + "</b><br>Importe: <b>" + money(c.total) + '</b><br>Enviá el comprobante por WhatsApp.</div>';
@@ -314,7 +243,6 @@
         h += '<div class="box">Pago en efectivo al retirar o recibir el pedido.</div>';
       }
       h += '<label class="fld">Observaciones (opcional)<textarea data-f="obs" rows="3">' + esc(f.obs) + "</textarea></label>";
-
       h += totHtml(c);
       h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="next">Ver resumen</button></div>';
     } else if (S.step === 2) {
@@ -323,7 +251,6 @@
       h += totHtml(c);
       h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="confirm"' + (S.busy ? " disabled" : "") + ">Confirmar pedido</button></div>";
     }
-    
     pb.innerHTML = h;
   }
   
@@ -338,55 +265,20 @@
     var url = waUrl(id, c);
     
     try {
-      if (typeof window.supabase === 'undefined') {
-        alert("ERROR: La librería de Supabase no se cargó. Revisá el index.html");
-        window.open(url, "_blank", "noopener");
-        S.busy = false;
-        return;
-      }
-
+      if (typeof window.supabase === 'undefined') { alert("ERROR: La librería de Supabase no se cargó."); window.open(url, "_blank", "noopener"); S.busy = false; return; }
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      
-      const detallesArray = S.cart.map(function(l) {
-        var p = prod(l.id);
-        return {
-          producto_id: l.id,
-          producto_nombre: p.nombre,
-          cantidad: l.n,
-          precio_unitario: p.precio,
-          subtotal: p.precio * l.n
-        };
-      });
-
-      const { data, error } = await supabase.rpc('crear_pedido_completo', {
-        p_cliente_nombre: S.f.nombre,
-        p_cliente_telefono: S.f.tel,
-        p_metodo_pago: S.f.pago,
-        p_modalidad: S.f.modo,
-        p_total: c.total,
-        p_observaciones: S.f.obs,
-        p_detalles: detallesArray
-      });
-
-      if (error) {
-        alert("Error de Supabase al guardar pedido: " + error.message);
-        throw error;
-      }
-
+      const detallesArray = S.cart.map(function(l) { var p = prod(l.id); return { producto_id: l.id, producto_nombre: p.nombre, cantidad: l.n, precio_unitario: p.precio, subtotal: p.precio * l.n }; });
+      const { data, error } = await supabase.rpc('crear_pedido_completo', { p_cliente_nombre: S.f.nombre, p_cliente_telefono: S.f.tel, p_metodo_pago: S.f.pago, p_modalidad: S.f.modo, p_total: c.total, p_observaciones: S.f.obs, p_detalles: detallesArray });
+      if (error) { alert("Error de Supabase: " + error.message); throw error; }
       window.open(url, "_blank", "noopener");
-      
-      var hist = ls.get("mg-hist", []);
-      hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
+      var hist = ls.get("mg-hist", []); hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
       S.done = { id: id, url: url }; S.cart = []; save(); refrescar(); toast("Pedido guardado y registrado");
-      
     } catch (err) {
       console.error("Error guardando pedido:", err);
       window.open(url, "_blank", "noopener");
-      var hist = ls.get("mg-hist", []);
-      hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
+      var hist = ls.get("mg-hist", []); hist.unshift({ id: id, lines: S.cart.slice() }); ls.set("mg-hist", hist.slice(0, 8));
       S.done = { id: id, url: url }; S.cart = []; save(); refrescar(); toast("Pedido registrado (modo offline)");
     }
-    
     S.busy = false; 
   }
 
@@ -401,12 +293,7 @@
     else if (a === "modo") { S.f.modo = v; renderPanel(); }
     else if (a === "pago") { S.f.pago = v; renderPanel(); }
     else if (a === "prev") { S.step = Math.max(0, S.step - 1); renderPanel(); }
-    else if (a === "next") { 
-      var m = validar(S.step); 
-      if (m) { $("#err").textContent = m; return; } 
-      S.step++; 
-      renderPanel(); 
-    }
+    else if (a === "next") { var m = validar(S.step); if (m) { $("#err").textContent = m; return; } S.step++; renderPanel(); }
     else if (a === "confirm") confirmar();
     else if (a === "fin") { S.done = null; S.step = 0; abrir(false); }
   });
