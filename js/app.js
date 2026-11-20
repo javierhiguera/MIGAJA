@@ -16,6 +16,9 @@
     f: { nombre: "", tel: "", email: "", modo: "Retiro", zona: "", calle: "", altura: "", piso: "", ref: "", pago: CONFIG.pagos[0], obs: "" } };
 
   var prod = function (id) { return PRODUCTOS.filter(function (p) { return p.id === id; })[0]; };
+  
+  var iso = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  
   var qtxt = function (p, n) { return p.venta.unidad === "kg" ? String(n) + " kg" : n + " u."; };
   var zona = function () { return CONFIG.envio.zonas.filter(function (z) { return z.nombre === S.f.zona; })[0]; };
   var save = function () { ls.set("mg-cart", S.cart); };
