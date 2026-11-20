@@ -5,92 +5,104 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin · La Migaja</title>
 <style>
-  body { font-family: system-ui, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; color: #333; }
+  :root {
+    --primary: #D1E535;
+    --accent: #2C3522;
+    --bg: #f4f4f4;
+    --text: #333;
+  }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); }
   .container { max-width: 900px; margin: 0 auto; }
-  .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-  h1 { margin-top: 0; color: #2C3522; }
-  input, button { padding: 10px; font-size: 16px; border-radius: 4px; border: 1px solid #ccc; }
-  button { background: #D1E535; color: #1B2317; border: none; font-weight: bold; cursor: pointer; }
-  button:hover { background: #b8cc2b; }
-  .pedido { border-bottom: 1px solid #eee; padding: 15px 0; }
+  .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  h1 { margin-top: 0; color: var(--accent); font-size: 24px; }
+  input, button { padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+  input { width: 100%; max-width: 300px; margin-bottom: 10px; }
+  button { background: var(--primary); color: var(--accent); border: none; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
+  button:hover { opacity: 0.8; }
+  .pedido { border-bottom: 1px solid #eee; padding: 20px 0; }
   .pedido:last-child { border-bottom: none; }
-  .pedido-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; }
-  .pedido-detalle { font-size: 14px; color: #666; }
-  .total { font-size: 18px; color: #2C3522; font-weight: bold; margin-top: 10px; }
+  .pedido-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: var(--accent); }
+  .pedido-detalle { font-size: 14px; color: #555; line-height: 1.5; }
+  .pedido-detalle b { color: #222; }
+  .total { font-size: 18px; color: var(--accent); font-weight: bold; margin-top: 12px; text-align: right; }
   #login { text-align: center; margin-top: 100px; }
   #app { display: none; }
+  .error-msg { color: #d15228; font-weight: bold; margin-top: 10px; }
+  .btn-refresh { margin-bottom: 20px; }
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login" class="card">
-  <h1>Panel de Admin</h1>
+  <h1>Panel de Administración</h1>
   <p>Ingresá la contraseña para ver los pedidos.</p>
-  <input type="password" id="pass" placeholder="Contraseña">
+  <input type="password" id="pass" placeholder="Contraseña secreta">
+  <br>
   <button onclick="login()">Entrar</button>
-  <p id="error" style="color:red;"></p>
+  <p id="error" class="error-msg"></p>
 </div>
 
+<!-- APP -->
 <div id="app" class="container">
   <div class="card">
     <h1>Pedidos Recientes</h1>
-    <button onclick="cargarPedidos()">Actualizar</button>
+    <button class="btn-refresh" onclick="cargarPedidos()">🔄 Actualizar Pedidos</button>
     <div id="lista"></div>
   </div>
 </div>
 
-<!-- Cargamos Supabase y tu config -->
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js"></script>
 <script>
-  // ⚠️ CAMBIÁ ESTA CLAVE POR LA QUE VOS QUIERAS
-  const CLAVE_ADMIN = "migaja2024"; 
-
+  // --- AUTH ---
   function login() {
     const input = document.getElementById("pass").value;
-    if (input === CLAVE_ADMIN) {
-      document.getElementById("login").style.display = "none";
-      document.getElementById("app").style.display = "block";
-      cargarPedidos();
-    } else {
-      document.getElementById("error").textContent = "Contraseña incorrecta";
-    }
+    if (!input) return;
+    
+    // Ocultamos el login y mostramos la app (la validación real la hace Supabase)
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    
+    // Pasamos la clave ingresada a la función que carga los pedidos
+    cargarPedidos(input);
   }
 
-  async function cargarPedidos() {
+  // --- RENDER ---
+  async function cargarPedidos(clave) {
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     const lista = document.getElementById("lista");
-    lista.innerHTML = "Cargando...";
+    lista.innerHTML = "Cargando pedidos...";
 
-    // Traemos los pedidos y sus detalles
-    const { data: pedidos, error } = await supabase
-      .from('pedidos')
-      .select(`
-        id, cliente_nombre, cliente_telefono, metodo_pago, modalidad, total, created_at,
-        pedido_detalles ( producto_nombre, cantidad, precio_unitario, subtotal )
-      `)
-      .order('created_at', { ascending: false });
+    // Enviamos la clave a Supabase. Si es incorrecta, Supabase devuelve error.
+    const { data: pedidos, error } = await supabase.rpc('obtener_pedidos_admin', {
+      p_clave: clave
+    });
 
     if (error) {
-      lista.innerHTML = "<p style='color:red'>Error: " + error.message + "</p>";
+      // Si la clave es incorrecta, volvemos al login y mostramos el error
+      document.getElementById("app").style.display = "none";
+      document.getElementById("login").style.display = "block";
+      document.getElementById("error").textContent = "Contraseña incorrecta o acceso denegado.";
       return;
     }
 
-    if (pedidos.length === 0) {
-      lista.innerHTML = "<p>No hay pedidos todavía.</p>";
+    if (!pedidos || pedidos.length === 0) {
+      lista.innerHTML = "<p>No hay pedidos todavía. ¡A vender!</p>";
       return;
     }
 
     lista.innerHTML = pedidos.map(function(p) {
       const fecha = new Date(p.created_at).toLocaleString("es-AR");
-      const detalles = p.pedido_detalles.map(function(d) {
-        return d.cantidad + " kg de " + d.producto_nombre + " - $" + d.subtotal;
-      }).join("<br>");
+      const detalles = p.pedido_detalles ? p.pedido_detalles.map(function(d) {
+        return "• " + d.cantidad + " kg de " + d.producto_nombre + " - $" + d.subtotal;
+      }).join("<br>") : "Sin detalles";
 
       return `
         <div class="pedido">
           <div class="pedido-header">
-            <span>${p.cliente_nombre} (${p.cliente_telefono})</span>
+            <span>👤 ${p.cliente_nombre} (${p.cliente_telefono})</span>
             <span>${fecha}</span>
           </div>
           <div class="pedido-detalle">
