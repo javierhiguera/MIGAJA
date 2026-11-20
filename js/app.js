@@ -170,49 +170,6 @@
   
   function refrescar() { renderLista(); renderBar(); if (S.open) renderPanel(); }
 
-  // --- SCHEDULE ---
-  function getFranjasDisponibles(cfg, fechaISO) {
-    var fecha = new Date(fechaISO + "T00:00:00");
-    var diaSemana = fecha.getDay();
-    if (cfg.dias.indexOf(diaSemana) < 0) return [];
-    
-    var ahora = new Date();
-    var minTime = ahora.getTime() + CONFIG.agenda.anticipacionHoras * 3600000;
-    
-    var franjas = [];
-    cfg.franjas.forEach(function(f) {
-      var partesD = f.desde.split(":").map(Number);
-      var partesH = f.hasta.split(":").map(Number);
-      var inicio = new Date(fecha); inicio.setHours(partesD[0], partesD[1], 0, 0);
-      var fin = new Date(fecha); fin.setHours(partesH[0], partesH[1], 0, 0);
-      
-      if (inicio.getTime() >= minTime) {
-        franjas.push(f.desde + " a " + f.hasta);
-      }
-    });
-    return franjas;
-  }
-
-  function diasDisponibles() {
-    var env = S.f.modo === "Envío", cfg = env ? CONFIG.agenda.envio : CONFIG.agenda.retiro;
-    var out = [];
-    for (var i = 0; i <= CONFIG.agenda.diasAdelante; i++) {
-      var d = new Date(); d.setDate(d.getDate() + i);
-      var isoStr = iso(d);
-      if (CONFIG.agenda.bloqueadas.indexOf(isoStr) > -1) continue;
-      
-      var franjas = getFranjasDisponibles(cfg, isoStr);
-      if (franjas.length) {
-        out.push({ 
-          iso: isoStr, 
-          label: d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" }), 
-          franjas: franjas 
-        });
-      }
-    }
-    return out;
-  }
-
   // --- CHECKOUT (AHORA SON SOLO 2 PASOS) ---
   var STEPS = ["Tu carrito", "Datos y entrega", "Resumen"];
   
@@ -231,18 +188,17 @@
     }).join("");
   }
   
-    function waUrl(id, c) {
-    var f = S.f, d = diasDisponibles().filter(function (x) { return x.iso === f.fecha; })[0];
-    var nombreFecha = d ? d.label : f.fecha;
+  function waUrl(id, c) {
+    var f = S.f;
     
-    // Armamos el mensaje con un diseño más moderno y legible
+    // Mensaje simplificado, sin emojis y con aviso de coordinación
     var t = [
-      "🛒 *NUEVO PEDIDO - LA MIGAJA*",
+      "*** NUEVO PEDIDO - LA MIGAJA ***",
       "----------------------------------",
-      "👤 *Cliente:* " + f.nombre,
-      "📱 *Teléfono:* " + f.tel,
+      "Cliente: " + f.nombre,
+      "Telefono: " + f.tel,
       "",
-      "*📦 ENTREGA*",
+      "--- ENTREGA ---",
       "Modalidad: " + f.modo
     ];
     
@@ -252,58 +208,57 @@
       t.push("Retiro en: " + CONFIG.direccionRetiro);
     }
     
-    t.push("Fecha: " + nombreFecha);
-    t.push("Horario: " + f.hora);
+    t.push("Horario: A coordinar por WhatsApp");
     t.push("");
     
-    t.push("*🍔 TU PEDIDO*");
+    t.push("--- TU PEDIDO ---");
     c.L.forEach(function (x) { 
-      t.push("• " + x.q + " de " + x.txt + " - " + money(x.m)); 
+      t.push("- " + x.q + " de " + x.txt + " - " + money(x.m)); 
     });
     
     if (c.promos.length > 0) {
       t.push("");
-      t.push("*🔥 PROMOS APLICADAS*");
+      t.push("--- PROMOS APLICADAS ---");
       c.promos.forEach(function(p) {
         t.push(p.nombre + ": " + p.descripcion + " (Ahorrás " + money(p.ahorro) + ")");
       });
     }
     
     t.push("");
-    t.push("*💵 RESUMEN*");
+    t.push("--- RESUMEN ---");
     t.push("Subtotal: " + money(c.sub));
     if (c.desc > 0) t.push("Descuento: -" + money(c.desc));
     if (f.modo === "Envío") t.push("Envío: " + money(c.env));
-    t.push("*TOTAL A PAGAR: " + money(c.total) + "*");
+    t.push("TOTAL A PAGAR: " + money(c.total));
     t.push("");
     
-    t.push("*💳 PAGO*");
+    t.push("--- PAGO ---");
     t.push("Método: " + f.pago);
     if (f.pago === "Transferencia") {
       t.push("Alias: " + CONFIG.alias);
       t.push("Titular: " + CONFIG.titular);
-      t.push("⚠️ _Enviá el comprobante por acá para confirmar tu pedido._");
+      t.push(">> Enviá el comprobante por acá para confirmar tu pedido.");
     } else {
-      t.push("⚠️ _Abonás en efectivo al retirar o recibir._");
+      t.push(">> Abonás en efectivo al retirar o recibir.");
     }
     
     if (f.obs) {
       t.push("");
-      t.push("*📝 NOTA:* " + f.obs);
+      t.push("NOTA: " + f.obs);
     }
     
     t.push("");
     t.push("----------------------------------");
+    t.push("AVISO AUTOMÁTICO:");
     
-    // ACÁ AGREGAMOS LO DEL SEGUIMIENTO Y EL RANGO HORARIO
-    t.push("🤖 *AVISO AUTOMÁTICO:*");
     if (f.modo === "Envío") {
-      t.push("Tu pedido está siendo preparado. El repartidor se comunicará con vos cuando esté en camino. Podés seguir el estado de tu envío respondiendo a este mensaje.");
+      t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar la entrega y el horario.");
     } else {
-      t.push("Tu pedido está siendo preparado. Te esperamos en el local dentro del horario elegido. Podés avisarnos cuando estés en camino respondiendo a este mensaje.");
+      t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar el horario de retiro.");
     }
+    
     t.push("");
-    t.push("¡Gracias por elegir La Migaja! 🐔✨");
+    t.push("Gracias por elegir La Migaja!");
     
     return "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(t.join("\n"));
   }
@@ -319,10 +274,6 @@
         var z = zona(); if (!z) return "Elegí tu zona de entrega.";
         if (!f.calle.trim() || !f.altura.trim()) return "Completá calle y altura.";
       }
-      var ds = diasDisponibles();
-      var d = ds.filter(function (x) { return x.iso === f.fecha; })[0]; 
-      if (!d) return "Elegí una fecha válida."; 
-      if (!d.franjas.includes(f.hora)) return "Elegí una franja horaria disponible."; 
     }
     return "";
   }
@@ -340,7 +291,6 @@
         h = itemsHtml(c, true) + totHtml(c) + '<div class="nav"><button type="button" class="btn o" data-a="fin">Seguir comprando</button><button type="button" class="btn r" data-a="next">Ir al checkout</button></div><button type="button" class="btn o" data-a="vaciar">Vaciar carrito</button>';
       }
     } else if (S.step === 1) {
-      // PASO UNIFICADO: Datos + Entrega + Fecha + Pago en una sola pantalla
       h = '<p class="steps">Paso ' + S.step + " de 2</p>";
       
       h += '<label class="fld">Nombre y apellido<input data-f="nombre" autocomplete="name" value="' + esc(f.nombre) + '"></label><label class="fld">Teléfono<input data-f="tel" type="tel" autocomplete="tel" value="' + esc(f.tel) + '"></label>';
@@ -353,8 +303,11 @@
         h += '<label class="fld">Zona de entrega<select data-f="zona"><option value="">Elegí tu zona</option>' + CONFIG.envio.zonas.map(function (z) { return '<option value="' + esc(z.nombre) + '"' + (f.zona === z.nombre ? " selected" : "") + ">" + esc(z.nombre) + " · Envío " + money(z.costo) + "</option>"; }).join("") + '</select></label><label class="fld">Calle<input data-f="calle" value="' + esc(f.calle) + '"></label><label class="fld">Altura<input data-f="altura" inputmode="numeric" value="' + esc(f.altura) + '"></label><label class="fld">Piso / depto (opcional)<input data-f="piso" value="' + esc(f.piso) + '"></label><label class="fld">Referencias (opcional)<input data-f="ref" value="' + esc(f.ref) + '"></label>';
       }
 
-      var ds = diasDisponibles(), cur = ds.filter(function (x) { return x.iso === f.fecha; })[0];
-      h += ds.length ? '<label class="fld">Fecha<select data-f="fecha"><option value="">Elegí una fecha</option>' + ds.map(function (d) { return '<option value="' + d.iso + '"' + (f.fecha === d.iso ? " selected" : "") + ">" + esc(d.label) + "</option>"; }).join("") + "</select></label>" + (cur ? '<label class="fld">Franja horaria<select data-f="hora"><option value="">Elegí una franja</option>' + cur.franjas.map(function (s) { return '<option value="' + esc(s) + '"' + (f.hora === s ? " selected" : "") + ">" + esc(s) + "</option>"; }).join("") + "</select></label>" : "") : '<p class="err">No hay fechas disponibles por ahora.</p>';
+      // Cartel informativo en vez de los selectores de fecha y hora
+      h += '<div class="box" style="background:#E3DCD3; border:none; margin-top:20px;">';
+      h += '<b>Horario de entrega</b><br>';
+      h += 'Una vez confirmado el pedido, te escribimos por WhatsApp para coordinar el día y el horario exacto.';
+      h += '</div>';
 
       h += '<div class="seg">' + CONFIG.pagos.map(function (p) { return '<button type="button" data-a="pago" data-v="' + esc(p) + '" class="' + (f.pago === p ? "on" : "") + '">' + esc(p) + "</button>"; }).join("") + "</div>";
       if (f.pago === "Transferencia") {
@@ -367,9 +320,8 @@
       h += totHtml(c);
       h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="next">Ver resumen</button></div>';
     } else if (S.step === 2) {
-      var d2 = diasDisponibles().filter(function (x) { return x.iso === f.fecha; })[0];
       h = '<p class="steps">Paso ' + S.step + " de 2</p>";
-      h += "<p><b>" + esc(f.nombre) + "</b> · " + esc(f.tel) + "<br>" + esc(f.modo) + (f.modo === "Envío" ? ": " + esc(f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")") : ": " + esc(CONFIG.direccionRetiro)) + "<br>" + esc((d2 ? d2.label : f.fecha) + " · " + f.hora) + "<br>Pago: " + esc(f.pago) + (f.obs ? "<br>Obs.: " + esc(f.obs) : "") + "</p>" + itemsHtml(c, false);
+      h += "<p><b>" + esc(f.nombre) + "</b> · " + esc(f.tel) + "<br>" + esc(f.modo) + (f.modo === "Envío" ? ": " + esc(f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")") : ": " + esc(CONFIG.direccionRetiro)) + "<br>Horario: A coordinar por WhatsApp<br>Pago: " + esc(f.pago) + (f.obs ? "<br>Obs.: " + esc(f.obs) : "") + "</p>" + itemsHtml(c, false);
       h += totHtml(c);
       h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="confirm"' + (S.busy ? " disabled" : "") + ">Confirmar pedido</button></div>";
     }
@@ -450,7 +402,7 @@
     else if (a === "line") { var l = S.cart[i]; if (l) add(l.t, l.id, l.op, +b.getAttribute("data-d")); }
     else if (a === "del") { S.cart.splice(i, 1); save(); refrescar(); toast("Producto eliminado"); }
     else if (a === "vaciar") { S.cart = []; save(); refrescar(); }
-    else if (a === "modo") { S.f.modo = v; S.f.fecha = ""; S.f.hora = ""; renderPanel(); }
+    else if (a === "modo") { S.f.modo = v; renderPanel(); }
     else if (a === "pago") { S.f.pago = v; renderPanel(); }
     else if (a === "prev") { S.step = Math.max(0, S.step - 1); renderPanel(); }
     else if (a === "next") { 
@@ -464,7 +416,7 @@
   });
   
   $("#pb").addEventListener("input", function (e) { var k = e.target.getAttribute("data-f"); if (k && e.target.tagName !== "SELECT") S.f[k] = e.target.value; });
-  $("#pb").addEventListener("change", function (e) { var k = e.target.getAttribute("data-f"); if (k && e.target.tagName === "SELECT") { S.f[k] = e.target.value; if (k === "fecha") S.f.hora = ""; renderPanel(); } });
+  $("#pb").addEventListener("change", function (e) { var k = e.target.getAttribute("data-f"); if (k && e.target.tagName === "SELECT") { S.f[k] = e.target.value; renderPanel(); } });
   $("#q").addEventListener("input", function (e) { S.q = e.target.value; renderLista(); });
   $("#cartBtn").addEventListener("click", function () { S.step = 0; S.done = null; abrir(true); });
   $("#barBtn").addEventListener("click", function () { S.step = 0; S.done = null; abrir(true); });
