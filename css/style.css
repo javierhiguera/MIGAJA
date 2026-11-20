@@ -1,6 +1,3 @@
-/* ==========================================================================
-   FONTS
-   ========================================================================== */
 @font-face {
   font-family: 'Wangi';
   src: url('../assets/fonts/Wangi.ttf') format('truetype');
@@ -17,16 +14,13 @@
   font-display: swap;
 }
 
-/* ==========================================================================
-   VARIABLES
-   ========================================================================== */
 :root {
   --primary: #D1E535;
   --accent: #2C3522;
   --surface: #D8C5E4;
   --muted: #EDE6DC;
   --text: #1B2317;
-  --text-muted: #5C6556;
+  --text-muted: #4A5244;
   --border: #D2CAB8;
   
   --font-brand: 'Wangi', serif;
@@ -41,9 +35,6 @@
   --safe-top: env(safe-area-inset-top, 0px);
 }
 
-/* ==========================================================================
-   RESET & BASE
-   ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; scroll-padding-top: 70px; }
 body {
@@ -54,7 +45,7 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: 1.5;
-  padding-bottom: calc(80px + var(--safe-bottom));
+  padding-bottom: calc(100px + var(--safe-bottom));
   overflow-x: hidden;
 }
 
@@ -64,9 +55,6 @@ a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ==========================================================================
-   HEADER
-   ========================================================================== */
 .top {
   position: sticky;
   top: 0;
@@ -83,7 +71,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 }
 .logo {
   font-family: var(--font-brand);
-  font-size: 32px;
+  font-size: 40px;
   color: #2C3522;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -107,9 +95,6 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .ib:active { background: var(--border); }
 .ib b { font-size: 15px; font-weight: 700; color: #2C3522; }
 
-/* ==========================================================================
-   HERO
-   ========================================================================== */
 .hero {
   position: relative;
   margin: 0;
@@ -126,7 +111,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+  background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);
   z-index: 1;
 }
 
@@ -155,15 +140,9 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .hero p {
   margin: 0;
   font-size: clamp(18px, 3vw, 22px);
-  color: #D1E535;
+  color: var(--primary);
   max-width: 600px;
   font-weight: 600;
-}
-
-.hero-img-container {
-  position: relative;
-  min-height: 340px;
-  background: #EDE6DC;
 }
 
 .hero img {
@@ -174,9 +153,6 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   object-fit: cover;
 }
 
-/* ==========================================================================
-   BUTTONS
-   ========================================================================== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -194,14 +170,11 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   width: fit-content;
 }
 .btn:active { transform: scale(0.97); }
-.btn.y { background: #D1E535; color: #1B2317; }
+.btn.y { background: var(--primary); color: var(--accent); }
 .btn.o { background: transparent; color: var(--text); border: 1px solid var(--border); }
-.btn.r { background: #2C3522; color: #FFFFFF; }
+.btn.r { background: var(--accent); color: #FFFFFF; }
 .btn[disabled] { opacity: 0.4; cursor: not-allowed; }
 
-/* ==========================================================================
-   SECTIONS & CATALOG
-   ========================================================================== */
 .sec { padding: 32px 20px; max-width: 1100px; margin: 0 auto; }
 .sec-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .sec h2 {
@@ -227,7 +200,7 @@ input[type=search], .fld input, .fld select, .fld textarea {
 }
 input[type=search]:focus, .fld input:focus, .fld select:focus, .fld textarea:focus {
   outline: none;
-  border-color: #2C3522;
+  border-color: var(--accent);
 }
 input::placeholder { color: var(--text-muted); }
 
@@ -242,16 +215,13 @@ input::placeholder { color: var(--text-muted); }
   padding: 8px 18px;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s;
 }
-.chip.on { background: #2C3522; color: #fff; border-color: #2C3522; }
+.chip.on { background: var(--primary); color: var(--accent); border-color: var(--primary); }
 
-/* ==========================================================================
-   CARDS
-   ========================================================================== */
 .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 .card {
   background: var(--muted);
@@ -281,23 +251,20 @@ input::placeholder { color: var(--text-muted); }
   gap: 8px;
   color: var(--text);
 }
-.cb p { margin: 0; color: var(--text-muted); font-size: 15px; }
-.price { font-family: var(--font-body); font-weight: 700; font-size: 24px; color: #2C3522; display: flex; align-items: baseline; gap: 4px; }
-.price small { font-family: var(--font-body); font-size: 14px; color: var(--text-muted); font-weight: 400; }
+.cb p { margin: 0; color: var(--text-muted); font-size: 16px; }
+.price { font-family: var(--font-body); font-weight: 700; font-size: 26px; color: var(--accent); display: flex; align-items: baseline; gap: 4px; }
+.price small { font-family: var(--font-body); font-size: 15px; color: var(--text-muted); font-weight: 400; }
 .fav { border: 0; background: none; color: var(--text-muted); cursor: pointer; padding: 4px; transition: color 0.2s; }
-.fav.on { color: #D1E535; }
+.fav.on { color: var(--primary); }
 .fav.on svg { fill: currentColor; }
 
-/* ==========================================================================
-   QUANTITY SELECTOR
-   ========================================================================== */
 .opt {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-top: 1px solid var(--border);
   padding-top: 12px;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text-muted);
 }
 .st { display: flex; align-items: center; gap: 8px; background: #E3DCD3; border-radius: var(--radius-sm); padding: 4px; }
@@ -318,22 +285,16 @@ input::placeholder { color: var(--text-muted); }
 }
 .st button:active { background: var(--border); }
 .st button[disabled] { opacity: 0.3; cursor: not-allowed; }
-.st span { min-width: 50px; text-align: center; font-weight: 700; color: var(--text); font-size: 15px; }
-.tag { color: var(--text-muted); font-size: 14px; margin: 0; }
+.st span { min-width: 50px; text-align: center; font-weight: 700; color: var(--text); font-size: 16px; }
+.tag { color: var(--text-muted); font-size: 15px; margin: 0; }
 
-/* ==========================================================================
-   INFO
-   ========================================================================== */
 .info { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .info div { background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
-.info h3 { margin: 0 0 8px; font-family: var(--font-body); font-weight: 700; font-size: 18px; color: #2C3522; }
-.info p { margin: 0; font-size: 15px; color: var(--text-muted); }
+.info h3 { margin: 0 0 8px; font-family: var(--font-body); font-weight: 700; font-size: 18px; color: var(--accent); }
+.info p { margin: 0; font-size: 16px; color: var(--text-muted); line-height: 1.6; }
 .info p b { color: var(--text); }
-.info a { color: #2C3522; font-weight: bold; text-decoration: underline; }
+.info a { color: var(--accent); font-weight: bold; text-decoration: underline; }
 
-/* ==========================================================================
-   BOTTOM NAV
-   ========================================================================== */
 .bottom-nav {
   position: fixed;
   left: 0; right: 0; bottom: 0;
@@ -358,7 +319,7 @@ input::placeholder { color: var(--text-muted); }
   background: transparent;
   border: none;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   border-radius: var(--radius-sm);
@@ -366,14 +327,14 @@ input::placeholder { color: var(--text-muted); }
   position: relative;
 }
 .bn-item svg { width: 24px; height: 24px; }
-.bn-item.on { color: #2C3522; }
-.bn-item.bn-cart { color: var(--text); background: #EDE6DC; }
+.bn-item.on { color: var(--accent); }
+.bn-item.bn-cart { color: var(--accent); background: var(--primary); }
 .bn-badge {
   position: absolute;
   top: 4px;
   right: calc(50% - 24px);
-  background: #2C3522;
-  color: #D1E535;
+  background: var(--accent);
+  color: var(--primary);
   font-size: 11px;
   font-weight: 700;
   min-width: 18px;
@@ -385,9 +346,6 @@ input::placeholder { color: var(--text-muted); }
   padding: 0 4px;
 }
 
-/* ==========================================================================
-   MODALS
-   ========================================================================== */
 .ov {
   position: fixed;
   inset: 0;
@@ -416,14 +374,11 @@ input::placeholder { color: var(--text-muted); }
 .ph { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .ph h2 { margin: 0; font-family: var(--font-body); font-weight: 700; font-size: 24px; color: var(--text); }
 
-/* ==========================================================================
-   CHECKOUT ROWS
-   ========================================================================== */
-.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text); }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 16px; color: var(--text); }
 .row:last-child { border-bottom: none; }
-.row b { color: #2C3522; }
+.row b { color: var(--accent); }
 
-.fld { display: block; margin-top: 18px; font-weight: 600; font-size: 14px; color: var(--text-muted); }
+.fld { display: block; margin-top: 18px; font-weight: 600; font-size: 15px; color: var(--text-muted); }
 .fld input, .fld select, .fld textarea { margin-top: 6px; font-weight: 400; font-size: 16px; background: #FFFFFF; }
 
 .seg { display: flex; gap: 8px; margin: 16px 0; background: #E3DCD3; padding: 4px; border-radius: var(--radius-sm); }
@@ -435,11 +390,11 @@ input::placeholder { color: var(--text-muted); }
   background: transparent;
   color: var(--text-muted);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   transition: all 0.2s;
 }
-.seg button.on { background: #2C3522; color: #fff; }
+.seg button.on { background: var(--accent); color: #fff; }
 
 .box {
   border: 1px solid var(--border);
@@ -447,7 +402,7 @@ input::placeholder { color: var(--text-muted); }
   padding: 16px;
   margin-top: 12px;
   background: #FFFFFF;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.6;
   color: var(--text-muted);
 }
@@ -456,27 +411,24 @@ input::placeholder { color: var(--text-muted); }
 .tot { margin-top: 16px; background: #FFFFFF; border-radius: var(--radius-sm); padding: 16px; border: 1px solid var(--border); }
 .tot .row { border: none; padding: 6px 0; }
 .tot .row.t { font-size: 20px; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 6px; }
-.tot .row.t b { font-family: var(--font-body); font-weight: 700; font-size: 26px; color: #2C3522; }
+.tot .row.t b { font-family: var(--font-body); font-weight: 700; font-size: 28px; color: var(--accent); }
 
-.err { color: #D15228; min-height: 24px; font-weight: 600; font-size: 14px; margin-top: 12px; }
+.err { color: #D15228; min-height: 24px; font-weight: 600; font-size: 15px; margin-top: 12px; }
 .nav { display: flex; gap: 10px; margin-top: 20px; }
 .nav .btn { flex: 1; }
-.steps { color: var(--text-muted); margin: 0 0 16px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.steps { color: var(--text-muted); margin: 0 0 16px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-/* ==========================================================================
-   TOAST
-   ========================================================================== */
 .toast {
   position: fixed;
   left: 50%;
-  bottom: calc(90px + var(--safe-bottom));
+  bottom: calc(100px + var(--safe-bottom));
   transform: translateX(-50%) translateY(20px);
-  background: #2C3522;
-  color: #D1E535;
+  background: var(--accent);
+  color: var(--primary);
   padding: 12px 24px;
   border-radius: 30px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s;
@@ -485,9 +437,12 @@ input::placeholder { color: var(--text-muted); }
 }
 .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
+@media (min-width: 600px) and (max-width: 1024px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .sec { padding: 40px; }
+  .info { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (min-width: 768px) {
   .hero {
     grid-template-columns: 1.1fr 0.9fr;
@@ -503,6 +458,7 @@ input::placeholder { color: var(--text-muted); }
   .grid { grid-template-columns: repeat(2, 1fr); }
   .info { grid-template-columns: repeat(2, 1fr); }
 }
+
 @media (min-width: 1024px) {
   .grid { grid-template-columns: repeat(3, 1fr); }
   .info { grid-template-columns: repeat(3, 1fr); }
