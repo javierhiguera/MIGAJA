@@ -50,7 +50,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Fondo animado WebGL: canvas debajo del contenido */
 #bg-canvas {
   position: fixed;
   inset: 0;
@@ -474,7 +473,12 @@ input::placeholder { color: var(--text-muted); }
 .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 600px) {
-  .logo img { height: 50px; }
+  .logo img {
+    height: 50px;
+    width: auto;
+    transform: scale(1.4);
+    transform-origin: left center;
+  }
 }
 
 @media (min-width: 600px) and (max-width: 1024px) {
