@@ -2,7 +2,7 @@ const SUPABASE_URL = "https://ynncndundoooinkdrtiw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kSu1cHcql8zIEd-oxqOngA_CI908kyy";
 
 const CONFIG = {
-  brandName: "La Migaja",
+  brandName: "Migaja",
   whatsapp: "5491173537313",
   telefono: "11 7353-7313",
   phone: "11 7353-7313",
