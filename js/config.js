@@ -115,3 +115,9 @@ const PRODUCTOS = [
     disponible: true
   }
 ];
+
+const PROMO = {
+  elegibles: ["clasica", "crispy"],
+  kilosRequeridos: 2,
+  precio: 12000
+};
