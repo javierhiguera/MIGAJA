@@ -1,4 +1,3 @@
-
 const SUPABASE_URL = "https://ynncndundoooinkdrtiw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kSu1cHcql8zIEd-oxqOngA_CI908kyy";
 
@@ -82,7 +81,7 @@ const PRODUCTOS = [
   },
   {
     id: "semillas",
-    nombre: "Semillas saborizadas",
+    nombre: "Semillas",
     categoria: "Semillas",
     descripcion: "Milanesa de pollo con semillas saborizadas, lista para freír.",
     precio: 8000,
@@ -116,11 +115,3 @@ const PRODUCTOS = [
     disponible: true
   }
 ];
-
-// Promoción desactivada hasta definir su precio.
-// No se aplican descuentos sin una promoción confirmada.
-const PROMO = {
-  elegibles: [],
-  kilosRequeridos: 2,
-  precio: 0
-};
