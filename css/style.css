@@ -486,7 +486,7 @@ input::placeholder { color: var(--text-muted); }
   .logo img {
     height: 50px;
     width: auto;
-    transform: scale(5.5);
+    transform: scale(4.5);
     transform-origin: left center;
   }
 }
