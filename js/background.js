@@ -1,4 +1,3 @@
-
 (function () {
   function initBackground() {
     const canvas = document.getElementById("bg-canvas");
