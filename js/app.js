@@ -185,7 +185,7 @@
   
   function waUrl(id, c) {
     var f = S.f;
-    var t = ["*** NUEVO PEDIDO - LA MIGAJA ***", "----------------------------------", "Cliente: " + f.nombre, "Telefono: " + f.tel, "", "--- ENTREGA ---", "Modalidad: " + f.modo];
+    var t = ["*** NUEVO PEDIDO - MIGAJA ***", "----------------------------------", "Cliente: " + f.nombre, "Telefono: " + f.tel, "", "--- ENTREGA ---", "Modalidad: " + f.modo];
     if (f.modo === "Envío") { t.push("Dirección: " + f.calle + " " + f.altura + (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")" + (f.ref ? " - Ref: " + f.ref : "")); } else { t.push("Retiro en: " + CONFIG.direccionRetiro); }
     t.push("Horario: A coordinar por WhatsApp", "", "--- TU PEDIDO ---");
     c.L.forEach(function (x) { t.push("- " + x.q + " de " + x.txt + " - " + money(x.m)); });
@@ -198,7 +198,7 @@
     if (f.obs) { t.push("", "NOTA: " + f.obs); }
     t.push("", "----------------------------------", "AVISO AUTOMÁTICO:");
     if (f.modo === "Envío") { t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar la entrega y el horario."); } else { t.push("Tu pedido está siendo preparado. Te escribimos por acá para coordinar el horario de retiro."); }
-    t.push("", "Gracias por elegir La Migaja!");
+    t.push("", "Gracias por elegir MIGAJA!");
     return "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(t.join("\n"));
   }
   
