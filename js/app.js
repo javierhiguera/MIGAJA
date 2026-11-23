@@ -19,6 +19,36 @@
 
   var iso = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
 
+  function horarioPedidosAbierto() {
+    var cfg = CONFIG.orderHours;
+    if (!cfg || !cfg.days) return false;
+
+    var parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: cfg.timezone || "America/Argentina/Buenos_Aires",
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(new Date());
+
+    var values = {};
+    parts.forEach(function (part) { values[part.type] = part.value; });
+    var days = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    var day = days[values.weekday];
+    var now = Number(values.hour) * 60 + Number(values.minute);
+    var slots = cfg.days[day] || [];
+
+    return slots.some(function (slot) {
+      var from = Number(slot.from.slice(0, 2)) * 60 + Number(slot.from.slice(3, 5));
+      var to = Number(slot.to.slice(0, 2)) * 60 + Number(slot.to.slice(3, 5));
+      return now >= from && now < to;
+    });
+  }
+
+  function mensajeHorarioPedidos() {
+    return "La toma de pedidos está cerrada. Horarios: lunes a viernes de 14:00 a 20:00; sábados de 10:00 a 14:00. Domingos cerrado.";
+  }
+
   var qtxt = function (p, n) { return p.venta.unidad === "kg" ? String(n) + " kg" : n + " u."; };
   var zona = function () { return CONFIG.envio.zonas.filter(function (z) { return z.nombre === S.f.zona; })[0]; };
   var save = function () { ls.set("mg-cart", S.cart); };
@@ -119,7 +149,7 @@
       ["Cómo comprar", "Elegí tus milanesas, armá el carrito, completá tus datos y confirmá. Se abrirá WhatsApp con el resumen de tu pedido para que puedas enviarlo."],
       ["Entregas y retiros", "Retiro sin cargo en <b>Av. Obispo Jorge Novak 2076</b>.<br><br>Envíos únicamente en <b>Barrio La Esmeralda</b>, con un costo de <b>$1.500</b>."],
       ["Medios de pago", "Aceptamos transferencia y efectivo.<br><br><b>Alias:</b> migaja.com.ar<br><b>Titular:</b> Pedro Javier Higuera Marin."],
-      ["Horarios de atención", "<b>Lunes a viernes:</b> 10:00 a 14:00 y 17:00 a 20:00 hs.<br><b>Sábados:</b> 10:00 a 14:00 hs.<br><b>Domingos:</b> Cerrado."],
+      ["Horarios para realizar pedidos", "<b>Lunes a viernes:</b> 14:00 a 20:00 hs.<br><b>Sábados:</b> 10:00 a 14:00 hs.<br><b>Domingos:</b> Cerrado."],
       ["Horarios de delivery", "<b>Lunes a Viernes:</b> 14:00 a 20:00 hs."],
       ["Conservación", "Mantené las milanesas refrigeradas hasta el momento de prepararlas. Cocinalas completamente antes de consumirlas."],
       ["Contacto", "Para consultas o pedidos, comunicate con nosotros por WhatsApp.<br><br><a href='https://wa.me/" + CONFIG.whatsapp + "' target='_blank'><b>WhatsApp:</b> " + CONFIG.telefono + "</a>"]
@@ -221,6 +251,7 @@
 
   function validar(step) {
     var f = S.f, c = calcularTotales();
+    if (!horarioPedidosAbierto()) return mensajeHorarioPedidos();
     if (step === 0 && !c.L.length) return "Tu carrito está vacío.";
     if (step === 1) {
       if (!f.nombre.trim()) return "Escribí tu nombre y apellido.";
@@ -271,13 +302,18 @@
       h += totHtml(c);
       h += '<div class="err" id="err" role="alert"></div><div class="nav"><button type="button" class="btn o" data-a="prev">Atrás</button><button type="button" class="btn r" data-a="confirm"' + (S.busy ? " disabled" : "") + ">Confirmar pedido</button></div>";
     }
+    if (!horarioPedidosAbierto()) {
+      h = '<div class="box" role="status">' + esc(mensajeHorarioPedidos()) + '</div>' + h;
+    }
     pb.innerHTML = h;
   }
 
   function abrir(v) { S.open = v; $("#ov").hidden = !v; if (v) { renderPanel(); $("#x").focus(); } renderBar(); }
 
   async function confirmar() {
-    if (S.busy) return; var c = calcularTotales(); if (!c.L.length) return;
+    if (S.busy) return;
+    if (!horarioPedidosAbierto()) { renderPanel(); toast(mensajeHorarioPedidos()); return; }
+    var c = calcularTotales(); if (!c.L.length) return;
     var m = validar(1); if (m) { S.step = 1; renderPanel(); $("#err").textContent = m; return; }
     S.busy = true;
 
