@@ -1,3 +1,4 @@
+
 const SUPABASE_URL = "https://ynncndundoooinkdrtiw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kSu1cHcql8zIEd-oxqOngA_CI908kyy";
 
@@ -27,7 +28,20 @@ const CONFIG = {
     ]
   },
 
-  hoursText: "Lun a Vie: 10:00–14:00 y 17:00–20:00 | Sáb: 10:00–14:00 | Dom: Cerrado",
+  hoursText: "Lun a Vie: 14:00–20:00 | Sáb: 10:00–14:00 | Dom: Cerrado",
+
+  orderHours: {
+    timezone: "America/Argentina/Buenos_Aires",
+    days: {
+      1: [{ from: "14:00", to: "20:00" }],
+      2: [{ from: "14:00", to: "20:00" }],
+      3: [{ from: "14:00", to: "20:00" }],
+      4: [{ from: "14:00", to: "20:00" }],
+      5: [{ from: "14:00", to: "20:00" }],
+      6: [{ from: "10:00", to: "14:00" }]
+    }
+  },
+
   storageNote: "Mantené las milanesas refrigeradas y freílas bien antes de consumirlas.",
 
   schedule: {
@@ -115,9 +129,3 @@ const PRODUCTOS = [
     disponible: true
   }
 ];
-
-const PROMO = {
-  elegibles: ["clasica", "crispy"],
-  kilosRequeridos: 2,
-  precio: 12000
-};
