@@ -275,7 +275,7 @@
       if (!c.L.length) {
         h = "<p>Tu carrito está vacío.</p><button type=\"button\" class=\"btn y\" data-a=\"fin\">Explorar productos</button>";
       } else {
-        h = itemsHtml(c, true) + totHtml(c) + '<div class="nav"><button type="button" class="btn o" data-a="fin">Seguir comprando</button><button type="button" class="btn r" data-a="next">Ir al checkout</button></div><button type="button" class="btn o" data-a="vaciar">Vaciar carrito</button>';
+        h = itemsHtml(c, true) + totHtml(c) + '<div class="nav"><button type="button" class="btn o" data-a="fin">Seguir comprando</button><button type="button" class="btn r" data-a="next">Finalizar pedido</button></div><button type="button" class="btn o" data-a="vaciar">Vaciar carrito</button>';
       }
     } else if (S.step === 1) {
       h = '<p class="steps">Paso ' + S.step + " de 2</p>";
