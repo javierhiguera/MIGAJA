@@ -1,4 +1,3 @@
-
 (function () {
   "use strict";
 
@@ -99,20 +98,33 @@
       values[part.type] = part.value;
     });
 
-    var days = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    var days = {
+      Sun: 0,
+      Mon: 1,
+      Tue: 2,
+      Wed: 3,
+      Thu: 4,
+      Fri: 5,
+      Sat: 6
+    };
+
     var day = days[values.weekday];
     var now = Number(values.hour) * 60 + Number(values.minute);
     var slots = cfg.days[day] || [];
 
     return slots.some(function (slot) {
-      var from = Number(slot.from.slice(0, 2)) * 60 + Number(slot.from.slice(3, 5));
-      var to = Number(slot.to.slice(0, 2)) * 60 + Number(slot.to.slice(3, 5));
+      var from = Number(slot.from.slice(0, 2)) * 60 +
+        Number(slot.from.slice(3, 5));
+
+      var to = Number(slot.to.slice(0, 2)) * 60 +
+        Number(slot.to.slice(3, 5));
+
       return now >= from && now < to;
     });
   }
 
   function mensajeHorarioPedidos() {
-    return "La toma de pedidos está cerrada. Horarios: lunes a viernes de 14:00 a 20:00; sábados de 10:00 a 14:00. Domingos cerrado.";
+    return "La toma de pedidos está cerrada. Horarios: lunes a viernes de 10:00 a 14:00 y de 17:00 a 20:00; sábados de 10:00 a 14:00. Domingos cerrado.";
   }
 
   var qtxt = function (p, n) {
@@ -157,6 +169,7 @@
   function depurar() {
     S.cart = S.cart.filter(function (l) {
       var p = prod(l.id);
+
       return p &&
         p.disponible !== false &&
         p.opciones.indexOf(l.op) > -1 &&
@@ -226,6 +239,7 @@
     var v = PRODUCTOS.filter(function (p) {
       var okc = S.cat === "Todas" ||
         (S.cat === "Favoritos" ? S.favs.indexOf(p.id) > -1 : p.categoria === S.cat);
+
       return okc;
     });
 
@@ -281,8 +295,8 @@
       ["Cómo comprar", "Elegí tus milanesas, armá el carrito, completá tus datos y confirmá. Se abrirá WhatsApp con el resumen de tu pedido para que puedas enviarlo."],
       ["Entregas y retiros", "Retiro sin cargo en <b>Av. Obispo Jorge Novak 2076</b>.<br><br>Envíos únicamente en <b>La Esmeralda, Villa Vatteone y San Jorge</b>, con un costo de <b>$1.500</b>."],
       ["Medios de pago", "Aceptamos transferencia y efectivo.<br><br><b>Alias:</b> migaja.com.ar<br><b>Titular:</b> Pedro Javier Higuera Marin."],
-      ["Horarios para realizar pedidos", "<b>Lunes a viernes:</b> 14:00 a 20:00 hs.<br><b>Sábados:</b> 10:00 a 14:00 hs.<br><b>Domingos:</b> Cerrado."],
-      ["Horarios de delivery", "<b>Lunes a Viernes:</b> 14:00 a 20:00 hs."],
+      ["Horarios para realizar pedidos", "<b>Lunes a viernes:</b> 10:00 a 14:00 y 17:00 a 20:00 hs.<br><b>Sábados:</b> 10:00 a 14:00 hs.<br><b>Domingos:</b> Cerrado."],
+      ["Horarios de entrega y retiro", "<b>Lunes a viernes:</b> 10:00 a 14:00 y 17:00 a 20:00 hs.<br><b>Sábados:</b> 10:00 a 14:00 hs.<br><b>Domingos:</b> Cerrado."],
       ["Conservación", "Mantené las milanesas refrigeradas hasta el momento de prepararlas. Cocinalas completamente antes de consumirlas."],
       ["Contacto", "Para consultas o pedidos, comunicate con nosotros por WhatsApp.<br><br><a href='https://wa.me/" + CONFIG.whatsapp + "' target='_blank'><b>WhatsApp:</b> " + CONFIG.telefono + "</a>"]
     ];
@@ -326,7 +340,7 @@
   }
 
   function itemsHtml(c, edit) {
-    return c.L.map(function (x, i) {
+    return c.L.map(function (x) {
       return '<div class="row"><span>' + esc(x.txt) + " · " + esc(x.q) +
         "</span>" +
         (edit
@@ -366,7 +380,11 @@
       t.push("Dirección: " + CONFIG.direccionRetiro);
     }
 
-    t.push("Horario: A coordinar", "", "*PEDIDO*");
+    t.push(
+      "Horario: Dentro del horario de atención",
+      "",
+      "*PEDIDO*"
+    );
 
     c.L.forEach(function (x) {
       t.push("• " + x.q + " de " + x.txt + " — " + money(x.m));
@@ -398,7 +416,7 @@
     t.push(
       "",
       "*ESTADO*",
-      "Pedido recibido. Pendiente de coordinación.",
+      "Pedido registrado. Pendiente de confirmación.",
       "",
       "*Gracias por elegir Migaja.*"
     );
@@ -508,7 +526,11 @@
       }
 
       h += '<div class="box" style="background:#E3DCD3; border:none; margin-top:20px;">' +
-        '<b>Horario de entrega</b><br>Una vez confirmado el pedido, te escribimos por WhatsApp para coordinar el día y el horario exacto.</div>';
+        '<b>Horarios de entrega y retiro</b><br>' +
+        'Lunes a viernes: 10:00 a 14:00 y 17:00 a 20:00 hs.<br>' +
+        'Sábados: 10:00 a 14:00 hs.<br>' +
+        'Domingos: cerrado.<br><br>' +
+        'La entrega o el retiro se coordina por WhatsApp dentro de estos horarios.</div>';
 
       h += '<div class="seg">' +
         CONFIG.pagos.map(function (p) {
@@ -546,7 +568,7 @@
           ? ": " + esc(f.calle + " " + f.altura +
             (f.piso ? ", " + f.piso : "") + " (" + f.zona + ")")
           : ": " + esc(CONFIG.direccionRetiro)) +
-        "<br>Horario: A coordinar por WhatsApp<br>Pago: " +
+        "<br>Entrega o retiro dentro del horario de atención<br>Pago: " +
         esc(f.pago) + (f.obs ? "<br>Obs.: " + esc(f.obs) : "") +
         "</p>" + itemsHtml(c, false);
 
@@ -645,7 +667,6 @@
         SUPABASE_KEY
       );
 
-      // La ventana se abre antes de la consulta para evitar bloqueos del navegador.
       popup = window.open("about:blank", "_blank");
 
       var resultado = await supabase.rpc("crear_pedido_completo", {
@@ -669,7 +690,6 @@
         throw new Error("Supabase no devolvió una confirmación válida del pedido.");
       }
 
-      // Importes definitivos devueltos por Supabase.
       var id = data.pedido_id;
       c.env = Number(data.costo_envio);
       c.total = Number(data.total);
@@ -716,7 +736,6 @@
       S.error = "No se pudo registrar el pedido: " +
         (err.message || "Error desconocido.");
 
-      // El carrito se conserva para permitir reintentar.
       renderPanel();
       toast("No se pudo registrar el pedido");
 
