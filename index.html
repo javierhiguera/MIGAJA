@@ -1,40 +1,58 @@
+
 <!doctype html>
 <html lang="es" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#151312">
-<title>MILANESAS DE POLLO | Migaja</title>
-<meta name="description" content="Las clásicas de siempre, con ese inconfundible sabor a casa.">
+
+<title>Milanesas de pollo caseras en Florencio Varela | Migaja</title>
+
+<meta name="description" content="Milanesas de pollo caseras: clásicas, crispy, con semillas y rellenas. Pedí por WhatsApp en Florencio Varela.">
+
 <meta name="robots" content="index, follow">
+
 <link rel="canonical" href="https://www.migaja.com.ar/">
 <link rel="icon" href="assets/favicon/MIGAJA.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon/MIGAJA.png">
 
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_AR">
 <meta property="og:site_name" content="Migaja">
-<meta property="og:title" content="MILANESAS DE POLLO | Migaja">
-<meta property="og:description" content="Las clásicas de siempre, con ese inconfundible sabor a casa.">
+<meta property="og:title" content="Milanesas de pollo caseras en Florencio Varela | Migaja">
+<meta property="og:description" content="Milanesas de pollo caseras: clásicas, crispy, con semillas y rellenas. Pedí por WhatsApp en Florencio Varela.">
 <meta property="og:url" content="https://www.migaja.com.ar/">
 <meta property="og:image" content="https://www.migaja.com.ar/assets/img/hero.jpg">
 <meta property="og:image:alt" content="Milanesas de pollo caseras Migaja">
 
 <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
+
 <canvas id="bg-canvas"></canvas>
+
 <header class="top">
   <a class="logo" href="#">
     <img src="assets/img/MIGAJA-Logo.svg" alt="Migaja">
   </a>
+
   <div class="acts">
-    <button id="cartBtn" class="ib" type="button" aria-label="Abrir carrito"><span id="ic"></span><b id="cnt">0</b></button>
+    <button id="cartBtn" class="ib" type="button" aria-label="Abrir carrito">
+      <span id="ic"></span>
+      <b id="cnt">0</b>
+    </button>
   </div>
 </header>
 
 <section class="hero">
-  <img id="heroImg" src="assets/img/hero.jpg" alt="Milanesas de pollo caseras crudas, listas para freír">
+  <img
+    id="heroImg"
+    src="assets/img/hero.jpg"
+    alt="Milanesas de pollo caseras crudas, listas para freír"
+  >
+
   <div class="hero-t">
     <h1>MILANESAS DE POLLO</h1>
     <p>Las clásicas de siempre, con ese inconfundible sabor a casa.</p>
@@ -42,31 +60,52 @@
 </section>
 
 <main>
+
   <section id="catalogo" class="sec">
     <div class="sec-head">
       <h2>Catálogo</h2>
     </div>
+
     <div id="chips" class="chips"></div>
     <div id="lista" class="grid"></div>
   </section>
-  <section id="info" class="sec"><h2>Información</h2><div id="infoBody" class="info"></div></section>
+
+  <section id="info" class="sec">
+    <h2>Información</h2>
+    <div id="infoBody" class="info"></div>
+  </section>
+
 </main>
 
 <nav class="bottom-nav">
+
   <a href="#catalogo" class="bn-item on">
-    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <svg viewBox="0 0 24 24">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
     <span>Catálogo</span>
   </a>
+
   <button id="barBtn" class="bn-item bn-cart" type="button">
-    <svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 12h11L21 7H6"/></svg>
+    <svg viewBox="0 0 24 24">
+      <circle cx="9" cy="20" r="1.5"/>
+      <circle cx="18" cy="20" r="1.5"/>
+      <path d="M2 3h3l2.5 12h11L21 7H6"/>
+    </svg>
     <span id="barTxt">Carrito</span>
     <b id="barCount" class="bn-badge">0</b>
   </button>
+
 </nav>
 
 <div id="ov" class="ov" hidden>
   <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pt">
-    <div class="ph"><h2 id="pt"></h2><button class="ib" id="x" type="button" aria-label="Cerrar"></button></div>
+    <div class="ph">
+      <h2 id="pt"></h2>
+      <button class="ib" id="x" type="button" aria-label="Cerrar"></button>
+    </div>
+
     <div id="pb"></div>
   </div>
 </div>
