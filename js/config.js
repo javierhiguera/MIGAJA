@@ -68,8 +68,8 @@ const PRODUCTOS = [
     id: "clasica",
     nombre: "Clásica",
     categoria: "Clásicas",
-    descripcion: "Milanesa de pollo casera, lista para freír.",
-    precio: 6000,
+    descripcion: "Milanesa de pollo casera.",
+    precio: 7000,
     foto: "assets/img/clasica.jpg",
     venta: {
       unidad: "kg",
@@ -82,8 +82,8 @@ const PRODUCTOS = [
     id: "crispy",
     nombre: "Crispy",
     categoria: "Crispy",
-    descripcion: "Milanesa de pollo crispy, lista para freír.",
-    precio: 8000,
+    descripcion: "Milanesa de pollo crispy.",
+    precio: 9000,
     foto: "assets/img/crispy.jpg",
     venta: {
       unidad: "kg",
@@ -96,8 +96,8 @@ const PRODUCTOS = [
     id: "semillas",
     nombre: "Semillas",
     categoria: "Semillas",
-    descripcion: "Milanesa de pollo con semillas saborizadas, lista para freír.",
-    precio: 8000,
+    descripcion: "Milanesa de pollo con semillas saborizadas.",
+    precio: 9000,
     foto: "assets/img/semillas.jpg",
     venta: {
       unidad: "kg",
@@ -110,12 +110,12 @@ const PRODUCTOS = [
     id: "rellena",
     nombre: "Rellena",
     categoria: "Rellenas",
-    descripcion: "Milanesa de pollo rellena, lista para freír.",
-    precio: 10000,
+    descripcion: "Milanesa de pollo rellena.",
+    precio: 12000,
     foto: "assets/img/rellena-jq.jpg",
     fotos_opciones: {
-      "De jamón y queso": "assets/img/rellena-jq.jpg",
-      "De espinaca y ricota": "assets/img/rellena-er.jpg"
+      "De Jamón y Queso": "assets/img/rellena-jq.jpg",
+      "De Espinaca y Ricota": "assets/img/rellena-er.jpg"
     },
     venta: {
       unidad: "kg",
