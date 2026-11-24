@@ -5,135 +5,159 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin - Migaja</title>
 <link rel="icon" href="assets/favicon/MIGAJA.png" type="image/png">
-
 <style>
-  :root {
-    --primary: #D1E535;
-    --accent: #2C3522;
-    --bg: #f4f4f4;
-    --text: #333;
-  }
-
-  body {
-    font-family: system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    margin: 0;
-    padding: 20px;
-    color: var(--text);
-  }
-
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .card {
-    background: white;
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    margin-top: 0;
-    color: var(--accent);
-    font-size: 24px;
-  }
-
-  input, button {
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-
-  input {
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 10px;
-  }
-
-  button {
-    background: var(--primary);
-    color: var(--accent);
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-
-  button:hover {
-    opacity: 0.8;
-  }
-
-  button:disabled {
-    opacity: 0.5;
-    cursor: wait;
-  }
-
-  .pedido {
-    border-bottom: 1px solid #eee;
-    padding: 20px 0;
-  }
-
-  .pedido:last-child {
-    border-bottom: none;
-  }
-
-  .pedido-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: var(--accent);
-  }
-
-  .pedido-detalle {
-    font-size: 14px;
-    color: #555;
-    line-height: 1.5;
-  }
-
-  .pedido-detalle b {
-    color: #222;
-  }
-
-  .total {
-    font-size: 18px;
-    color: var(--accent);
-    font-weight: bold;
-    margin-top: 12px;
-    text-align: right;
-  }
-
-  #login {
-    text-align: center;
-    margin: 100px auto 0;
-    max-width: 450px;
-  }
-
-  #app {
-    display: none;
-  }
-
-  .error-msg {
-    color: #d15228;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-
-  .btn-refresh {
-    margin-bottom: 20px;
-  }
-
-  .btn-logout {
-    background: #eee;
-    margin-left: 8px;
-  }
+:root {
+  --primary: #D1E535;
+  --accent: #2C3522;
+  --bg: #f4f4f4;
+  --text: #333;
+  --muted: #777;
+  --border: #e8e8e8;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  margin: 0;
+  padding: 24px 16px;
+  color: var(--text);
+}
+.container { max-width: 1050px; margin: auto; }
+.card {
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.06);
+  margin-bottom: 18px;
+}
+h1 { margin: 0 0 8px; color: var(--accent); font-size: 25px; }
+h2 { color: var(--accent); font-size: 17px; margin: 0 0 14px; }
+p { line-height: 1.5; }
+input, button {
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+input { width: 100%; }
+button {
+  background: var(--primary);
+  color: var(--accent);
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+button:disabled { opacity: .5; cursor: wait; }
+#login {
+  text-align: center;
+  margin: 90px auto 0;
+  max-width: 450px;
+}
+#login input { max-width: 320px; margin: 7px auto; }
+#app { display: none; }
+.error-msg { color: #b83220; font-weight: 600; }
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+.toolbar input { flex: 1; min-width: 220px; }
+.btn-logout { background: #eee; }
+.estado {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #f0f0f0;
+  color: #444;
+  font-size: 12px;
+  font-weight: 700;
+}
+.pedido {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+}
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.pedido-id {
+  font-size: 12px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  margin-top: 5px;
+}
+.fecha { color: var(--muted); font-size: 13px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px 0;
+}
+.dato { min-width: 0; }
+.dato small {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.dato strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 600;
+}
+.seccion {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+.producto {
+  padding: 12px;
+  background: #f8f8f5;
+  border-radius: 9px;
+  margin: 9px 0;
+  font-size: 14px;
+}
+.producto-nombre { font-weight: 700; color: var(--accent); }
+.producto-info {
+  color: #666;
+  margin-top: 5px;
+  line-height: 1.6;
+}
+.total {
+  text-align: right;
+  color: var(--accent);
+  font-size: 21px;
+  font-weight: 800;
+  margin-top: 18px;
+}
+.observaciones {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.vacio, .mensaje {
+  color: var(--muted);
+  text-align: center;
+  padding: 25px 10px;
+}
+@media (max-width: 600px) {
+  body { padding: 12px 9px; }
+  .card { padding: 17px; }
+  .grid { grid-template-columns: 1fr; gap: 12px; }
+  .pedido { padding: 15px; }
+  .toolbar button { width: 100%; }
+}
 </style>
 </head>
 
@@ -141,58 +165,31 @@
 
 <div id="login" class="card">
   <h1>Panel de Administración</h1>
-
   <p>Ingresá tus credenciales de administrador.</p>
-
   <form id="loginForm">
-    <input
-      type="email"
-      id="email"
-      placeholder="Correo electrónico"
-      autocomplete="username"
-      required
-    >
-
-    <br>
-
-    <input
-      type="password"
-      id="pass"
-      placeholder="Contraseña"
-      autocomplete="current-password"
-      required
-    >
-
-    <br>
-
+    <input type="email" id="email" placeholder="Correo electrónico"
+      autocomplete="username" required>
+    <input type="password" id="pass" placeholder="Contraseña"
+      autocomplete="current-password" required>
     <button type="submit" id="btnLogin">Entrar</button>
   </form>
-
   <p id="error" class="error-msg"></p>
 </div>
 
 <div id="app" class="container">
   <div class="card">
+    <h1>Administración Migaja</h1>
+    <p>Gestión y consulta de pedidos.</p>
 
-    <h1>Pedidos Recientes</h1>
+    <div class="toolbar">
+      <input type="search" id="busqueda"
+        placeholder="Buscar por cliente, teléfono o ID...">
+      <button id="btnRefresh">Actualizar pedidos</button>
+      <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
+    </div>
 
-    <button
-      class="btn-refresh"
-      id="btnRefresh"
-      onclick="cargarPedidos()"
-    >
-      Actualizar Pedidos
-    </button>
-
-    <button
-      class="btn-logout"
-      onclick="cerrarSesion()"
-    >
-      Cerrar sesión
-    </button>
-
-    <div id="lista"></div>
-
+    <div id="resumen"></div>
+    <div id="lista" class="mensaje">Cargando pedidos...</div>
   </div>
 </div>
 
@@ -200,48 +197,92 @@
 <script src="js/config.js"></script>
 
 <script>
-  const ADMIN_UID = "6ba26374-49c7-4a46-8fa4-cb90a68acb25";
+"use strict";
 
-  const supabaseAdmin = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
+const ADMIN_UID = "6ba26374-49c7-4a46-8fa4-cb90a68acb25";
+
+const supabaseAdmin = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const loginBox = document.getElementById("login");
+const appBox = document.getElementById("app");
+const errorBox = document.getElementById("error");
+const lista = document.getElementById("lista");
+const resumen = document.getElementById("resumen");
+const busqueda = document.getElementById("busqueda");
+const btnLogin = document.getElementById("btnLogin");
+
+let pedidosActuales = [];
+
+const moneda = valor =>
+  new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 2
+  }).format(Number(valor || 0));
+
+function elemento(tag, clase, contenido) {
+  const el = document.createElement(tag);
+  if (clase) el.className = clase;
+  if (contenido !== undefined) el.textContent = contenido;
+  return el;
+}
+
+function dato(contenedor, titulo, valor) {
+  const bloque = elemento("div", "dato");
+  bloque.append(
+    elemento("small", "", titulo),
+    elemento("strong", "", valor || "No informado")
   );
+  contenedor.appendChild(bloque);
+}
 
-  const loginBox = document.getElementById("login");
-  const appBox = document.getElementById("app");
-  const errorBox = document.getElementById("error");
-  const lista = document.getElementById("lista");
+function mostrarLogin(mensaje) {
+  appBox.style.display = "none";
+  loginBox.style.display = "block";
+  errorBox.textContent = mensaje || "";
+}
 
-  function mostrarLogin(mensaje) {
-    appBox.style.display = "none";
-    loginBox.style.display = "block";
-    errorBox.textContent = mensaje || "";
+function mostrarPanel() {
+  loginBox.style.display = "none";
+  appBox.style.display = "block";
+  errorBox.textContent = "";
+}
+
+async function verificarAdministrador() {
+  const { data, error } = await supabaseAdmin.auth.getSession();
+
+  if (error || !data.session) {
+    mostrarLogin("");
+    return false;
   }
 
-  function mostrarPanel() {
-    loginBox.style.display = "none";
-    appBox.style.display = "block";
-    errorBox.textContent = "";
+  if (data.session.user.id !== ADMIN_UID) {
+    await supabaseAdmin.auth.signOut();
+    mostrarLogin("Usuario sin autorización.");
+    return false;
   }
 
-  async function login(event) {
-    event.preventDefault();
+  return true;
+}
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("pass").value;
-    const boton = document.getElementById("btnLogin");
+async function login(event) {
+  event.preventDefault();
 
-    boton.disabled = true;
-    boton.textContent = "Ingresando...";
-    errorBox.textContent = "";
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("pass").value;
 
+  btnLogin.disabled = true;
+  btnLogin.textContent = "Ingresando...";
+  errorBox.textContent = "";
+
+  try {
     const { data, error } = await supabaseAdmin.auth.signInWithPassword({
-      email: email,
-      password: password
+      email,
+      password
     });
-
-    boton.disabled = false;
-    boton.textContent = "Entrar";
 
     if (error) {
       mostrarLogin("Correo o contraseña incorrectos.");
@@ -255,145 +296,206 @@
     }
 
     document.getElementById("pass").value = "";
-
     mostrarPanel();
     await cargarPedidos();
+
+  } catch (error) {
+    mostrarLogin("No se pudo conectar con el servidor.");
+  } finally {
+    btnLogin.disabled = false;
+    btnLogin.textContent = "Entrar";
   }
+}
 
-  async function cargarPedidos() {
-    lista.textContent = "Cargando pedidos...";
+async function cargarPedidos() {
+  lista.textContent = "Cargando pedidos...";
+  resumen.textContent = "";
 
-    const { data: sessionData, error: sessionError } =
-      await supabaseAdmin.auth.getSession();
+  const autorizado = await verificarAdministrador();
+  if (!autorizado) return;
 
-    if (sessionError || !sessionData.session) {
-      mostrarLogin("La sesión expiró. Ingresá nuevamente.");
-      return;
-    }
-
-    if (sessionData.session.user.id !== ADMIN_UID) {
-      await supabaseAdmin.auth.signOut();
-      mostrarLogin("Usuario sin autorización.");
-      return;
-    }
-
-    const { data: pedidos, error } = await supabaseAdmin
-      .from("pedidos")
-      .select(`
+  const { data, error } = await supabaseAdmin
+    .from("pedidos")
+    .select(`
+      id,
+      created_at,
+      cliente_nombre,
+      cliente_telefono,
+      metodo_pago,
+      modalidad,
+      total,
+      observaciones,
+      estado,
+      direccion,
+      zona,
+      costo_envio,
+      pedido_detalles (
         id,
-        created_at,
-        cliente_nombre,
-        cliente_telefono,
-        modalidad,
-        metodo_pago,
-        total,
-        pedido_detalles (*)
-      `)
-      .order("created_at", { ascending: false });
+        producto_id,
+        producto_nombre,
+        cantidad,
+        precio_unitario,
+        subtotal,
+        opcion
+      )
+    `)
+    .order("created_at", { ascending: false });
 
-    if (error) {
-      lista.textContent = "Error al cargar los pedidos: " + error.message;
-      return;
-    }
-
-    lista.replaceChildren();
-
-    if (!pedidos || pedidos.length === 0) {
-      lista.textContent = "No hay pedidos todavía.";
-      return;
-    }
-
-    pedidos.forEach(function(p) {
-      const pedido = document.createElement("div");
-      pedido.className = "pedido";
-
-      const header = document.createElement("div");
-      header.className = "pedido-header";
-
-      const cliente = document.createElement("span");
-      cliente.textContent =
-        (p.cliente_nombre || "") + " (" +
-        (p.cliente_telefono || "") + ")";
-
-      const fecha = document.createElement("span");
-      fecha.textContent = p.created_at
-        ? new Date(p.created_at).toLocaleString("es-AR")
-        : "Fecha no disponible";
-
-      header.append(cliente, fecha);
-
-      const detalle = document.createElement("div");
-      detalle.className = "pedido-detalle";
-
-      const entrega = document.createElement("div");
-      entrega.textContent = "Entrega: " + (p.modalidad || "");
-
-      const pago = document.createElement("div");
-      pago.textContent = "Pago: " + (p.metodo_pago || "");
-
-      const productosTitulo = document.createElement("b");
-      productosTitulo.textContent = "Productos:";
-
-      detalle.append(entrega, pago, productosTitulo);
-
-      if (Array.isArray(p.pedido_detalles) &&
-          p.pedido_detalles.length > 0) {
-
-        p.pedido_detalles.forEach(function(d) {
-          const linea = document.createElement("div");
-
-          linea.textContent =
-            "- " + d.cantidad + " kg de " +
-            (d.producto_nombre || "Producto") +
-            " - $" + d.subtotal;
-
-          detalle.appendChild(linea);
-        });
-
-      } else {
-        const sinDetalles = document.createElement("div");
-        sinDetalles.textContent = "Sin detalles";
-        detalle.appendChild(sinDetalles);
-      }
-
-      const total = document.createElement("div");
-      total.className = "total";
-      total.textContent = "Total: $" + p.total;
-
-      pedido.append(header, detalle, total);
-      lista.appendChild(pedido);
-    });
+  if (error) {
+    lista.textContent = "Error al cargar pedidos: " + error.message;
+    return;
   }
 
-  async function cerrarSesion() {
-    await supabaseAdmin.auth.signOut();
-    lista.replaceChildren();
-    mostrarLogin("Sesión cerrada.");
+  pedidosActuales = data || [];
+  renderizarPedidos();
+}
+
+function renderizarPedidos() {
+  const termino = busqueda.value.trim().toLowerCase();
+
+  const filtrados = pedidosActuales.filter(p => {
+    return [
+      p.id,
+      p.cliente_nombre,
+      p.cliente_telefono
+    ].some(valor => String(valor || "").toLowerCase().includes(termino));
+  });
+
+  resumen.textContent =
+    "Pedidos registrados: " + pedidosActuales.length +
+    " | Resultados: " + filtrados.length;
+
+  lista.replaceChildren();
+
+  if (!filtrados.length) {
+    lista.appendChild(elemento("div", "vacio",
+      pedidosActuales.length
+        ? "No se encontraron pedidos."
+        : "No hay pedidos todavía."
+    ));
+    return;
   }
 
-  document
-    .getElementById("loginForm")
-    .addEventListener("submit", login);
+  filtrados.forEach(p => {
+    const tarjeta = elemento("article", "pedido");
 
-  async function iniciarPanel() {
-    const { data, error } = await supabaseAdmin.auth.getSession();
+    // Encabezado
+    const encabezado = elemento("div", "pedido-header");
+    const identificacion = elemento("div");
 
-    if (error || !data.session) {
-      mostrarLogin("");
-      return;
+    identificacion.append(
+      elemento("strong", "", p.cliente_nombre || "Cliente sin nombre"),
+      elemento("div", "pedido-id", "ID: " + p.id)
+    );
+
+    const fecha = p.created_at
+      ? new Date(p.created_at).toLocaleString("es-AR")
+      : "Fecha no disponible";
+
+    const estado = elemento("div");
+    estado.append(
+      elemento("div", "fecha", fecha),
+      elemento("div", "estado", p.estado || "Sin estado")
+    );
+
+    encabezado.append(identificacion, estado);
+    tarjeta.appendChild(encabezado);
+
+    // Datos generales
+    const datos = elemento("div", "grid");
+
+    dato(datos, "Teléfono", p.cliente_telefono);
+    dato(datos, "Modalidad", p.modalidad);
+    dato(datos, "Medio de pago", p.metodo_pago);
+    dato(datos, "Dirección", p.direccion);
+    dato(datos, "Zona", p.zona);
+    dato(datos, "Costo de envío", moneda(p.costo_envio));
+
+    tarjeta.appendChild(datos);
+
+    // Observaciones
+    const observaciones = elemento("div", "seccion");
+    observaciones.appendChild(elemento("h2", "", "Observaciones"));
+    observaciones.appendChild(
+      elemento("div", "observaciones",
+        p.observaciones || "Sin observaciones."
+      )
+    );
+    tarjeta.appendChild(observaciones);
+
+    // Productos
+    const productos = elemento("div", "seccion");
+    productos.appendChild(elemento("h2", "", "Detalle de productos"));
+
+    if (Array.isArray(p.pedido_detalles) && p.pedido_detalles.length) {
+      p.pedido_detalles.forEach(d => {
+        const producto = elemento("div", "producto");
+
+        producto.appendChild(elemento(
+          "div",
+          "producto-nombre",
+          d.producto_nombre || d.producto_id || "Producto"
+        ));
+
+        const info = [
+          "Opción: " + (d.opcion || "No especificada"),
+          "Cantidad: " + d.cantidad + " kg",
+          "Precio por kg: " + moneda(d.precio_unitario),
+          "Subtotal: " + moneda(d.subtotal)
+        ];
+
+        producto.appendChild(
+          elemento("div", "producto-info", info.join(" | "))
+        );
+
+        productos.appendChild(producto);
+      });
+    } else {
+      productos.appendChild(
+        elemento("div", "producto-info", "Sin detalles registrados.")
+      );
     }
 
-    if (data.session.user.id !== ADMIN_UID) {
-      await supabaseAdmin.auth.signOut();
-      mostrarLogin("Usuario sin autorización.");
-      return;
-    }
+    tarjeta.appendChild(productos);
 
+    // Total
+    tarjeta.appendChild(
+      elemento("div", "total", "Total del pedido: " + moneda(p.total))
+    );
+
+    lista.appendChild(tarjeta);
+  });
+}
+
+async function cerrarSesion() {
+  await supabaseAdmin.auth.signOut();
+  pedidosActuales = [];
+  lista.replaceChildren();
+  resumen.textContent = "";
+  mostrarLogin("Sesión cerrada.");
+}
+
+document.getElementById("loginForm")
+  .addEventListener("submit", login);
+
+document.getElementById("btnRefresh")
+  .addEventListener("click", cargarPedidos);
+
+document.getElementById("btnLogout")
+  .addEventListener("click", cerrarSesion);
+
+busqueda.addEventListener("input", renderizarPedidos);
+
+async function iniciarPanel() {
+  const autorizado = await verificarAdministrador();
+
+  if (autorizado) {
     mostrarPanel();
     await cargarPedidos();
   }
+}
 
-  iniciarPanel();
+iniciarPanel();
 </script>
 
 </body>
