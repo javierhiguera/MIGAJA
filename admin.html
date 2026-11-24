@@ -379,7 +379,6 @@ function renderizarPedidos() {
   filtrados.forEach(p => {
     const tarjeta = elemento("article", "pedido");
 
-    // Encabezado
     const encabezado = elemento("div", "pedido-header");
     const identificacion = elemento("div");
 
@@ -401,7 +400,6 @@ function renderizarPedidos() {
     encabezado.append(identificacion, estado);
     tarjeta.appendChild(encabezado);
 
-    // Datos generales
     const datos = elemento("div", "grid");
 
     dato(datos, "Teléfono", p.cliente_telefono);
@@ -413,7 +411,6 @@ function renderizarPedidos() {
 
     tarjeta.appendChild(datos);
 
-    // Observaciones
     const observaciones = elemento("div", "seccion");
     observaciones.appendChild(elemento("h2", "", "Observaciones"));
     observaciones.appendChild(
@@ -423,7 +420,6 @@ function renderizarPedidos() {
     );
     tarjeta.appendChild(observaciones);
 
-    // Productos
     const productos = elemento("div", "seccion");
     productos.appendChild(elemento("h2", "", "Detalle de productos"));
 
@@ -458,7 +454,6 @@ function renderizarPedidos() {
 
     tarjeta.appendChild(productos);
 
-    // Total
     tarjeta.appendChild(
       elemento("div", "total", "Total del pedido: " + moneda(p.total))
     );
