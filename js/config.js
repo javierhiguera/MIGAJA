@@ -99,7 +99,7 @@ const PRODUCTOS = [
     categoria: "Clásicas",
     descripcion: "Milanesa de pollo casera.",
     precio: 7000,
-    foto: "assets/img/clasica.jpg",
+    foto: "assets/img/clasica.webp",
     venta: {
       unidad: "kg",
       etiqueta: "el kilo"
@@ -113,7 +113,7 @@ const PRODUCTOS = [
     categoria: "Crispy",
     descripcion: "Milanesa de pollo crispy.",
     precio: 9000,
-    foto: "assets/img/crispy.jpg",
+    foto: "assets/img/crispy.webp",
     venta: {
       unidad: "kg",
       etiqueta: "el kilo"
@@ -127,7 +127,7 @@ const PRODUCTOS = [
     categoria: "Semillas",
     descripcion: "Milanesa de pollo con semillas saborizadas.",
     precio: 9000,
-    foto: "assets/img/semillas.jpg",
+    foto: "assets/img/semillas.webp",
     venta: {
       unidad: "kg",
       etiqueta: "el kilo"
@@ -141,10 +141,10 @@ const PRODUCTOS = [
     categoria: "Rellenas",
     descripcion: "Milanesa de pollo rellena.",
     precio: 12000,
-    foto: "assets/img/rellena-jq.jpg",
+    foto: "assets/img/rellena_jq.webp",
     fotos_opciones: {
-      "De Jamón y Queso": "assets/img/rellena-jq.jpg",
-      "De Espinaca y Ricota": "assets/img/rellena-er.jpg"
+      "De Jamón y Queso": "assets/img/rellena_jq.webp",
+      "De Espinaca y Ricota": "assets/img/rellena_er.webp"
     },
     venta: {
       unidad: "kg",
