@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -5,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin - Migaja</title>
 <link rel="icon" href="assets/favicon/MIGAJA.png" type="image/png">
+
 <style>
   :root {
     --primary: #D1E535;
@@ -12,105 +14,387 @@
     --bg: #f4f4f4;
     --text: #333;
   }
-  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); }
-  .container { max-width: 900px; margin: 0 auto; }
-  .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
-  h1 { margin-top: 0; color: var(--accent); font-size: 24px; }
-  input, button { padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
-  input { width: 100%; max-width: 300px; margin-bottom: 10px; }
-  button { background: var(--primary); color: var(--accent); border: none; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
-  button:hover { opacity: 0.8; }
-  .pedido { border-bottom: 1px solid #eee; padding: 20px 0; }
-  .pedido:last-child { border-bottom: none; }
-  .pedido-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: var(--accent); }
-  .pedido-detalle { font-size: 14px; color: #555; line-height: 1.5; }
-  .pedido-detalle b { color: #222; }
-  .total { font-size: 18px; color: var(--accent); font-weight: bold; margin-top: 12px; text-align: right; }
-  #login { text-align: center; margin-top: 100px; }
-  #app { display: none; }
-  .error-msg { color: #d15228; font-weight: bold; margin-top: 10px; }
-  .btn-refresh { margin-bottom: 20px; }
+
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 20px;
+    color: var(--text);
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    margin-top: 0;
+    color: var(--accent);
+    font-size: 24px;
+  }
+
+  input, button {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  input {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    background: var(--primary);
+    color: var(--accent);
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  .pedido {
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+  }
+
+  .pedido:last-child {
+    border-bottom: none;
+  }
+
+  .pedido-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: var(--accent);
+  }
+
+  .pedido-detalle {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .pedido-detalle b {
+    color: #222;
+  }
+
+  .total {
+    font-size: 18px;
+    color: var(--accent);
+    font-weight: bold;
+    margin-top: 12px;
+    text-align: right;
+  }
+
+  #login {
+    text-align: center;
+    margin: 100px auto 0;
+    max-width: 450px;
+  }
+
+  #app {
+    display: none;
+  }
+
+  .error-msg {
+    color: #d15228;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .btn-refresh {
+    margin-bottom: 20px;
+  }
+
+  .btn-logout {
+    background: #eee;
+    margin-left: 8px;
+  }
 </style>
 </head>
+
 <body>
 
 <div id="login" class="card">
   <h1>Panel de Administración</h1>
-  <p>Ingresá la contraseña para ver los pedidos.</p>
-  <input type="password" id="pass" placeholder="Contraseña secreta">
-  <br>
-  <button onclick="login()">Entrar</button>
+
+  <p>Ingresá tus credenciales de administrador.</p>
+
+  <form id="loginForm">
+    <input
+      type="email"
+      id="email"
+      placeholder="Correo electrónico"
+      autocomplete="username"
+      required
+    >
+
+    <br>
+
+    <input
+      type="password"
+      id="pass"
+      placeholder="Contraseña"
+      autocomplete="current-password"
+      required
+    >
+
+    <br>
+
+    <button type="submit" id="btnLogin">Entrar</button>
+  </form>
+
   <p id="error" class="error-msg"></p>
 </div>
 
 <div id="app" class="container">
   <div class="card">
+
     <h1>Pedidos Recientes</h1>
-    <button class="btn-refresh" onclick="cargarPedidos()">Actualizar Pedidos</button>
+
+    <button
+      class="btn-refresh"
+      id="btnRefresh"
+      onclick="cargarPedidos()"
+    >
+      Actualizar Pedidos
+    </button>
+
+    <button
+      class="btn-logout"
+      onclick="cerrarSesion()"
+    >
+      Cerrar sesión
+    </button>
+
     <div id="lista"></div>
+
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js"></script>
+
 <script>
-  var claveActual = "";
-  
-  function login() {
-    var input = document.getElementById("pass").value;
-    if (!input) return;
-    
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    
-    claveActual = input;
-    cargarPedidos(claveActual);
+  const ADMIN_UID = "6ba26374-49c7-4a46-8fa4-cb90a68acb25";
+
+  const supabaseAdmin = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  const loginBox = document.getElementById("login");
+  const appBox = document.getElementById("app");
+  const errorBox = document.getElementById("error");
+  const lista = document.getElementById("lista");
+
+  function mostrarLogin(mensaje) {
+    appBox.style.display = "none";
+    loginBox.style.display = "block";
+    errorBox.textContent = mensaje || "";
   }
 
-  async function cargarPedidos(clave) {
-    if (!clave) clave = claveActual;
+  function mostrarPanel() {
+    loginBox.style.display = "none";
+    appBox.style.display = "block";
+    errorBox.textContent = "";
+  }
 
-    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    var lista = document.getElementById("lista");
-    lista.innerHTML = "Cargando pedidos...";
+  async function login(event) {
+    event.preventDefault();
 
-    var { data: pedidos, error } = await supabase.rpc('obtener_pedidos_admin', {
-      p_clave: clave
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("pass").value;
+    const boton = document.getElementById("btnLogin");
+
+    boton.disabled = true;
+    boton.textContent = "Ingresando...";
+    errorBox.textContent = "";
+
+    const { data, error } = await supabaseAdmin.auth.signInWithPassword({
+      email: email,
+      password: password
     });
 
+    boton.disabled = false;
+    boton.textContent = "Entrar";
+
     if (error) {
-      document.getElementById("app").style.display = "none";
-      document.getElementById("login").style.display = "block";
-      document.getElementById("error").textContent = "Contraseña incorrecta o acceso denegado.";
+      mostrarLogin("Correo o contraseña incorrectos.");
       return;
     }
+
+    if (!data.user || data.user.id !== ADMIN_UID) {
+      await supabaseAdmin.auth.signOut();
+      mostrarLogin("Usuario sin autorización.");
+      return;
+    }
+
+    document.getElementById("pass").value = "";
+
+    mostrarPanel();
+    await cargarPedidos();
+  }
+
+  async function cargarPedidos() {
+    lista.textContent = "Cargando pedidos...";
+
+    const { data: sessionData, error: sessionError } =
+      await supabaseAdmin.auth.getSession();
+
+    if (sessionError || !sessionData.session) {
+      mostrarLogin("La sesión expiró. Ingresá nuevamente.");
+      return;
+    }
+
+    if (sessionData.session.user.id !== ADMIN_UID) {
+      await supabaseAdmin.auth.signOut();
+      mostrarLogin("Usuario sin autorización.");
+      return;
+    }
+
+    const { data: pedidos, error } = await supabaseAdmin
+      .from("pedidos")
+      .select(`
+        id,
+        created_at,
+        cliente_nombre,
+        cliente_telefono,
+        modalidad,
+        metodo_pago,
+        total,
+        pedido_detalles (*)
+      `)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      lista.textContent = "Error al cargar los pedidos: " + error.message;
+      return;
+    }
+
+    lista.replaceChildren();
 
     if (!pedidos || pedidos.length === 0) {
-      lista.innerHTML = "<p>No hay pedidos todavía.</p>";
+      lista.textContent = "No hay pedidos todavía.";
       return;
     }
 
-    lista.innerHTML = pedidos.map(function(p) {
-      var fecha = new Date(p.created_at).toLocaleString("es-AR");
-      var detalles = p.pedido_detalles ? p.pedido_detalles.map(function(d) {
-        return "- " + d.cantidad + " kg de " + d.producto_nombre + " - $" + d.subtotal;
-      }).join("<br>") : "Sin detalles";
+    pedidos.forEach(function(p) {
+      const pedido = document.createElement("div");
+      pedido.className = "pedido";
 
-      return `
-        <div class="pedido">
-          <div class="pedido-header">
-            <span>${p.cliente_nombre} (${p.cliente_telefono})</span>
-            <span>${fecha}</span>
-          </div>
-          <div class="pedido-detalle">
-            <b>Entrega:</b> ${p.modalidad} | <b>Pago:</b> ${p.metodo_pago}<br>
-            <b>Productos:</b><br>${detalles}
-          </div>
-          <div class="total">Total: $${p.total}</div>
-        </div>
-      `;
-    }).join("");
+      const header = document.createElement("div");
+      header.className = "pedido-header";
+
+      const cliente = document.createElement("span");
+      cliente.textContent =
+        (p.cliente_nombre || "") + " (" +
+        (p.cliente_telefono || "") + ")";
+
+      const fecha = document.createElement("span");
+      fecha.textContent = p.created_at
+        ? new Date(p.created_at).toLocaleString("es-AR")
+        : "Fecha no disponible";
+
+      header.append(cliente, fecha);
+
+      const detalle = document.createElement("div");
+      detalle.className = "pedido-detalle";
+
+      const entrega = document.createElement("div");
+      entrega.textContent = "Entrega: " + (p.modalidad || "");
+
+      const pago = document.createElement("div");
+      pago.textContent = "Pago: " + (p.metodo_pago || "");
+
+      const productosTitulo = document.createElement("b");
+      productosTitulo.textContent = "Productos:";
+
+      detalle.append(entrega, pago, productosTitulo);
+
+      if (Array.isArray(p.pedido_detalles) &&
+          p.pedido_detalles.length > 0) {
+
+        p.pedido_detalles.forEach(function(d) {
+          const linea = document.createElement("div");
+
+          linea.textContent =
+            "- " + d.cantidad + " kg de " +
+            (d.producto_nombre || "Producto") +
+            " - $" + d.subtotal;
+
+          detalle.appendChild(linea);
+        });
+
+      } else {
+        const sinDetalles = document.createElement("div");
+        sinDetalles.textContent = "Sin detalles";
+        detalle.appendChild(sinDetalles);
+      }
+
+      const total = document.createElement("div");
+      total.className = "total";
+      total.textContent = "Total: $" + p.total;
+
+      pedido.append(header, detalle, total);
+      lista.appendChild(pedido);
+    });
   }
+
+  async function cerrarSesion() {
+    await supabaseAdmin.auth.signOut();
+    lista.replaceChildren();
+    mostrarLogin("Sesión cerrada.");
+  }
+
+  document
+    .getElementById("loginForm")
+    .addEventListener("submit", login);
+
+  async function iniciarPanel() {
+    const { data, error } = await supabaseAdmin.auth.getSession();
+
+    if (error || !data.session) {
+      mostrarLogin("");
+      return;
+    }
+
+    if (data.session.user.id !== ADMIN_UID) {
+      await supabaseAdmin.auth.signOut();
+      mostrarLogin("Usuario sin autorización.");
+      return;
+    }
+
+    mostrarPanel();
+    await cargarPedidos();
+  }
+
+  iniciarPanel();
 </script>
 
 </body>
