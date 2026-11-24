@@ -17,15 +17,25 @@ const CONFIG = {
   condicionesRetiro: "Retiro sin cargo. Coordiná el horario al confirmar el pedido.",
 
   envio: {
-    habilitado: true,
-    zonas: [
-      {
-        nombre: "Barrio La Esmeralda",
-        costo: 1500,
-        minAmount: 0
-      }
-    ]
-  },
+  habilitado: true,
+  zonas: [
+    {
+      nombre: "La Esmeralda",
+      costo: 1500,
+      minAmount: 0
+    },
+    {
+      nombre: "Villa Vatteone",
+      costo: 1500,
+      minAmount: 0
+    },
+    {
+      nombre: "San Jorge",
+      costo: 1500,
+      minAmount: 0
+    }
+  ]
+},
 
   hoursText: "Lun a Vie: 14:00–20:00 | Sáb: 10:00–14:00 | Dom: Cerrado",
 
