@@ -1,3 +1,4 @@
+
 const SUPABASE_URL = "https://ynncndundoooinkdrtiw.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kSu1cHcql8zIEd-oxqOngA_CI908kyy";
 
@@ -17,37 +18,54 @@ const CONFIG = {
   condicionesRetiro: "Retiro sin cargo. Coordiná el horario al confirmar el pedido.",
 
   envio: {
-  habilitado: true,
-  zonas: [
-    {
-      nombre: "La Esmeralda",
-      costo: 1500,
-      minAmount: 0
-    },
-    {
-      nombre: "Villa Vatteone",
-      costo: 1500,
-      minAmount: 0
-    },
-    {
-      nombre: "San Jorge",
-      costo: 1500,
-      minAmount: 0
-    }
-  ]
-},
+    habilitado: true,
+    zonas: [
+      {
+        nombre: "La Esmeralda",
+        costo: 1500,
+        minAmount: 0
+      },
+      {
+        nombre: "Villa Vatteone",
+        costo: 1500,
+        minAmount: 0
+      },
+      {
+        nombre: "San Jorge",
+        costo: 1500,
+        minAmount: 0
+      }
+    ]
+  },
 
-  hoursText: "Lun a Vie: 14:00–20:00 | Sáb: 10:00–14:00 | Dom: Cerrado",
+  hoursText: "Lun a Vie: 10:00–14:00 y 17:00–20:00 | Sáb: 10:00–14:00 | Dom: Cerrado",
 
   orderHours: {
     timezone: "America/Argentina/Buenos_Aires",
     days: {
-      1: [{ from: "14:00", to: "20:00" }],
-      2: [{ from: "14:00", to: "20:00" }],
-      3: [{ from: "14:00", to: "20:00" }],
-      4: [{ from: "14:00", to: "20:00" }],
-      5: [{ from: "14:00", to: "20:00" }],
-      6: [{ from: "10:00", to: "14:00" }]
+      1: [
+        { from: "10:00", to: "14:00" },
+        { from: "17:00", to: "20:00" }
+      ],
+      2: [
+        { from: "10:00", to: "14:00" },
+        { from: "17:00", to: "20:00" }
+      ],
+      3: [
+        { from: "10:00", to: "14:00" },
+        { from: "17:00", to: "20:00" }
+      ],
+      4: [
+        { from: "10:00", to: "14:00" },
+        { from: "17:00", to: "20:00" }
+      ],
+      5: [
+        { from: "10:00", to: "14:00" },
+        { from: "17:00", to: "20:00" }
+      ],
+      6: [
+        { from: "10:00", to: "14:00" }
+      ]
     }
   },
 
@@ -64,7 +82,8 @@ const CONFIG = {
     delivery: {
       days: [1, 2, 3, 4, 5, 6],
       slots: [
-        { from: "14:00", to: "20:00" }
+        { from: "10:00", to: "14:00" },
+        { from: "17:00", to: "20:00" }
       ]
     },
     leadHours: 2,
