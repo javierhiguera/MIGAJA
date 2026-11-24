@@ -1,162 +1,424 @@
+
 <!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Admin - Migaja</title>
+<meta name="theme-color" content="#2C3522">
+<title>Administración | Migaja</title>
 <link rel="icon" href="assets/favicon/MIGAJA.png" type="image/png">
+
 <style>
 :root {
   --primary: #D1E535;
   --accent: #2C3522;
-  --bg: #f4f4f4;
-  --text: #333;
-  --muted: #777;
-  --border: #e8e8e8;
+  --bg: #f4f5f1;
+  --surface: #fff;
+  --text: #30352c;
+  --muted: #777d70;
+  --border: #e5e8df;
+  --danger: #b83220;
+  --shadow: 0 4px 18px rgba(25,35,15,.06);
 }
 * { box-sizing: border-box; }
+
 body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: var(--bg);
   margin: 0;
   padding: 24px 16px;
+  background: var(--bg);
   color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-.container { max-width: 1050px; margin: auto; }
-.card {
-  background: white;
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.06);
-  margin-bottom: 18px;
+
+button, input, select {
+  font: inherit;
 }
-h1 { margin: 0 0 8px; color: var(--accent); font-size: 25px; }
-h2 { color: var(--accent); font-size: 17px; margin: 0 0 14px; }
-p { line-height: 1.5; }
-input, button {
-  padding: 12px 14px;
-  font-size: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-input { width: 100%; }
+
 button {
+  border: 0;
+  border-radius: 9px;
+  padding: 11px 15px;
   background: var(--primary);
   color: var(--accent);
-  border: none;
   font-weight: 700;
   cursor: pointer;
+  transition: opacity .15s ease, transform .15s ease;
 }
+
+button:hover { opacity: .88; }
+button:active { transform: scale(.98); }
 button:disabled { opacity: .5; cursor: wait; }
-#login {
-  text-align: center;
-  margin: 90px auto 0;
-  max-width: 450px;
+
+input, select {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: white;
+  color: var(--text);
+  outline: none;
 }
-#login input { max-width: 320px; margin: 7px auto; }
+
+input:focus, select:focus {
+  border-color: #9eaf32;
+  box-shadow: 0 0 0 3px rgba(209,229,53,.17);
+}
+
+.container {
+  width: 100%;
+  max-width: 1250px;
+  margin: auto;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+
+h1, h2, h3, p { margin-top: 0; }
+
+h1 {
+  color: var(--accent);
+  font-size: 25px;
+  margin-bottom: 5px;
+}
+
+h2 {
+  color: var(--accent);
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  color: var(--accent);
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+#login {
+  max-width: 430px;
+  margin: 90px auto;
+  text-align: center;
+}
+
+#login input {
+  margin: 7px 0;
+}
+
+#login button {
+  width: 100%;
+  margin-top: 8px;
+}
+
 #app { display: none; }
-.error-msg { color: #b83220; font-weight: 600; }
+
+.error-msg {
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.topbar p { margin-bottom: 0; }
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.btn-secondary {
+  background: #edf0e7;
+  color: var(--accent);
+}
+
+.btn-dark {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-logout {
+  background: #f5e9e7;
+  color: #9c3024;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+  margin-top: 22px;
+}
+
+.stat {
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fbfcf9;
+  min-width: 0;
+}
+
+.stat-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  display: block;
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.stat-detail {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 5px;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 20px 0;
+  margin-top: 20px;
 }
-.toolbar input { flex: 1; min-width: 220px; }
-.btn-logout { background: #eee; }
-.estado {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 20px;
-  background: #f0f0f0;
-  color: #444;
+
+.toolbar input {
+  flex: 1;
+  min-width: 230px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 11px;
+  margin-top: 16px;
+}
+
+.filter label {
+  display: block;
   font-size: 12px;
-  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 600;
 }
+
+.results-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .pedido {
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 16px 0;
+  border-radius: 13px;
+  padding: 19px;
+  margin: 14px 0;
+  background: white;
+  break-inside: avoid;
 }
+
 .pedido-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
+
+.cliente-nombre {
+  color: var(--accent);
+  font-size: 17px;
+  font-weight: 800;
+}
+
 .pedido-id {
-  font-size: 12px;
   color: var(--muted);
+  font-size: 11px;
   overflow-wrap: anywhere;
   margin-top: 5px;
 }
-.fecha { color: var(--muted); font-size: 13px; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding: 18px 0;
+
+.fecha {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 5px;
 }
+
+.estado {
+  display: inline-block;
+  padding: 6px 11px;
+  border-radius: 20px;
+  background: #edf0e7;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.grid-datos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  padding: 17px 0;
+}
+
 .dato { min-width: 0; }
+
 .dato small {
   display: block;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
   margin-bottom: 4px;
 }
+
 .dato strong {
   display: block;
+  font-size: 13px;
+  font-weight: 650;
   overflow-wrap: anywhere;
-  font-size: 14px;
-  font-weight: 600;
 }
+
 .seccion {
   border-top: 1px solid var(--border);
-  padding-top: 16px;
-  margin-top: 4px;
+  padding-top: 15px;
+  margin-top: 5px;
 }
+
 .producto {
   padding: 12px;
-  background: #f8f8f5;
+  margin: 8px 0;
   border-radius: 9px;
-  margin: 9px 0;
-  font-size: 14px;
+  background: #f7f8f3;
+  font-size: 13px;
 }
-.producto-nombre { font-weight: 700; color: var(--accent); }
+
+.producto-nombre {
+  color: var(--accent);
+  font-weight: 800;
+}
+
 .producto-info {
-  color: #666;
-  margin-top: 5px;
-  line-height: 1.6;
+  color: #68705f;
+  line-height: 1.7;
+  margin-top: 4px;
 }
+
+.observaciones {
+  padding: 12px;
+  background: #fafbf8;
+  border-radius: 9px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .total {
   text-align: right;
   color: var(--accent);
   font-size: 21px;
-  font-weight: 800;
-  margin-top: 18px;
+  font-weight: 850;
+  margin-top: 17px;
 }
-.observaciones {
-  background: #fafafa;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 14px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+
+.pedido-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 15px;
 }
+
+.pedido-actions button {
+  font-size: 12px;
+  padding: 9px 12px;
+}
+
 .vacio, .mensaje {
-  color: var(--muted);
+  padding: 35px 12px;
   text-align: center;
-  padding: 25px 10px;
+  color: var(--muted);
+  font-size: 14px;
 }
+
+.status-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.status-chip {
+  padding: 7px 10px;
+  background: #f3f5ed;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 8px;
+}
+
+@media (max-width: 850px) {
+  .filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 @media (max-width: 600px) {
   body { padding: 12px 9px; }
-  .card { padding: 17px; }
-  .grid { grid-template-columns: 1fr; gap: 12px; }
-  .pedido { padding: 15px; }
+  .card { padding: 16px; }
+  .topbar { align-items: flex-start; }
+  .top-actions { width: 100%; }
+  .top-actions button { flex: 1; }
+  .stats { gap: 9px; }
+  .stat { padding: 13px; }
+  .stat-value { font-size: 18px; }
+  .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-datos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .toolbar button { width: 100%; }
+  .pedido { padding: 14px; }
+  .pedido-actions button { flex: 1; }
+}
+
+@media print {
+  body { background: white; padding: 0; }
+  .no-print, #login, .pedido-actions, .footer-note { display: none !important; }
+  #app { display: block !important; }
+  .card { box-shadow: none; border: 0; padding: 0; }
+  .pedido { border: 1px solid #ccc; }
+  .stats { grid-template-columns: repeat(4, 1fr); }
 }
 </style>
 </head>
@@ -164,8 +426,9 @@ button:disabled { opacity: .5; cursor: wait; }
 <body>
 
 <div id="login" class="card">
-  <h1>Panel de Administración</h1>
-  <p>Ingresá tus credenciales de administrador.</p>
+  <h1>Administración Migaja</h1>
+  <p class="muted">Ingresá tus credenciales de administrador.</p>
+
   <form id="loginForm">
     <input type="email" id="email" placeholder="Correo electrónico"
       autocomplete="username" required>
@@ -173,24 +436,125 @@ button:disabled { opacity: .5; cursor: wait; }
       autocomplete="current-password" required>
     <button type="submit" id="btnLogin">Entrar</button>
   </form>
+
   <p id="error" class="error-msg"></p>
 </div>
 
 <div id="app" class="container">
-  <div class="card">
-    <h1>Administración Migaja</h1>
-    <p>Gestión y consulta de pedidos.</p>
+
+  <section class="card">
+    <div class="topbar">
+      <div>
+        <h1>Administración Migaja</h1>
+        <p class="muted">Panel de gestión y control de pedidos</p>
+      </div>
+
+      <div class="top-actions no-print">
+        <button id="btnRefresh" class="btn-secondary" type="button">
+          Actualizar
+        </button>
+        <button id="btnLogout" class="btn-logout" type="button">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-label">Pedidos registrados</span>
+        <strong class="stat-value" id="statPedidos">0</strong>
+        <span class="stat-detail">Total de pedidos cargados</span>
+      </div>
+
+      <div class="stat">
+        <span class="stat-label">Facturación registrada</span>
+        <strong class="stat-value" id="statFacturacion">$0</strong>
+        <span class="stat-detail">Suma de pedidos registrados</span>
+      </div>
+
+      <div class="stat">
+        <span class="stat-label">Promedio por pedido</span>
+        <strong class="stat-value" id="statPromedio">$0</strong>
+        <span class="stat-detail">Promedio del total cargado</span>
+      </div>
+
+      <div class="stat">
+        <span class="stat-label">Resultados filtrados</span>
+        <strong class="stat-value" id="statResultados">0</strong>
+        <span class="stat-detail">Según los filtros aplicados</span>
+      </div>
+    </div>
+
+    <div id="resumenEstados" class="status-summary"></div>
+  </section>
+
+  <section class="card no-print">
+    <h2>Buscar y filtrar pedidos</h2>
 
     <div class="toolbar">
       <input type="search" id="busqueda"
-        placeholder="Buscar por cliente, teléfono o ID...">
-      <button id="btnRefresh">Actualizar pedidos</button>
-      <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
+        placeholder="Buscar cliente, teléfono o ID...">
+
+      <button id="btnExportar" type="button" class="btn-dark">
+        Exportar CSV
+      </button>
+
+      <button id="btnImprimir" type="button" class="btn-secondary">
+        Imprimir resultados
+      </button>
+
+      <button id="btnLimpiar" type="button" class="btn-secondary">
+        Limpiar filtros
+      </button>
     </div>
 
-    <div id="resumen"></div>
+    <div class="filters">
+      <div class="filter">
+        <label for="fEstado">Estado</label>
+        <select id="fEstado">
+          <option value="">Todos</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label for="fModalidad">Modalidad</label>
+        <select id="fModalidad">
+          <option value="">Todas</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label for="fPago">Medio de pago</label>
+        <select id="fPago">
+          <option value="">Todos</option>
+        </select>
+      </div>
+
+      <div class="filter">
+        <label for="fDesde">Desde</label>
+        <input type="date" id="fDesde">
+      </div>
+
+      <div class="filter">
+        <label for="fHasta">Hasta</label>
+        <input type="date" id="fHasta">
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="results-line">
+      <strong>Pedidos</strong>
+      <span id="contadorResultados">Cargando...</span>
+    </div>
+
     <div id="lista" class="mensaje">Cargando pedidos...</div>
+  </section>
+
+  <div class="footer-note">
+    Administración Migaja · Panel privado
   </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -206,15 +570,16 @@ const supabaseAdmin = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-const loginBox = document.getElementById("login");
-const appBox = document.getElementById("app");
-const errorBox = document.getElementById("error");
-const lista = document.getElementById("lista");
-const resumen = document.getElementById("resumen");
-const busqueda = document.getElementById("busqueda");
-const btnLogin = document.getElementById("btnLogin");
+const $ = id => document.getElementById(id);
+
+const loginBox = $("login");
+const appBox = $("app");
+const errorBox = $("error");
+const lista = $("lista");
+const busqueda = $("busqueda");
 
 let pedidosActuales = [];
+let pedidosFiltrados = [];
 
 const moneda = valor =>
   new Intl.NumberFormat("es-AR", {
@@ -271,11 +636,11 @@ async function verificarAdministrador() {
 async function login(event) {
   event.preventDefault();
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("pass").value;
+  const email = $("email").value.trim();
+  const password = $("pass").value;
 
-  btnLogin.disabled = true;
-  btnLogin.textContent = "Ingresando...";
+  $("btnLogin").disabled = true;
+  $("btnLogin").textContent = "Ingresando...";
   errorBox.textContent = "";
 
   try {
@@ -295,198 +660,487 @@ async function login(event) {
       return;
     }
 
-    document.getElementById("pass").value = "";
+    $("pass").value = "";
     mostrarPanel();
     await cargarPedidos();
 
   } catch (error) {
     mostrarLogin("No se pudo conectar con el servidor.");
   } finally {
-    btnLogin.disabled = false;
-    btnLogin.textContent = "Entrar";
+    $("btnLogin").disabled = false;
+    $("btnLogin").textContent = "Entrar";
   }
 }
 
 async function cargarPedidos() {
+  $("btnRefresh").disabled = true;
+  $("btnRefresh").textContent = "Actualizando...";
   lista.textContent = "Cargando pedidos...";
-  resumen.textContent = "";
 
-  const autorizado = await verificarAdministrador();
-  if (!autorizado) return;
+  try {
+    const autorizado = await verificarAdministrador();
+    if (!autorizado) return;
 
-  const { data, error } = await supabaseAdmin
-    .from("pedidos")
-    .select(`
-      id,
-      created_at,
-      cliente_nombre,
-      cliente_telefono,
-      metodo_pago,
-      modalidad,
-      total,
-      observaciones,
-      estado,
-      direccion,
-      zona,
-      costo_envio,
-      pedido_detalles (
+    const { data, error } = await supabaseAdmin
+      .from("pedidos")
+      .select(`
         id,
-        producto_id,
-        producto_nombre,
-        cantidad,
-        precio_unitario,
-        subtotal,
-        opcion
-      )
-    `)
-    .order("created_at", { ascending: false });
+        created_at,
+        cliente_nombre,
+        cliente_telefono,
+        metodo_pago,
+        modalidad,
+        total,
+        observaciones,
+        estado,
+        direccion,
+        zona,
+        costo_envio,
+        pedido_detalles (
+          id,
+          producto_id,
+          producto_nombre,
+          cantidad,
+          precio_unitario,
+          subtotal,
+          opcion
+        )
+      `)
+      .order("created_at", { ascending: false });
 
-  if (error) {
-    lista.textContent = "Error al cargar pedidos: " + error.message;
-    return;
+    if (error) {
+      lista.textContent = "Error al cargar pedidos: " + error.message;
+      return;
+    }
+
+    pedidosActuales = data || [];
+
+    actualizarOpcionesFiltros();
+    renderizarPedidos();
+
+  } catch (error) {
+    lista.textContent = "No se pudieron cargar los pedidos.";
+  } finally {
+    $("btnRefresh").disabled = false;
+    $("btnRefresh").textContent = "Actualizar";
   }
-
-  pedidosActuales = data || [];
-  renderizarPedidos();
 }
 
-function renderizarPedidos() {
-  const termino = busqueda.value.trim().toLowerCase();
+function llenarSelect(id, valores, etiquetaInicial) {
+  const select = $(id);
+  const seleccionado = select.value;
 
-  const filtrados = pedidosActuales.filter(p => {
-    return [
+  select.replaceChildren();
+
+  const inicial = elemento("option", "", etiquetaInicial);
+  inicial.value = "";
+  select.appendChild(inicial);
+
+  valores.forEach(valor => {
+    const opcion = elemento("option", "", valor);
+    opcion.value = valor;
+    select.appendChild(opcion);
+  });
+
+  if (valores.includes(seleccionado)) {
+    select.value = seleccionado;
+  }
+}
+
+function actualizarOpcionesFiltros() {
+  const estados = [...new Set(
+    pedidosActuales.map(p => p.estado).filter(Boolean)
+  )].sort();
+
+  const modalidades = [...new Set(
+    pedidosActuales.map(p => p.modalidad).filter(Boolean)
+  )].sort();
+
+  const pagos = [...new Set(
+    pedidosActuales.map(p => p.metodo_pago).filter(Boolean)
+  )].sort();
+
+  llenarSelect("fEstado", estados, "Todos");
+  llenarSelect("fModalidad", modalidades, "Todas");
+  llenarSelect("fPago", pagos, "Todos");
+}
+
+function fechaLocal(fecha) {
+  if (!fecha) return "";
+
+  const d = new Date(fecha);
+  if (Number.isNaN(d.getTime())) return "";
+
+  const anio = d.getFullYear();
+  const mes = String(d.getMonth() + 1).padStart(2, "0");
+  const dia = String(d.getDate()).padStart(2, "0");
+
+  return `${anio}-${mes}-${dia}`;
+}
+
+function filtrarPedidos() {
+  const termino = busqueda.value.trim().toLowerCase();
+  const estado = $("fEstado").value;
+  const modalidad = $("fModalidad").value;
+  const pago = $("fPago").value;
+  const desde = $("fDesde").value;
+  const hasta = $("fHasta").value;
+
+  return pedidosActuales.filter(p => {
+    const coincideBusqueda = [
       p.id,
       p.cliente_nombre,
       p.cliente_telefono
-    ].some(valor => String(valor || "").toLowerCase().includes(termino));
+    ].some(valor =>
+      String(valor || "").toLowerCase().includes(termino)
+    );
+
+    const fecha = fechaLocal(p.created_at);
+
+    const coincideEstado = !estado || p.estado === estado;
+    const coincideModalidad = !modalidad || p.modalidad === modalidad;
+    const coincidePago = !pago || p.metodo_pago === pago;
+    const coincideDesde = !desde || (fecha && fecha >= desde);
+    const coincideHasta = !hasta || (fecha && fecha <= hasta);
+
+    return coincideBusqueda &&
+      coincideEstado &&
+      coincideModalidad &&
+      coincidePago &&
+      coincideDesde &&
+      coincideHasta;
+  });
+}
+
+function actualizarEstadisticas(filtrados) {
+  const totalGeneral = pedidosActuales.reduce(
+    (suma, p) => suma + Number(p.total || 0), 0
+  );
+
+  const promedio = pedidosActuales.length
+    ? totalGeneral / pedidosActuales.length
+    : 0;
+
+  $("statPedidos").textContent = pedidosActuales.length;
+  $("statFacturacion").textContent = moneda(totalGeneral);
+  $("statPromedio").textContent = moneda(promedio);
+  $("statResultados").textContent = filtrados.length;
+
+  const conteoEstados = {};
+
+  pedidosActuales.forEach(p => {
+    const estado = p.estado || "Sin estado";
+    conteoEstados[estado] = (conteoEstados[estado] || 0) + 1;
   });
 
-  resumen.textContent =
-    "Pedidos registrados: " + pedidosActuales.length +
-    " | Resultados: " + filtrados.length;
+  const contenedor = $("resumenEstados");
+  contenedor.replaceChildren();
+
+  Object.entries(conteoEstados).forEach(([estado, cantidad]) => {
+    const chip = elemento(
+      "span",
+      "status-chip",
+      `${estado}: ${cantidad}`
+    );
+    contenedor.appendChild(chip);
+  });
+}
+
+function crearTarjetaPedido(p) {
+  const tarjeta = elemento("article", "pedido");
+
+  const encabezado = elemento("div", "pedido-header");
+  const identificacion = elemento("div");
+
+  identificacion.append(
+    elemento("div", "cliente-nombre",
+      p.cliente_nombre || "Cliente sin nombre"
+    ),
+    elemento("div", "pedido-id", "ID: " + p.id)
+  );
+
+  const estadoFecha = elemento("div");
+  const fecha = p.created_at
+    ? new Date(p.created_at).toLocaleString("es-AR")
+    : "Fecha no disponible";
+
+  estadoFecha.append(
+    elemento("div", "estado", p.estado || "Sin estado"),
+    elemento("div", "fecha", fecha)
+  );
+
+  encabezado.append(identificacion, estadoFecha);
+  tarjeta.appendChild(encabezado);
+
+  const datos = elemento("div", "grid-datos");
+
+  dato(datos, "Teléfono", p.cliente_telefono);
+  dato(datos, "Modalidad", p.modalidad);
+  dato(datos, "Medio de pago", p.metodo_pago);
+  dato(datos, "Dirección", p.direccion);
+  dato(datos, "Zona", p.zona);
+  dato(datos, "Costo de envío", moneda(p.costo_envio));
+
+  tarjeta.appendChild(datos);
+
+  const observaciones = elemento("div", "seccion");
+  observaciones.appendChild(
+    elemento("h3", "", "Observaciones")
+  );
+  observaciones.appendChild(
+    elemento("div", "observaciones",
+      p.observaciones || "Sin observaciones."
+    )
+  );
+  tarjeta.appendChild(observaciones);
+
+  const productos = elemento("div", "seccion");
+  productos.appendChild(
+    elemento("h3", "", "Detalle de productos")
+  );
+
+  if (Array.isArray(p.pedido_detalles) && p.pedido_detalles.length) {
+    p.pedido_detalles.forEach(d => {
+      const producto = elemento("div", "producto");
+
+      producto.appendChild(
+        elemento("div", "producto-nombre",
+          d.producto_nombre || d.producto_id || "Producto"
+        )
+      );
+
+      const info = [
+        "Opción: " + (d.opcion || "No especificada"),
+        "Cantidad: " + d.cantidad + " kg",
+        "Precio por kg: " + moneda(d.precio_unitario),
+        "Subtotal: " + moneda(d.subtotal)
+      ];
+
+      producto.appendChild(
+        elemento("div", "producto-info", info.join(" | "))
+      );
+
+      productos.appendChild(producto);
+    });
+  } else {
+    productos.appendChild(
+      elemento("div", "producto-info", "Sin detalles registrados.")
+    );
+  }
+
+  tarjeta.appendChild(productos);
+
+  tarjeta.appendChild(
+    elemento("div", "total",
+      "Total del pedido: " + moneda(p.total)
+    )
+  );
+
+  const acciones = elemento("div", "pedido-actions no-print");
+
+  const copiar = elemento("button", "btn-secondary", "Copiar ID");
+  copiar.type = "button";
+  copiar.addEventListener("click", () => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(String(p.id))
+        .then(() => {
+          copiar.textContent = "Copiado";
+          setTimeout(() => copiar.textContent = "Copiar ID", 1500);
+        })
+        .catch(() => {
+          copiar.textContent = "No se pudo copiar";
+        });
+    } else {
+      copiar.textContent = "Copiado no disponible";
+    }
+  });
+
+  acciones.appendChild(copiar);
+  tarjeta.appendChild(acciones);
+
+  return tarjeta;
+}
+
+function renderizarPedidos() {
+  const filtrados = filtrarPedidos();
+  pedidosFiltrados = filtrados;
+
+  actualizarEstadisticas(filtrados);
+
+  $("contadorResultados").textContent =
+    `${filtrados.length} de ${pedidosActuales.length} pedidos`;
 
   lista.replaceChildren();
 
   if (!filtrados.length) {
-    lista.appendChild(elemento("div", "vacio",
-      pedidosActuales.length
-        ? "No se encontraron pedidos."
-        : "No hay pedidos todavía."
-    ));
+    lista.appendChild(
+      elemento("div", "vacio",
+        pedidosActuales.length
+          ? "No se encontraron pedidos con esos filtros."
+          : "Todavía no hay pedidos registrados."
+      )
+    );
     return;
   }
 
   filtrados.forEach(p => {
-    const tarjeta = elemento("article", "pedido");
-
-    const encabezado = elemento("div", "pedido-header");
-    const identificacion = elemento("div");
-
-    identificacion.append(
-      elemento("strong", "", p.cliente_nombre || "Cliente sin nombre"),
-      elemento("div", "pedido-id", "ID: " + p.id)
-    );
-
-    const fecha = p.created_at
-      ? new Date(p.created_at).toLocaleString("es-AR")
-      : "Fecha no disponible";
-
-    const estado = elemento("div");
-    estado.append(
-      elemento("div", "fecha", fecha),
-      elemento("div", "estado", p.estado || "Sin estado")
-    );
-
-    encabezado.append(identificacion, estado);
-    tarjeta.appendChild(encabezado);
-
-    const datos = elemento("div", "grid");
-
-    dato(datos, "Teléfono", p.cliente_telefono);
-    dato(datos, "Modalidad", p.modalidad);
-    dato(datos, "Medio de pago", p.metodo_pago);
-    dato(datos, "Dirección", p.direccion);
-    dato(datos, "Zona", p.zona);
-    dato(datos, "Costo de envío", moneda(p.costo_envio));
-
-    tarjeta.appendChild(datos);
-
-    const observaciones = elemento("div", "seccion");
-    observaciones.appendChild(elemento("h2", "", "Observaciones"));
-    observaciones.appendChild(
-      elemento("div", "observaciones",
-        p.observaciones || "Sin observaciones."
-      )
-    );
-    tarjeta.appendChild(observaciones);
-
-    const productos = elemento("div", "seccion");
-    productos.appendChild(elemento("h2", "", "Detalle de productos"));
-
-    if (Array.isArray(p.pedido_detalles) && p.pedido_detalles.length) {
-      p.pedido_detalles.forEach(d => {
-        const producto = elemento("div", "producto");
-
-        producto.appendChild(elemento(
-          "div",
-          "producto-nombre",
-          d.producto_nombre || d.producto_id || "Producto"
-        ));
-
-        const info = [
-          "Opción: " + (d.opcion || "No especificada"),
-          "Cantidad: " + d.cantidad + " kg",
-          "Precio por kg: " + moneda(d.precio_unitario),
-          "Subtotal: " + moneda(d.subtotal)
-        ];
-
-        producto.appendChild(
-          elemento("div", "producto-info", info.join(" | "))
-        );
-
-        productos.appendChild(producto);
-      });
-    } else {
-      productos.appendChild(
-        elemento("div", "producto-info", "Sin detalles registrados.")
-      );
-    }
-
-    tarjeta.appendChild(productos);
-
-    tarjeta.appendChild(
-      elemento("div", "total", "Total del pedido: " + moneda(p.total))
-    );
-
-    lista.appendChild(tarjeta);
+    lista.appendChild(crearTarjetaPedido(p));
   });
 }
 
-async function cerrarSesion() {
-  await supabaseAdmin.auth.signOut();
-  pedidosActuales = [];
-  lista.replaceChildren();
-  resumen.textContent = "";
-  mostrarLogin("Sesión cerrada.");
+function exportarCSV() {
+  if (!pedidosFiltrados.length) {
+    alert("No hay pedidos para exportar.");
+    return;
+  }
+
+  const filas = [[
+    "ID",
+    "Fecha",
+    "Cliente",
+    "Telefono",
+    "Estado",
+    "Modalidad",
+    "Pago",
+    "Direccion",
+    "Zona",
+    "Costo envio",
+    "Observaciones",
+    "Producto",
+    "Opcion",
+    "Cantidad kg",
+    "Precio unitario",
+    "Subtotal",
+    "Total pedido"
+  ]];
+
+  pedidosFiltrados.forEach(p => {
+    const detalles = Array.isArray(p.pedido_detalles)
+      ? p.pedido_detalles
+      : [];
+
+    if (!detalles.length) {
+      filas.push([
+        p.id, p.created_at, p.cliente_nombre, p.cliente_telefono,
+        p.estado, p.modalidad, p.metodo_pago, p.direccion, p.zona,
+        p.costo_envio, p.observaciones, "", "", "", "", "", p.total
+      ]);
+      return;
+    }
+
+    detalles.forEach(d => {
+      filas.push([
+        p.id,
+        p.created_at,
+        p.cliente_nombre,
+        p.cliente_telefono,
+        p.estado,
+        p.modalidad,
+        p.metodo_pago,
+        p.direccion,
+        p.zona,
+        p.costo_envio,
+        p.observaciones,
+        d.producto_nombre,
+        d.opcion,
+        d.cantidad,
+        d.precio_unitario,
+        d.subtotal,
+        p.total
+      ]);
+    });
+  });
+
+  const escapar = valor => {
+    const texto = String(valor == null ? "" : valor);
+    return '"' + texto.replace(/"/g, '""') + '"';
+  };
+
+  const csv = "\uFEFF" + filas
+    .map(fila => fila.map(escapar).join(";"))
+    .join("\r\n");
+
+  const archivo = new Blob([csv], {
+    type: "text/csv;charset=utf-8;"
+  });
+
+  const url = URL.createObjectURL(archivo);
+  const enlace = document.createElement("a");
+
+  enlace.href = url;
+  enlace.download = "migaja-pedidos-" +
+    new Date().toISOString().slice(0, 10) + ".csv";
+
+  document.body.appendChild(enlace);
+  enlace.click();
+  enlace.remove();
+
+  URL.revokeObjectURL(url);
 }
 
-document.getElementById("loginForm")
-  .addEventListener("submit", login);
+function limpiarFiltros() {
+  busqueda.value = "";
+  $("fEstado").value = "";
+  $("fModalidad").value = "";
+  $("fPago").value = "";
+  $("fDesde").value = "";
+  $("fHasta").value = "";
 
-document.getElementById("btnRefresh")
-  .addEventListener("click", cargarPedidos);
+  renderizarPedidos();
+}
 
-document.getElementById("btnLogout")
-  .addEventListener("click", cerrarSesion);
+async function cerrarSesion() {
+  $("btnLogout").disabled = true;
 
-busqueda.addEventListener("input", renderizarPedidos);
+  try {
+    const { error } = await supabaseAdmin.auth.signOut();
+
+    if (error) {
+      alert("No se pudo cerrar la sesión: " + error.message);
+      return;
+    }
+
+    pedidosActuales = [];
+    pedidosFiltrados = [];
+    lista.replaceChildren();
+    $("resumenEstados").replaceChildren();
+
+    mostrarLogin("Sesión cerrada.");
+
+  } finally {
+    $("btnLogout").disabled = false;
+  }
+}
+
+$("loginForm").addEventListener("submit", login);
+$("btnRefresh").addEventListener("click", cargarPedidos);
+$("btnLogout").addEventListener("click", cerrarSesion);
+$("btnExportar").addEventListener("click", exportarCSV);
+$("btnImprimir").addEventListener("click", () => window.print());
+$("btnLimpiar").addEventListener("click", limpiarFiltros);
+
+[
+  "busqueda",
+  "fEstado",
+  "fModalidad",
+  "fPago",
+  "fDesde",
+  "fHasta"
+].forEach(id => {
+  $(id).addEventListener("input", renderizarPedidos);
+  $(id).addEventListener("change", renderizarPedidos);
+});
 
 async function iniciarPanel() {
-  const autorizado = await verificarAdministrador();
+  try {
+    const autorizado = await verificarAdministrador();
 
-  if (autorizado) {
-    mostrarPanel();
-    await cargarPedidos();
+    if (autorizado) {
+      mostrarPanel();
+      await cargarPedidos();
+    }
+  } catch (error) {
+    mostrarLogin("No se pudo iniciar el panel.");
   }
 }
 
