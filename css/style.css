@@ -54,8 +54,6 @@
   --safe-top: env(safe-area-inset-top, 0px);
 }
 
-/* BASE */
-
 *, *::before, *::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -79,8 +77,6 @@ body {
   overflow-x: hidden;
 }
 
-/* FONDO */
-
 #bg-canvas {
   position: fixed;
   inset: 0;
@@ -90,8 +86,6 @@ body {
   z-index: 0;
   pointer-events: none;
 }
-
-/* ELEMENTOS GENERALES */
 
 b, strong, .fw-bold {
   font-family: var(--font-body);
@@ -122,8 +116,6 @@ svg {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
-/* HEADER */
 
 .top {
   position: sticky;
@@ -180,8 +172,6 @@ svg {
   font-weight: 700;
   color: #2C3522;
 }
-
-/* HERO */
 
 .hero {
   position: relative;
@@ -253,8 +243,6 @@ svg {
   z-index: 0;
 }
 
-/* BOTONES */
-
 .btn {
   display: inline-flex;
   align-items: center;
@@ -297,8 +285,6 @@ svg {
   cursor: not-allowed;
 }
 
-/* CONTENIDO */
-
 main {
   position: relative;
   z-index: 1;
@@ -331,8 +317,6 @@ main {
   color: var(--text);
 }
 
-/* FORMULARIOS */
-
 input[type=search],
 .fld input,
 .fld select,
@@ -360,8 +344,6 @@ input[type=search]:focus,
 input::placeholder {
   color: var(--text-muted);
 }
-
-/* CATEGORÍAS */
 
 .chips {
   display: flex;
@@ -869,15 +851,15 @@ input::placeholder {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 6px;
   width: 100%;
   margin: 24px auto 0;
-  padding: 24px 16px;
-  background: rgba(216, 197, 228, 0.95);
-  border-top: 1px solid rgba(255,255,255,0.2);
-  color: #2C3522;
+  padding: 20px 16px 28px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
   font-family: var(--font-tagback-body);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   text-align: center;
 }
@@ -885,14 +867,14 @@ input::placeholder {
 .tagback-footer a {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   color: inherit;
   text-decoration: none;
 }
 
 .tagback-footer img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   object-fit: contain;
 }
 
@@ -901,7 +883,7 @@ input::placeholder {
   font-weight: 700;
   text-transform: lowercase;
   letter-spacing: -0.5px;
-  color: #2C3522;
+  color: var(--text);
 }
 
 @media (max-width: 600px) {
