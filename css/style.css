@@ -14,8 +14,6 @@
   font-display: swap;
 }
 
-/* FUENTES TAGBACK */
-
 @font-face {
   font-family: 'IBM Plex Mono';
   src: url('../assets/tagback/ibm-plex-mono.medium.ttf') format('truetype');
@@ -56,6 +54,8 @@
   --safe-top: env(safe-area-inset-top, 0px);
 }
 
+/* BASE */
+
 *, *::before, *::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -79,6 +79,8 @@ body {
   overflow-x: hidden;
 }
 
+/* FONDO */
+
 #bg-canvas {
   position: fixed;
   inset: 0;
@@ -88,6 +90,8 @@ body {
   z-index: 0;
   pointer-events: none;
 }
+
+/* ELEMENTOS GENERALES */
 
 b, strong, .fw-bold {
   font-family: var(--font-body);
@@ -118,6 +122,8 @@ svg {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* HEADER */
 
 .top {
   position: sticky;
@@ -174,6 +180,8 @@ svg {
   font-weight: 700;
   color: #2C3522;
 }
+
+/* HERO */
 
 .hero {
   position: relative;
@@ -245,6 +253,8 @@ svg {
   z-index: 0;
 }
 
+/* BOTONES */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -287,6 +297,8 @@ svg {
   cursor: not-allowed;
 }
 
+/* CONTENIDO */
+
 main {
   position: relative;
   z-index: 1;
@@ -319,6 +331,8 @@ main {
   color: var(--text);
 }
 
+/* FORMULARIOS */
+
 input[type=search],
 .fld input,
 .fld select,
@@ -346,6 +360,8 @@ input[type=search]:focus,
 input::placeholder {
   color: var(--text-muted);
 }
+
+/* CATEGORÍAS */
 
 .chips {
   display: flex;
@@ -846,16 +862,20 @@ input::placeholder {
   transform: translateX(-50%) translateY(0);
 }
 
-/* FOOTER TAGBACK */
-
 .tagback-footer {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 7px;
-  padding: 20px 12px;
-  color: var(--text-muted);
+  width: 100%;
+  margin: 24px auto 0;
+  padding: 24px 16px;
+  background: rgba(216, 197, 228, 0.95);
+  border-top: 1px solid rgba(255,255,255,0.2);
+  color: #2C3522;
   font-family: var(--font-tagback-body);
   font-size: 11px;
   font-weight: 500;
@@ -881,7 +901,7 @@ input::placeholder {
   font-weight: 700;
   text-transform: lowercase;
   letter-spacing: -0.5px;
-  color: var(--text);
+  color: #2C3522;
 }
 
 @media (max-width: 600px) {
@@ -895,6 +915,12 @@ input::placeholder {
   .hero {
     width: calc(100% - 24px);
     margin: 12px auto;
+  }
+
+  .tagback-footer {
+    gap: 6px;
+    padding: 22px 12px;
+    font-size: 10px;
   }
 }
 
