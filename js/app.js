@@ -1,3 +1,4 @@
+
 (function () {
   "use strict";
 
@@ -33,6 +34,123 @@
     x: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'
   };
 
+  /*
+   * Catálogo local de respaldo.
+   * El catálogo principal se carga desde Supabase.
+   */
+  var catalogo = PRODUCTOS.slice();
+
+  var supabase = null;
+
+  function obtenerSupabase() {
+    if (supabase) return supabase;
+
+    if (
+      typeof window.supabase === "undefined" ||
+      typeof window.supabase.createClient !== "function"
+    ) {
+      throw new Error("La librería de Supabase no se cargó.");
+    }
+
+    supabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    return supabase;
+  }
+
+  function buscarFotoAlternativa(producto, opcion) {
+    if (!producto || !producto.fotos_opciones) return null;
+
+    var buscada = String(opcion || "").toLowerCase();
+
+    var clave = Object.keys(producto.fotos_opciones).filter(function (k) {
+      return k.toLowerCase() === buscada;
+    })[0];
+
+    return clave ? producto.fotos_opciones[clave] : null;
+  }
+
+  function normalizarProducto(row) {
+    var anterior = PRODUCTOS.filter(function (p) {
+      return p.id === row.id;
+    })[0] || {};
+
+    var opciones = Array.isArray(row.opciones)
+      ? row.opciones
+      : anterior.opciones || [];
+
+    var foto = row.foto || anterior.foto || "";
+
+    return {
+      id: row.id,
+      categoria: row.categoria || anterior.categoria || "Otros",
+      nombre: row.nombre || anterior.nombre || row.id,
+      descripcion: row.descripcion || "",
+      precio: Number(row.precio),
+      foto: foto,
+      opciones: opciones,
+      disponible: row.disponible !== false,
+      venta: anterior.venta || {
+        unidad: "kg",
+        etiqueta: "el kilo"
+      },
+      fotos_opciones: anterior.fotos_opciones || null
+    };
+  }
+
+  async function cargarProductos() {
+    try {
+      var db = obtenerSupabase();
+
+      var resultado = await db
+        .from("productos")
+        .select("id,categoria,nombre,descripcion,precio,foto,opciones,disponible")
+        .order("id");
+
+      if (resultado.error) {
+        throw resultado.error;
+      }
+
+      if (!Array.isArray(resultado.data) || !resultado.data.length) {
+        throw new Error("Supabase no devolvió productos.");
+      }
+
+      var nuevos = resultado.data.map(normalizarProducto);
+
+      var validos = nuevos.filter(function (p) {
+        return p.id &&
+          Number.isFinite(p.precio) &&
+          p.precio >= 0 &&
+          Array.isArray(p.opciones);
+      });
+
+      if (!validos.length) {
+        throw new Error("El catálogo recibido no contiene productos válidos.");
+      }
+
+      catalogo = validos;
+
+      depurar();
+      renderChips();
+      refrescar();
+
+      console.info("Catálogo cargado desde Supabase:", catalogo.length);
+
+    } catch (err) {
+      console.error("Error cargando productos desde Supabase:", err);
+
+      toast("No se pudo actualizar el catálogo. Se usa el catálogo local.");
+
+      catalogo = PRODUCTOS.slice();
+
+      depurar();
+      renderChips();
+      refrescar();
+    }
+  }
+
   var S = {
     cart: ls.get("mg-cart", []),
     favs: ls.get("mg-favs", []),
@@ -58,7 +176,9 @@
   };
 
   var prod = function (id) {
-    return PRODUCTOS.filter(function (p) { return p.id === id; })[0];
+    return catalogo.filter(function (p) {
+      return p.id === id;
+    })[0];
   };
 
   var zona = function () {
@@ -73,9 +193,13 @@
 
   var toast = function (m) {
     var t = $("#toast");
+    if (!t) return;
+
     t.textContent = m;
     t.classList.add("on");
+
     clearTimeout(toast.h);
+
     toast.h = setTimeout(function () {
       t.classList.remove("on");
     }, 1600);
@@ -94,6 +218,7 @@
     }).formatToParts(new Date());
 
     var values = {};
+
     parts.forEach(function (part) {
       values[part.type] = part.value;
     });
@@ -128,7 +253,9 @@
   }
 
   var qtxt = function (p, n) {
-    return p.venta.unidad === "kg" ? String(n) + " kg" : n + " u.";
+    return p.venta.unidad === "kg"
+      ? String(n) + " kg"
+      : n + " u.";
   };
 
   function calcularTotales() {
@@ -198,13 +325,24 @@
     if (!Number.isInteger(nuevoValor)) return;
 
     if (nuevoValor <= 0) {
-      S.cart = S.cart.filter(function (x) { return x !== l; });
+      S.cart = S.cart.filter(function (x) {
+        return x !== l;
+      });
+
       if (l) toast("Producto eliminado");
+
     } else if (l) {
       l.n = nuevoValor;
       toast("Cantidad actualizada");
+
     } else {
-      S.cart.push({ t: t, id: id, op: op || "", n: nuevoValor });
+      S.cart.push({
+        t: t,
+        id: id,
+        op: op || "",
+        n: nuevoValor
+      });
+
       toast("Agregado al carrito");
     }
 
@@ -215,8 +353,10 @@
   function renderChips() {
     var cats = ["Todas"];
 
-    PRODUCTOS.forEach(function (p) {
-      if (cats.indexOf(p.categoria) < 0) cats.push(p.categoria);
+    catalogo.forEach(function (p) {
+      if (cats.indexOf(p.categoria) < 0) {
+        cats.push(p.categoria);
+      }
     });
 
     cats.push("Favoritos");
@@ -231,14 +371,19 @@
 
   function foto(src, alt) {
     return '<div class="ph0">' +
-      (src ? '<img loading="lazy" src="' + esc(src) + '" alt="' + esc(alt) + '">' : "Foto próximamente") +
+      (src
+        ? '<img loading="lazy" src="' + esc(src) +
+          '" alt="' + esc(alt) + '">'
+        : "Foto próximamente") +
       "</div>";
   }
 
   function renderLista() {
-    var v = PRODUCTOS.filter(function (p) {
+    var v = catalogo.filter(function (p) {
       var okc = S.cat === "Todas" ||
-        (S.cat === "Favoritos" ? S.favs.indexOf(p.id) > -1 : p.categoria === S.cat);
+        (S.cat === "Favoritos"
+          ? S.favs.indexOf(p.id) > -1
+          : p.categoria === S.cat);
 
       return okc;
     });
@@ -253,10 +398,14 @@
           return l.id === p.id;
         })[0];
 
-        var opSeleccionada = opEnCarrito ? opEnCarrito.op : p.opciones[0];
+        var opSeleccionada = opEnCarrito
+          ? opEnCarrito.op
+          : p.opciones[0];
 
-        if (p.fotos_opciones[opSeleccionada]) {
-          currentFoto = p.fotos_opciones[opSeleccionada];
+        var fotoOpcion = buscarFotoAlternativa(p, opSeleccionada);
+
+        if (fotoOpcion) {
+          currentFoto = fotoOpcion;
         }
       }
 
@@ -285,7 +434,9 @@
         "</button></h3><p>" + esc(p.descripcion) +
         '</p><div class="price">' + money(p.precio) +
         " <small>" + esc(p.venta.etiqueta) + "</small></div>" +
-        (off ? '<div class="tag">No disponible</div>' : opts) +
+        (off
+          ? '<div class="tag">No disponible</div>'
+          : opts) +
         "</div></article>";
     }).join("") : '<p class="tag">No encontramos ese producto.</p>';
   }
@@ -320,7 +471,10 @@
   function refrescar() {
     renderLista();
     renderBar();
-    if (S.open) renderPanel();
+
+    if (S.open) {
+      renderPanel();
+    }
   }
 
   var STEPS = ["Tu carrito", "Datos y entrega", "Resumen"];
@@ -330,7 +484,8 @@
       money(c.sub) + "</span></div>";
 
     if (S.f.modo === "Envío" && S.step >= 1 && zona()) {
-      h += '<div class="row"><span>Envío</span><span>' + money(c.env) + "</span></div>";
+      h += '<div class="row"><span>Envío</span><span>' +
+        money(c.env) + "</span></div>";
     }
 
     h += '<div class="row t"><span>Total</span><b>' +
@@ -429,11 +584,18 @@
     var f = S.f;
     var c = calcularTotales();
 
-    if (!horarioPedidosAbierto()) return mensajeHorarioPedidos();
-    if (step === 0 && !c.L.length) return "Tu carrito está vacío.";
+    if (!horarioPedidosAbierto()) {
+      return mensajeHorarioPedidos();
+    }
+
+    if (step === 0 && !c.L.length) {
+      return "Tu carrito está vacío.";
+    }
 
     if (step === 1) {
-      if (!f.nombre.trim()) return "Escribí tu nombre y apellido.";
+      if (!f.nombre.trim()) {
+        return "Escribí tu nombre y apellido.";
+      }
 
       if (f.tel.replace(/\D/g, "").length < 8) {
         return "Escribí un teléfono válido.";
@@ -444,7 +606,9 @@
           return "Por ahora no hacemos envíos. Elegí retiro.";
         }
 
-        if (!zona()) return "Elegí tu zona de entrega.";
+        if (!zona()) {
+          return "Elegí tu zona de entrega.";
+        }
 
         if (!f.calle.trim() || !f.altura.trim()) {
           return "Completá calle y altura.";
@@ -633,9 +797,7 @@
     var popup = null;
 
     try {
-      if (typeof window.supabase === "undefined") {
-        throw new Error("La librería de Supabase no se cargó.");
-      }
+      var db = obtenerSupabase();
 
       var direccion = null;
       var zonaEntrega = null;
@@ -662,14 +824,9 @@
         };
       });
 
-      var supabase = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
-
       popup = window.open("about:blank", "_blank");
 
-      var resultado = await supabase.rpc("crear_pedido_completo", {
+      var resultado = await db.rpc("crear_pedido_completo", {
         p_cliente_nombre: S.f.nombre.trim(),
         p_cliente_telefono: S.f.tel.trim(),
         p_metodo_pago: S.f.pago,
@@ -879,7 +1036,9 @@
   });
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && S.open) abrir(false);
+    if (e.key === "Escape" && S.open) {
+      abrir(false);
+    }
   });
 
   $("#ic").innerHTML = IC.cart;
@@ -893,4 +1052,8 @@
   renderChips();
   renderInfo();
   refrescar();
+
+  // Carga inicial del catálogo desde Supabase.
+  cargarProductos();
+
 })();
