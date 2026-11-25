@@ -1,4 +1,3 @@
-
 (function () {
   "use strict";
 
@@ -119,6 +118,27 @@
 
       var nuevos = resultado.data.map(normalizarProducto);
 
+      /*
+       * Orden fijo del catálogo:
+       * Clásica → Crispy → Semillas → Rellena
+       */
+      var ordenProductos = [
+        "clasica",
+        "crispy",
+        "semillas",
+        "rellena"
+      ];
+
+      nuevos.sort(function (a, b) {
+        var posA = ordenProductos.indexOf(a.id);
+        var posB = ordenProductos.indexOf(b.id);
+
+        if (posA === -1) posA = 999;
+        if (posB === -1) posB = 999;
+
+        return posA - posB;
+      });
+
       var validos = nuevos.filter(function (p) {
         return p.id &&
           Number.isFinite(p.precio) &&
@@ -154,6 +174,7 @@
   var S = {
     cart: ls.get("mg-cart", []),
     favs: ls.get("mg-favs", []),
+    fotoOpcionSeleccionada: {},
     cat: "Todas",
     open: false,
     step: 0,
@@ -393,16 +414,20 @@
       var fav = S.favs.indexOf(p.id) > -1;
       var currentFoto = p.foto;
 
+      /*
+       * Imagen dinámica para productos con fotos por opción.
+       * Rellena:
+       * Jamón y queso → rellena_jq.webp
+       * Espinaca y ricota → rellena_er.webp
+       */
       if (p.fotos_opciones) {
-        var opEnCarrito = S.cart.filter(function (l) {
-          return l.id === p.id;
-        })[0];
+        var opSeleccionada =
+          S.fotoOpcionSeleccionada[p.id] || p.opciones[0];
 
-        var opSeleccionada = opEnCarrito
-          ? opEnCarrito.op
-          : p.opciones[0];
-
-        var fotoOpcion = buscarFotoAlternativa(p, opSeleccionada);
+        var fotoOpcion = buscarFotoAlternativa(
+          p,
+          opSeleccionada
+        );
 
         if (fotoOpcion) {
           currentFoto = fotoOpcion;
@@ -916,10 +941,22 @@
       renderLista();
 
     } else if (a === "add") {
+      var idProducto = b.getAttribute("data-id");
+      var opcionProducto = b.getAttribute("data-op");
+      var producto = prod(idProducto);
+
+      /*
+       * Actualiza la imagen cuando se selecciona
+       * una opción de Rellena.
+       */
+      if (producto && producto.fotos_opciones) {
+        S.fotoOpcionSeleccionada[idProducto] = opcionProducto;
+      }
+
       add(
         b.getAttribute("data-t"),
-        b.getAttribute("data-id"),
-        b.getAttribute("data-op"),
+        idProducto,
+        opcionProducto,
         +b.getAttribute("data-d")
       );
 
