@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es" data-theme="dark">
 <head>
@@ -144,6 +145,20 @@
 
 </main>
 
+<footer class="tagback-footer">
+  <span>© <span id="currentYear"></span> TAGBACK. Todos los derechos reservados.</span>
+  <span>Diseño y desarrollo por</span>
+  <a
+    href="https://tagback.com.ar/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="TAGBACK - Diseño y desarrollo web"
+  >
+    <img src="assets/tagback/tagback.svg" alt="">
+    <span class="tagback-word">tagback</span>
+  </a>
+</footer>
+
 <nav class="bottom-nav">
 
   <a href="#catalogo" class="bn-item on">
@@ -178,6 +193,10 @@
 </div>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js"></script>
